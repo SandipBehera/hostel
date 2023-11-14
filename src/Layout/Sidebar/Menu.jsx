@@ -18,7 +18,17 @@ export const MENUITEMS = [
         active: false,
         children: [
           { path: `/create-employee`, title: "Create Employee", type: "link" },
-          { path: `/allemployee`, title: "All Employee", type: "link" },
+        
+        ],
+      },
+      {
+        title: "Student Management",
+        icon: "widget",
+        type: "sub",
+        active: false,
+        children: [
+       
+          { path: `/all-student`, title: "All Student", type: "link" },
         ],
       },
       {
