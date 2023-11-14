@@ -180,6 +180,7 @@ import FormTouchspinContain from "../Components/Forms/FormWidget/FormTouchspin";
 import FormClipboardContain from "../Components/Forms/FormWidget/FormClipboard";
 import FAQContent from "../Components/FAQ";
 import CreateEmployee from "../pages/employee/create";
+import AllEmployee from "../pages/employee/AllEmployee";
 
 export const routes = [
   { path: `/dashboard`, Component: <Default /> },
@@ -188,6 +189,7 @@ export const routes = [
 
   //employee Management routes
   { path: `/create-employee`, Component: <CreateEmployee /> },
+  {path:`/allemployee`, Component:<AllEmployee/>},
 
   //employee Management routes ends
 

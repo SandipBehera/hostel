@@ -117,7 +117,7 @@ export const Experience = "Experience";
 
 export const ContactUs = "Contact Us";
 export const Contact = "Contact";
-export const YourName = "Your Name";
+export const YourName = "Employee Name";
 export const Email = "Email";
 export const Message = "Message";
 export const PrivacyPolicy = "Privacy Policy";
@@ -1202,7 +1202,7 @@ export const DefaultFormLayout = "Default Form Layout";
 export const HorizontalFormLayout = "Horizontal Form Layout";
 export const MegaForm = "Mega form";
 export const AccountInformation = "Account Information";
-export const CompanyInformation = "Company Information";
+export const CompanyInformation = "Employee Information";
 export const BillingInformation = "Billing Information";
 export const InlineForm = "Inline Form";
 export const InlineFormWithLabel = "Inline Form with Label";
@@ -1210,7 +1210,7 @@ export const InlineFormWithoutLabel = "Inline Form without Label";
 
 export const Login = "Login";
 export const LOGIN = "LOGIN";
-export const CompanyName = "Company Name";
+export const CompanyName = "Employee Address";
 export const ContactNumber = "Contact Number";
 export const Radios = "Radios";
 export const Checkboxes = "Checkboxes";
