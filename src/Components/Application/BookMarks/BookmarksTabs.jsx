@@ -1,4 +1,4 @@
-import React, { Fragment, useCallback, useContext, useState } from 'react';
+import React, { Fragment,useCallback, useContext, useState } from 'react';
 import { CreatedByMe, Favourites, MyBookmark, Newsletter, Notification, NoBookmarksFound } from '../../../Constant';
 import BookmarkContext from '../../../_helper/Bookmark';
 import DataLoop from './DataLoop';
@@ -12,9 +12,9 @@ const BookmarksTabs = () => {
   const { activeTabss } = useContext(BookmarkContext);
   const [gridView, setgridView] = useState(true);
 
-  const callback = useCallback((grid) => {
-    return setgridView(grid);
-  });
+  // const callback = useCallback((grid) => {
+  //   return setgridView(grid);
+  // });
 
   return (
     <Fragment>
