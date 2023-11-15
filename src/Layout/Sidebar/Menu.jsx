@@ -40,7 +40,19 @@ export const MENUITEMS = [
       }
     ],
   },
-
+  {
+    menutitle: "Settings",
+    menucontent: "Ready to use Apps",
+    Items: [
+      {
+        title: "Room Management",
+        icon: "widget",
+        type: "link",
+        active: false,
+        path: `/room-management`,
+      },
+    ],
+  },
   {
     menutitle: "Components",
     menucontent: "Ready to use Apps",

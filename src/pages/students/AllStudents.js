@@ -1,6 +1,7 @@
 import React, { useContext,useState } from "react";
 import { Box } from "react-feather/dist";
-import { Label, FormGroup,DropdownMenu, DropdownItem,Dropdown,CardBody } from "reactstrap";
+import { Label, FormGroup,DropdownMenu, DropdownItem,Dropdown,CardBody,  Modal,  ModalHeader,
+    ModalBody, Button,} from "reactstrap";
 import Select from "react-select";
 import { options2 } from "../../Components/Forms/FormWidget/FormSelect2/OptionDatas";
 import {
@@ -31,28 +32,41 @@ import { FaSearch } from "react-icons/fa";
 import { H5, Image,H1,Btn } from "../../AbstractElements";
 import TableContext from "../../_helper/Table";
 import { BasicColorData } from '../../Components/Common/Data/Ui-kits/index';
-import CommonDropDown from '../../Components/UiKits/Dropdown/Common/CommonDropDown'
+import CommonDropDown from '../../Components/UiKits/Dropdown/Common/CommonDropDown';
+import {useNavigate} from 'react-router-dom';
+import PopUpButton from "./PopUpButton";
 const AllStudents = () => {
+   const navigate=useNavigate();
   const { data } = useContext(TableContext);
   const [searchTerm, setSearchTerm] = useState('');
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [activeDropdown, setActiveDropdown] = useState(null);
   const [selectedOption, setSelectedOption] = useState('Select an option');
+  const [modalOpen, setModalOpen] = useState(false);
+   const[active,setActive]=useState(false)
 
    const handleChange=(e)=>{
     setSearchTerm(e.target.value)
    }
 
    const toggleDropdown = (id) => {
-
-    setActiveDropdown(activeDropdown === id ? null : id);
+   setActiveDropdown(activeDropdown === id ? null : id);
     setDropdownOpen(!dropdownOpen);
   };
 
   const handleOptionSelect = (option) => {
-    setSelectedOption(option);
-    setDropdownOpen(false);
+    if (option === 'Edit') {
+        setModalOpen(true);
+      }
+    // setSelectedOption(option);
+    // setDropdownOpen(false);
+    toggleModal()
   };
+
+  const toggleModal = () => {
+    setModalOpen(!modalOpen);
+  };
+
   return (
     <>
       <div className="page-wrapper" id="pageWrapper">
@@ -131,19 +145,19 @@ const AllStudents = () => {
                        
                         <td>{item.user_name}</td>
                         <td>{item.role}</td>
-                        <td>{item.company}</td>
+                        <td><PopUpButton/></td>
                         <td>
                         <Dropdown isOpen={activeDropdown === item.id} toggle={()=>toggleDropdown(item.id)}>
                         <DropdownToggle caret>{Action}</DropdownToggle>
                         <DropdownMenu>
-                          <DropdownItem onClick={() => handleOptionSelect('Option 1')}>
+                          <DropdownItem onClick={() => handleOptionSelect('Edit')}>
                             Edit
                           </DropdownItem>
-                          <DropdownItem onClick={() => handleOptionSelect('Option 2')}>
-                         Assign Room
+                          <DropdownItem onClick={()=>navigate('/assigned-room')}>
+                             Assign Room
                         </DropdownItem>
-                        <DropdownItem onClick={() => handleOptionSelect('Option 2')}>
-                         Active
+                        <DropdownItem onClick={()=>setActive(!active)}>
+                           {active?"ACTIVE":"IN ACTIVE"}
                         </DropdownItem>
                          
                         </DropdownMenu>
@@ -154,6 +168,20 @@ const AllStudents = () => {
                     ))}
                   </tbody>
                 </Table>
+
+       {/* popup modal */}
+
+                <Modal isOpen={modalOpen} toggle={toggleModal}>
+                <ModalHeader toggle={toggleModal}>Popup Modal</ModalHeader>
+                <ModalBody>
+                  {/* Content for the modal */}
+                  <p>Popup content goes here.</p>
+                  <Button color="primary" onClick={toggleModal}>
+                    Close
+                  </Button>
+                </ModalBody>
+              </Modal>
+
               </div>
             </Card>
           </Col>
@@ -166,24 +194,3 @@ const AllStudents = () => {
 export default AllStudents;
 
 
-// <Dropdown className="dropdown">
-// <Btn attrBtn={{ color: 'primary', className: 'dropbtn' }} >{DropdownButton} <span><i className="icofont icofont-arrow-down"></i></span></Btn>
-// <DropdownMenu className="dropdown-content">
-//   <DropdownItem href="#">{Action}</DropdownItem>
-//   <DropdownItem href="#">{AnotherAction}</DropdownItem>
-//   <DropdownItem href="#">{SomethingElseHere}</DropdownItem>
-// </DropdownMenu>
-// </Dropdown>
-
-// <Dropdown>
-// <div className="btn-group mb-0">
-//   <Btn attrBtn={{ color: 'primary', className: 'dropbtn' }} >{Action} <span><i className="icofont icofont-arrow-down"></i></span></Btn>
-//   <DropdownMenu className="dropdown-content">
-//     <DropdownItem href="#">1</DropdownItem>
-//     <DropdownItem href="#">{AnotherAction}</DropdownItem>
-//     <DropdownItem href="#">{SomethingElseHere}</DropdownItem>
-//     <DropdownItem divider />
-//     <DropdownItem href="#">{'Separated Link'}</DropdownItem>
-//   </DropdownMenu>
-// </div>
-// </Dropdown>
