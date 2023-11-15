@@ -182,6 +182,8 @@ import FAQContent from "../Components/FAQ";
 import CreateEmployee from "../pages/employee/create";
 import AllEmployee from "../pages/employee/AllEmployee";
 import AllStudents from "../pages/students/AllStudents";
+import RoomManagement from "../pages/Setting/RoomManagement";
+
 
 export const routes = [
   { path: `/dashboard`, Component: <Default /> },
@@ -192,6 +194,7 @@ export const routes = [
   { path: `/create-employee`, Component: <CreateEmployee /> },
   {path:`/allemployee`, Component:<AllEmployee/>},
   { path: `/all-student`, Component: <AllStudents /> },
+  { path: `/room-management`, Component: <RoomManagement/> },
 
   //employee Management routes ends
 
