@@ -21,6 +21,7 @@ export const MENUITEMS = [
           { path: `/allemployee`, title: "All Employee", type: "link" },
         ],
       },
+      
       {
         title: "Student Management",
         icon: "widget",
@@ -30,6 +31,13 @@ export const MENUITEMS = [
           { path: `/all-student`, title: "All Student", type: "link" },
         ],
       },
+      {
+        title: "Food Book",
+        icon: "widget",
+        type: "link",
+        active: false,
+        path:"/food-book"
+      }
     ],
   },
 

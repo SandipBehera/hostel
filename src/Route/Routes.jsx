@@ -182,11 +182,15 @@ import FAQContent from "../Components/FAQ";
 import CreateEmployee from "../pages/employee/create";
 import AllEmployee from "../pages/employee/AllEmployee";
 import AllStudents from "../pages/students/AllStudents";
+import FoodBook from "../pages/foodbook/FoodBook";
 
 export const routes = [
   { path: `/dashboard`, Component: <Default /> },
   { path: `/widgets/general`, Component: <General /> },
   { path: `/widgets/chart`, Component: <Chart /> },
+
+  //Food Book routes
+  { path: `/food-book`, Component: <FoodBook /> },
 
   //employee Management routes
   { path: `/create-employee`, Component: <CreateEmployee /> },
