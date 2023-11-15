@@ -21,7 +21,7 @@ export default function CreateEmployee() {
                             <H6>{AccountInformation}</H6>
                             <FormGroup>
                                 <Label className="col-form-label">{YourName}</Label>
-                                <Input className="form-control" type="text" placeholder="Employee Name" />
+                                <Input className="form-control" type="text" placeholder="your Name" />
                             </FormGroup>
                             <FormGroup>
                                 <Label className="col-form-label">{EmailAddress}</Label>
@@ -34,8 +34,8 @@ export default function CreateEmployee() {
                             <hr className="mt-4 mb-4" />
                             <H6>{CompanyInformation}</H6>
                             <FormGroup>
-                                <Label className="col-form-label">{CompanyName}</Label>
-                                <Input className="form-control" type="text" placeholder="Employee Address" />
+                                <Label className="col-form-label">CompanyName</Label>
+                                <Input className="form-control" type="text" placeholder="Company Name" />
                             </FormGroup>
                             <FormGroup>
                                 <Label className="col-form-label">{Website}</Label>
