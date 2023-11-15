@@ -30,18 +30,21 @@ export const MENUITEMS = [
           { path: `/all-student`, title: "All Student", type: "link" },
         ],
       },
+    ],
+  },
+  {
+    menutitle: "Settings",
+    menucontent: "Ready to use Apps",
+    Items: [
       {
         title: "Room Management",
         icon: "widget",
-        type: "sub",
+        type: "link",
         active: false,
-        children: [
-          { path: `/room-management`, title: "Setting", type: "link" },
-        ],
-      }
+        path: `/room-management`,
+      },
     ],
   },
- 
   {
     menutitle: "Components",
     menucontent: "Ready to use Apps",

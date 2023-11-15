@@ -1,4 +1,3 @@
-
 import React, { Fragment, useState } from "react";
 // import Registration from "../../Components/Forms/FormLayout/FormWizard1/Registration";
 // import Email from "../../Components/Forms/FormLayout/FormWizard1/Email";
@@ -9,46 +8,80 @@ import { FormWizardWithIcon } from "../../Constant";
 import { Breadcrumbs } from "../../AbstractElements";
 import CreateRoom from "./Component/RoomComponent/CreateRoom";
 import FloorConfig from "./Component/RoomComponent/FloorConfig";
-;
+import RoomAmmenities from "./Component/RoomComponent/RoomAmmenities";
 const RoomManagement = () => {
   const [steps, setSteps] = useState(1);
   const [formdata, setFormdata] = useState({});
   return (
     <Fragment>
-    <Breadcrumbs parent="Forms" mainTitle="Form Wizard" subParent="Form Layout" title="Form Wizard" />
-    <Container fluid={true}>
-      <Row>
-        <Col sm="12">
-          <Card>
-           
-            <CardBody>
-              {steps === 1 && <CreateRoom setSteps={setSteps} setFormdata={setFormdata} formdata={formdata} />}
+      <Breadcrumbs
+        parent="Forms"
+        mainTitle="Form Wizard"
+        subParent="Form Layout"
+        title="Form Wizard"
+      />
+      <Container fluid={true}>
+        <Row>
+          <Col sm="12">
+            <Card>
+              <CardBody>
+                {steps === 1 && (
+                  <CreateRoom
+                    setSteps={setSteps}
+                    setFormdata={setFormdata}
+                    formdata={formdata}
+                  />
+                )}
 
-              {steps === 2 && <FloorConfig setSteps={setSteps} setFormdata={setFormdata} formdata={formdata} />}
+                {steps === 2 && (
+                  <FloorConfig
+                    setSteps={setSteps}
+                    setFormdata={setFormdata}
+                    formdata={formdata}
+                  />
+                )}
 
-            
-              <div className="text-center">
-                <span className={`step ${steps > 1 ? "finish" : ""} ${steps === 1 ? "active" : ""}`} />
-                <span className={`step ${steps > 2 ? "finish" : ""} ${steps === 2 ? "active" : ""}`} />
-               
-              </div>
-            </CardBody>
-          </Card>
-        </Col>
-      </Row>
-    </Container>
-  </Fragment>
-  )
-}
+                {steps === 3 && (
+                  <RoomAmmenities
+                    setSteps={setSteps}
+                    setFormdata={setFormdata}
+                    formdata={formdata}
+                  />
+                )}
+                <div className="text-center">
+                  <span
+                    className={`step ${steps > 1 ? "finish" : ""} ${
+                      steps === 1 ? "active" : ""
+                    }`}
+                  />
+                  <span
+                    className={`step ${steps > 2 ? "finish" : ""} ${
+                      steps === 2 ? "active" : ""
+                    }`}
+                  />
+                  <span
+                    className={`step ${steps > 3 ? "finish" : ""} ${
+                      steps === 3 ? "active" : ""
+                    }`}
+                  />
+                </div>
+              </CardBody>
+            </Card>
+          </Col>
+        </Row>
+      </Container>
+    </Fragment>
+  );
+};
 
-export default RoomManagement
+export default RoomManagement;
 
 // import React, { useState } from 'react';
 // import { Container, Row, Col, Button, Input } from 'reactstrap';
 // const RoomManagement = () => {
 //   const [currentStep, setCurrentStep] = useState(1);
 //   const [inputs, setInputs] = useState(['Block Name', 'No of floor']);
- 
+
 //   const handleNext = () => {
 //     if (currentStep < 3) {
 //       const newInput = String.fromCharCode(inputs.length + 97); // Convert index to alphabet
@@ -277,4 +310,3 @@ export default RoomManagement
 // };
 
 // export default RoomManagement;
-
