@@ -18,7 +18,7 @@ export const MENUITEMS = [
         active: false,
         children: [
           { path: `/create-employee`, title: "Create Employee", type: "link" },
-        
+          { path: `/allemployee`, title: "All Employee", type: "link" },
         ],
       },
       {
@@ -27,18 +27,7 @@ export const MENUITEMS = [
         type: "sub",
         active: false,
         children: [
-       
           { path: `/all-student`, title: "All Student", type: "link" },
-        ],
-      },
-      {
-        title: "Widgets",
-        icon: "widget",
-        type: "sub",
-        active: false,
-        children: [
-          { path: `/widgets/general`, title: "General", type: "link" },
-          { path: `/widgets/chart`, title: "Chart", type: "link" },
         ],
       },
     ],
@@ -66,6 +55,16 @@ export const MENUITEMS = [
             type: "link",
             title: "Create New",
           },
+        ],
+      },
+      {
+        title: "Widgets",
+        icon: "widget",
+        type: "sub",
+        active: false,
+        children: [
+          { path: `/widgets/general`, title: "General", type: "link" },
+          { path: `/widgets/chart`, title: "Chart", type: "link" },
         ],
       },
       {
