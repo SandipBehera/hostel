@@ -184,17 +184,21 @@ import AllEmployee from "../pages/employee/AllEmployee";
 import AllStudents from "../pages/students/AllStudents";
 import RoomManagement from "../pages/Setting/RoomManagement";
 
+import FoodBook from "../pages/foodbook/FoodBook";
 
 export const routes = [
   { path: `/dashboard`, Component: <Default /> },
   { path: `/widgets/general`, Component: <General /> },
   { path: `/widgets/chart`, Component: <Chart /> },
 
+  //Food Book routes
+  { path: `/food-book`, Component: <FoodBook /> },
+
   //employee Management routes
   { path: `/create-employee`, Component: <CreateEmployee /> },
-  {path:`/allemployee`, Component:<AllEmployee/>},
+  { path: `/allemployee`, Component: <AllEmployee /> },
   { path: `/all-student`, Component: <AllStudents /> },
-  { path: `/room-management`, Component: <RoomManagement/> },
+  { path: `/room-management`, Component: <RoomManagement /> },
 
   //employee Management routes ends
 

@@ -1,13 +1,21 @@
 import React, { Fragment, useContext } from 'react';
-import { Col, Card, CardHeader, Table } from 'reactstrap';
+import { Col, Card, CardHeader, Table, Button, Row } from 'reactstrap';
 
-import { H5, Image } from '../../AbstractElements';
+import { Btn, H5, Image } from '../../AbstractElements';
 import TableContext from '../../_helper/Table';
+import { useNavigate} from 'react-router-dom';
+import { Grid } from 'react-feather';
 
 
 const AllEmployee = () => {
   const { data } = useContext(TableContext);
-console.log(data);
+  const navigate = useNavigate(); // Get the history object
+
+  const handleCreateEmployee = () => {
+    // Navigate to the create employee page when the button is clicked
+    navigate('/create-employee'); // Replace '/create-employee' with the actual route to your create employee page
+  };
+// console.log(data);
   return (
     <Fragment>
        <div className="page-wrapper" id="pageWrapper">
@@ -15,9 +23,15 @@ console.log(data);
       <Col sm='12'>
         <Card>
           <CardHeader>
-            <H5>All Employee</H5>
-            
-          </CardHeader>
+           <Row className="align-items-center justify-content-between">
+                <Col xs="auto" className="px-4">
+                  <H5 className="mb-0">All Employee</H5>
+                </Col>
+                <Col xs="auto" className="px-4">
+                  <Button onClick={handleCreateEmployee} className="py-2">Create Employee</Button>
+                </Col>
+              </Row>
+              </CardHeader>
           <div className='table-responsive'>
             <Table>
               <thead>

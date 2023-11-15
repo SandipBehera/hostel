@@ -63,7 +63,7 @@ export default function CreateEmployee() {
                             </FormGroup>
                             <FormGroup>
                                 <Label className="col-form-label">Date Of Joining</Label>
-                                <Input className="form-control" type="text" placeholder="Date Of Joining" />
+                                <Input className="form-control" type="date" placeholder="Date Of Joining" />
                             </FormGroup>
                             <FormGroup className="row">
                                     <Label className="col-sm-3 col-form-label">{UploadFile}</Label>
@@ -71,10 +71,10 @@ export default function CreateEmployee() {
                                         <Input className="form-control" type="file" />
                                     </Col>
                                 </FormGroup>
-                        </Form>
+                     
                         <hr className="mt-4 mb-4" />
                         <H6 attrH6={{ className: 'pb-2' }}>{BillingInformation}</H6>
-                        <Form className="row theme-form billing-form">
+                        
                             <FormGroup className="col-auto">
                                 <Input className="form-control" type="text" placeholder="Name On Card" />
                             </FormGroup>
@@ -84,7 +84,7 @@ export default function CreateEmployee() {
                             <FormGroup className="col-auto">
                                 <Input className="form-control" type="text" name="inputPassword" placeholder="Zip Code" />
                             </FormGroup>
-                        </Form>
+                         </Form>
                     </CardBody>
                     <FooterCard />
                 </Card>
