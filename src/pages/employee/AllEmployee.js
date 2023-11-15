@@ -15,7 +15,7 @@ console.log(data);
       <Col sm='12'>
         <Card>
           <CardHeader>
-            <H5>All Employee</H5>
+            <H5>All Employees</H5>
             
           </CardHeader>
           <div className='table-responsive'>
