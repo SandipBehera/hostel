@@ -185,6 +185,8 @@ import AllStudents from "../pages/students/AllStudents";
 import RoomManagement from "../pages/Setting/RoomManagement";
 
 import FoodBook from "../pages/foodbook/FoodBook";
+import Ammenities from "../pages/Setting/Component/RoomComponent/Ammenities";
+import StudentDetail from "../pages/Setting/Component/RoomComponent/StudentDetail";
 
 export const routes = [
   { path: `/dashboard`, Component: <Default /> },
@@ -199,7 +201,8 @@ export const routes = [
   { path: `/allemployee`, Component: <AllEmployee /> },
   { path: `/all-student`, Component: <AllStudents /> },
   { path: `/room-management`, Component: <RoomManagement /> },
-
+  { path: `/ammenities`, Component: <Ammenities /> },
+  { path: `/studend-detail/:id`, Component: <StudentDetail /> },
   //employee Management routes ends
 
   { path: `/ui-kits/typography`, Component: <Typography /> },

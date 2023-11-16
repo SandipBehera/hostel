@@ -2,7 +2,7 @@ import React, { Fragment } from "react";
 import { Row, Col, Form, Label, Button, FormGroup } from "reactstrap";
 import { Submit, BirthDate, Age, Previous } from "../../../../Constant";
 import { useForm } from "react-hook-form";
-
+import Amenities from "./Ammenities";
 const RoomAmmenities = ({ setSteps, setFormdata, formdata }) => {
   const {
     register,
@@ -33,7 +33,7 @@ const RoomAmmenities = ({ setSteps, setFormdata, formdata }) => {
                 type="date"
                 name="birthday"
                 defaultValue={formdata.birthday || ""}
-                {...register("birthday", { required: true })}
+                {...register(<Amenities/>, { required: true })}
               />
               <span className="text-danger">
                 {errors.birthday && "Birth Date is required"}
