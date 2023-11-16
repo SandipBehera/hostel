@@ -186,6 +186,7 @@ import RoomManagement from "../pages/Setting/RoomManagement";
 
 import FoodBook from "../pages/foodbook/FoodBook";
 
+
 export const routes = [
   { path: `/dashboard`, Component: <Default /> },
   { path: `/widgets/general`, Component: <General /> },
