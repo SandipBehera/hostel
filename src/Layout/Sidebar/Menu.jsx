@@ -51,6 +51,20 @@ export const MENUITEMS = [
         active: false,
         path: `/room-management`,
       },
+      {
+        title: "Amenities",
+        icon: "widget",
+        type: "link",
+        active: false,
+        path: `/amenities`,
+      },
+      {
+        title: "Food Planner",
+        icon: "widget",
+        type: "link",
+        active: false,
+        path: `/food-planner`,
+      },
     ],
   },
   {

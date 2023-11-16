@@ -183,7 +183,8 @@ import CreateEmployee from "../pages/employee/create";
 import AllEmployee from "../pages/employee/AllEmployee";
 import AllStudents from "../pages/students/AllStudents";
 import RoomManagement from "../pages/Setting/RoomManagement";
-
+import Amenities from "../pages/Setting/Component/RoomComponent/Amenities";
+import FoodPlanner from "../pages/Setting/Component/RoomComponent/FoodPlanner";
 import FoodBook from "../pages/foodbook/FoodBook";
 
 export const routes = [
@@ -193,6 +194,12 @@ export const routes = [
 
   //Food Book routes
   { path: `/food-book`, Component: <FoodBook /> },
+  
+  //Amenities routes
+  { path: `/amenities`, Component: <Amenities/> },
+   
+  //Food planner routes
+  { path: `/food-planner`, Component: <FoodPlanner /> },
 
   //employee Management routes
   { path: `/create-employee`, Component: <CreateEmployee /> },
