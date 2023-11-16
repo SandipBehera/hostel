@@ -6,7 +6,6 @@ import { FormWizardWithIcon } from "../../Constant";
 import { Breadcrumbs } from "../../AbstractElements";
 import CreateRoom from "./Component/RoomComponent/CreateRoom";
 import FloorConfig from "./Component/RoomComponent/FloorConfig";
-import RoomAmmenities from "./Component/RoomComponent/RoomAmmenities";
 import Amenities from "./Component/RoomComponent/Ammenities";
 const RoomManagement = () => {
   const [steps, setSteps] = useState(1);
