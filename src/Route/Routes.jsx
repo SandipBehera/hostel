@@ -185,6 +185,8 @@ import AllStudents from "../pages/students/AllStudents";
 import RoomManagement from "../pages/Setting/RoomManagement";
 
 import FoodBook from "../pages/foodbook/FoodBook";
+import Take_Attendence from "../pages/Attendence-Management/Take_Attendence";
+import Attendence_Repo from "../pages/Attendence-Management/Attendence_Repo";
 
 
 export const routes = [
@@ -194,6 +196,10 @@ export const routes = [
 
   //Food Book routes
   { path: `/food-book`, Component: <FoodBook /> },
+
+    //Attendence management
+    { path: `/take-attendence`, Component: <Take_Attendence /> },
+    { path: `/attendence-repo`, Component: <Attendence_Repo /> },
 
   //employee Management routes
   { path: `/create-employee`, Component: <CreateEmployee /> },

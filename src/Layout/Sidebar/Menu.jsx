@@ -31,6 +31,7 @@ export const MENUITEMS = [
           { path: `/all-student`, title: "All Student", type: "link" },
         ],
       },
+    
       {
         title: "Food Book",
         icon: "widget",
@@ -51,7 +52,18 @@ export const MENUITEMS = [
         active: false,
         path: `/room-management`,
       },
+      {
+        title: "AttendenceManagement",
+        icon: "widget",
+        type: "sub",
+        active: false,
+        children: [
+          { path: `/take-attendence`, title: "Take Attendence", type: "link" },
+          { path: `/attendence-repo`, title: "Attendence Repo", type: "link" },
+        ],
+      },
     ],
+    
   },
   {
     menutitle: "Components",
