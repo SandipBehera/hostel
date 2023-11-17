@@ -1,12 +1,11 @@
 import React, { Fragment, useState } from "react";
 
-
 import { Container, Row, Col, Card, CardBody } from "reactstrap";
 import { FormWizardWithIcon } from "../../Constant";
 import { Breadcrumbs } from "../../AbstractElements";
 import CreateRoom from "./Component/RoomComponent/CreateRoom";
 import FloorConfig from "./Component/RoomComponent/FloorConfig";
-import Amenities from "./Component/RoomComponent/Ammenities";
+import RoomAmenities from "./Component/RoomComponent/RoomAmenities";
 const RoomManagement = () => {
   const [steps, setSteps] = useState(1);
   const [formdata, setFormdata] = useState({});
@@ -41,7 +40,7 @@ const RoomManagement = () => {
                 )}
 
                 {steps === 3 && (
-                  <Amenities
+                  <RoomAmenities
                     setSteps={setSteps}
                     setFormdata={setFormdata}
                     formdata={formdata}
@@ -74,7 +73,6 @@ const RoomManagement = () => {
 };
 
 export default RoomManagement;
-
 
 // import { Container, Row, Col, Button, Input } from 'reactstrap';
 // const RoomManagement = () => {
