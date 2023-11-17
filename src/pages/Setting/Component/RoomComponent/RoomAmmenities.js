@@ -1,74 +1,71 @@
-import React, { Fragment } from "react";
-import { Row, Col, Form, Label, Button, FormGroup } from "reactstrap";
-import { Submit, BirthDate, Age, Previous } from "../../../../Constant";
+import React from "react";
+import { Row, Col, Form, Label, Button, FormGroup, Input } from "reactstrap";
+import { H5 } from "../../../../AbstractElements";
 import { useForm } from "react-hook-form";
 
-const RoomAmmenities = ({ setSteps, setFormdata, formdata }) => {
+const amenitiesList = [
+  "TV",
+  "Fan",
+  "Free Wi-Fi",
+  "Bed",
+  "Air Conditioning",
+  "Table",
+  "Chair",
+];
+
+const RoomAmenities = ({ setSteps, setFormdata, formdata }) => {
   const {
     register,
     handleSubmit,
+    control,
+    setValue,
     formState: { errors },
-  } = useForm();
+  } = useForm({
+    defaultValues: formdata,
+  });
+
   const onSubmit = (data) => {
-    if (data) {
-      setFormdata((prev) => ({ ...prev, ...data }));
-      alert("Your Form is Submited");
-      setSteps(1);
-    }
+    // Remove nested objects with 'name' property
+    const { selectedAmenities, ...restData } = data;
+    setFormdata({ ...restData, selectedAmenities });
+    alert("Your Form is Submitted");
+    setSteps(1);
   };
-  console.log(formdata);
+
   return (
-    <Fragment>
-      <Row>
-        <Col sm="12">
-          <Form
-            onSubmit={handleSubmit(onSubmit)}
-            className="form-bookmark needs-validation"
-          >
-            <FormGroup className="mb-3">
-              <Label htmlFor="Bdate">{BirthDate}</Label>
-              <input
-                className={`form-control ${errors.birthday && "is-invalid"}`}
-                id="Bdate"
-                type="date"
-                name="birthday"
-                defaultValue={formdata.birthday || ""}
-                {...register("birthday", { required: true })}
+    <div className="page-wrapper" id="pageWrapper">
+      <Col sm="12 ps-0">
+        <H5>Choose Room Amenities</H5>
+      </Col>
+      <Form
+        onSubmit={handleSubmit(onSubmit)}
+        className="form-bookmark needs-validation"
+      >
+        {amenitiesList.map((amenity) => (
+          <FormGroup key={amenity}>
+            <div className="checkbox checkbox-dark m-squar">
+              <Input
+                id={`inline-sqr-${amenity}`}
+                type="checkbox"
+                {...register(`selectedAmenities.${amenity}`, {
+                  required: false,
+                })}
+                onChange={(e) => {
+                  setValue(`selectedAmenities.${amenity}`, e.target.checked);
+                }}
               />
-              <span className="text-danger">
-                {errors.birthday && "Birth Date is required"}
-              </span>
-            </FormGroup>
-            <FormGroup className="mb-3">
-              <Label htmlFor="age">{Age}</Label>
-              <input
-                className={`form-control ${errors.age && "is-invalid"}`}
-                id="age"
-                type="number"
-                name="age"
-                defaultValue={formdata.age || ""}
-                {...register("age", { required: true })}
-              />
-              <span className="text-danger">
-                {errors.age && "Age is required"}
-              </span>
-            </FormGroup>
-            <div className="text-end">
-              <Button
-                className="secondary me-2"
-                onClick={() => setSteps((pre) => pre - 1)}
-              >
-                {Previous}
-              </Button>
-              <Button className="primary" type="submit">
-                {Submit}
-              </Button>
+              <Label className="mt-0" htmlFor={`inline-sqr-${amenity}`}>
+                {amenity}
+              </Label>
             </div>
-          </Form>
-        </Col>
-      </Row>
-    </Fragment>
+          </FormGroup>
+        ))}
+        <Button color="primary" type="submit">
+          Submit
+        </Button>
+      </Form>
+    </div>
   );
 };
 
-export default RoomAmmenities;
+export default RoomAmenities;
