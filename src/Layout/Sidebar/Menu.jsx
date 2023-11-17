@@ -21,7 +21,7 @@ export const MENUITEMS = [
           { path: `/allemployee`, title: "All Employee", type: "link" },
         ],
       },
-      
+
       {
         title: "Student Management",
         icon: "widget",
@@ -36,8 +36,8 @@ export const MENUITEMS = [
         icon: "widget",
         type: "link",
         active: false,
-        path:"/food-book"
-      }
+        path: "/food-book",
+      },
     ],
   },
   {
@@ -50,6 +50,20 @@ export const MENUITEMS = [
         type: "link",
         active: false,
         path: `/room-management`,
+      },
+      {
+        title: "Amenities",
+        icon: "widget",
+        type: "link",
+        active: false,
+        path: `/create-amenities`,
+      },
+      {
+        title: "Food Planner",
+        icon: "widget",
+        type: "link",
+        active: false,
+        path: `/food-planner`,
       },
     ],
   },

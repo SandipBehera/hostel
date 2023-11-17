@@ -1,9 +1,5 @@
 // dashbaord
-import Crypto from "../Components/Dashboard/Crypto";
 import Default from "../Components/Dashboard/Default";
-import Ecommerce from "../Components/Dashboard/Ecommerce";
-import OnlineCourse from "../Components/Dashboard/OnlineCourse";
-import Social from "../Components/Dashboard/Social";
 
 // //widgets
 import Chart from "../Components/Widgets/Chart";
@@ -183,8 +179,9 @@ import CreateEmployee from "../pages/employee/create";
 import AllEmployee from "../pages/employee/AllEmployee";
 import AllStudents from "../pages/students/AllStudents";
 import RoomManagement from "../pages/Setting/RoomManagement";
-
+import FoodPlanner from "../pages/Setting/FoodPlanner";
 import FoodBook from "../pages/foodbook/FoodBook";
+import CreateAmenities from "../pages/Setting/CreateAmenities";
 
 
 export const routes = [
@@ -194,6 +191,12 @@ export const routes = [
 
   //Food Book routes
   { path: `/food-book`, Component: <FoodBook /> },
+
+  //Amenities routes
+  { path: `/create-amenities`, Component: <CreateAmenities /> },
+
+  //Food planner routes
+  { path: `/food-planner`, Component: <FoodPlanner /> },
 
   //employee Management routes
   { path: `/create-employee`, Component: <CreateEmployee /> },

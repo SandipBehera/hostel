@@ -1,6 +1,8 @@
 import React, { useState,Fragment } from 'react';
 import { Table, Row, Col, Card, CardHeader, Button, Input, ModalFooter, ModalBody, ModalHeader, Modal, FormGroup, Label } from 'reactstrap';
 import { H5 } from '../../AbstractElements';
+import { Page, Text, View, StyleSheet, PDFDownloadLink, Document} from '@react-pdf/renderer';
+import Papa from 'papaparse';
 
 const mockData = [
     {
@@ -45,33 +47,23 @@ const mockData = [
       },
     // Add more objects as needed
   ];
-  
 
 const FoodBook = () => {
     const [data, setData] = useState(mockData);
-    const [modalOpen, setModalOpen] = useState(false);
-  const [exportType, setExportType] = useState(''); // State to hold the selected export type
-
-  const toggleModal = () => {
-    setModalOpen(!modalOpen);
-  };
 
   const handleExport = () => {
-    toggleModal();
+    const csv = Papa.unparse(data);
+    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+    const link = document.createElement('a');
+    link.href = window.URL.createObjectURL(blob);
+    link.download = 'food_book.csv';
+    link.click();
   };
-  const handleExportSubmit = () => {
-    // Handle the selected export type (PDF or CSV)
-    console.log('Selected export type:', exportType);
-    // Additional logic for exporting (e.g., fetching data in selected format)
-    toggleModal(); // Close modal after submission
-  };
+ 
   return (
     <Fragment>
         <Col sm='12'>
         <Card>
-        {/* <CardHeader>
-            <H5>Food Book</H5>
-          </CardHeader> */}
           <CardHeader>
            <Row className="align-items-center justify-content-between">
                 <Col xs="auto">
@@ -83,7 +75,6 @@ const FoodBook = () => {
               </Row>
               </CardHeader>
      <div>
-      {/* <h1 className="text-center" style={{color:'#61A3BA'}}>Food Book</h1> */}
       <Table>
         <thead>
           <tr>
@@ -114,41 +105,7 @@ const FoodBook = () => {
       </Table>
     </div>
     </Card>
-    </Col>
-     {/* Export Modal */}
-     <Modal isOpen={modalOpen} toggle={toggleModal}>
-        <ModalHeader toggle={toggleModal}>Choose Export type</ModalHeader>
-        <ModalBody>
-          <FormGroup check>
-            <Label check>
-              <Input
-                type="radio"
-                name="exportType"
-                value="PDF"
-                onChange={(e) => setExportType(e.target.value)}
-              />{' '}
-              PDF
-            </Label>
-          </FormGroup>
-          <FormGroup check>
-            <Label check>
-              <Input
-                type="radio"
-                name="exportType"
-                value="CSV"
-                onChange={(e) => setExportType(e.target.value)}
-              />{' '}
-              CSV
-            </Label>
-          </FormGroup>
-        </ModalBody>
-        <ModalFooter>
-          <Button color="primary" onClick={handleExportSubmit}>Submit</Button>{' '}
-          <Button color="secondary" onClick={toggleModal}>Cancel</Button>
-        </ModalFooter>
-      </Modal>
-
-      
+    </Col>  
     </Fragment>
   )
 }
