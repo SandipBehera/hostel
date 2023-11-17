@@ -183,6 +183,7 @@ import FoodPlanner from "../pages/Setting/FoodPlanner";
 import FoodBook from "../pages/foodbook/FoodBook";
 import CreateAmenities from "../pages/Setting/CreateAmenities";
 
+
 export const routes = [
   { path: `/dashboard`, Component: <Default /> },
   { path: `/widgets/general`, Component: <General /> },
