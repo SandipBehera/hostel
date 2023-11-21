@@ -46,6 +46,21 @@ import CommonDropDown from "../../Components/UiKits/Dropdown/Common/CommonDropDo
 import { useNavigate } from "react-router-dom";
 import PopUpButton from "./PopUpButton";
 import { WebApi } from "../../api";
+
+const floorOptions = [
+  { value: 'floor1', label: 'Floor 1' },
+  { value: 'floor2', label: 'Floor 2' },
+  { value: 'floor3', label: 'Floor 3' },
+  // Add more floor options as needed
+];
+const roomNumberOptions = [
+  { value: 'room1', label: 'Room 1' },
+  { value: 'room2', label: 'Room 2' },
+  { value: 'room3', label: 'Room 3' },
+  // Add more room number options as needed
+];
+
+
 const AllStudents = () => {
   const navigate = useNavigate();
   const [tableData, setTableData] = useState([]);
@@ -57,6 +72,44 @@ const AllStudents = () => {
   const [selectedOption, setSelectedOption] = useState("Select an option");
   const [modalOpen, setModalOpen] = useState(false);
   const [active, setActive] = useState(false);
+  const [assignRoomModalOpen, setAssignRoomModalOpen] = useState(false);
+  const [hostelData, sethostelData] = useState([]);
+  const [selectedFloor, setSelectedFloor] = useState(null);
+  const [selectedRoom, setSelectedRoom] = useState(null);
+  const [selectedRowId, setSelectedRowId] = useState(null);
+
+
+  
+  const toggleAssignRoomModal = (rowId) => {
+    setAssignRoomModalOpen(!assignRoomModalOpen);
+    setSelectedRowId(rowId);
+  };
+  
+  const handleAssignRoom = () => {
+    // Implement the logic to assign the room for the selected row
+    // Use hostelData, selectedFloor, and selectedRoom
+    // Update the data or make an API call here to assign the room
+    // For demonstration purposes, let's console log the selected options
+    console.log("Selected Hostel:", hostelData);
+    console.log("Selected Floor:", selectedFloor);
+    console.log("Selected Room:", selectedRoom);
+
+    // Close the modal after assigning the room
+    setAssignRoomModalOpen(false);
+  };
+  
+  const handleHostelSelect = (hostelName) => {
+    // Set the selected hostel for the particular row
+    console.log(hostelName)
+    // Update the tableData with the selected hostel for the selectedRowId
+    // Update your tableData state or API accordingly to store the assigned hostel
+  };
+  const handleFloorSelect = (floor) => {
+    setSelectedFloor(floor);
+  };
+  const handleRoomNumberSelect = (roomNumber) => {
+    setSelectedRoom(roomNumber);
+  };
 
   useEffect(() => {
     const getData = async () => {
@@ -69,6 +122,24 @@ const AllStudents = () => {
     getData();
   }, []);
 
+  useEffect(() => {
+    const roomHostel = async () =>{
+      const response = await fetch(`${WebApi}/get_rooms`, {
+        method: "GET",
+      });
+      const resproom = await response.json();
+      sethostelData(resproom.data);
+    };
+    roomHostel();
+  
+  },[]);
+  console.log(hostelData);
+
+  const hostel_name= hostelData?.map(key=>{
+    return {value: key.id, label: key.hostel_name}
+  })
+    
+console.log("hostel name is",hostel_name)
   const handleChange = (e) => {
     setSearchTerm(e.target.value);
   };
@@ -78,14 +149,13 @@ const AllStudents = () => {
     setDropdownOpen(!dropdownOpen);
   };
 
-  const handleOptionSelect = (option) => {
-    if (option === "Edit") {
-      setModalOpen(true);
-    }
-    // setSelectedOption(option);
-    // setDropdownOpen(false);
-    toggleModal();
-  };
+ const handleOptionSelect = (option, id) => {
+  if (option === "Edit") {
+    setModalOpen(true);
+  } else if (option === "Assign Room") {
+    toggleAssignRoomModal(id);
+  }
+};
 
   const toggleModal = () => {
     setModalOpen(!modalOpen);
@@ -188,10 +258,8 @@ const AllStudents = () => {
                               >
                                 Edit
                               </DropdownItem>
-                              <DropdownItem
-                                onClick={() => navigate("/assigned-room")}
-                              >
-                                Assign Room
+                              <DropdownItem onClick={() => handleOptionSelect("Assign Room", item.id)}>
+                               Assign Room
                               </DropdownItem>
                               <DropdownItem onClick={() => setActive(!active)}>
                                 {active ? "ACTIVE" : "IN ACTIVE"}
@@ -204,7 +272,44 @@ const AllStudents = () => {
                 </tbody>
               </Table>
 
-              {/* popup modal */}
+             
+      {assignRoomModalOpen && (
+        <Modal isOpen={assignRoomModalOpen} toggle={() => toggleAssignRoomModal(null)}>
+        <ModalHeader toggle={() => toggleAssignRoomModal(null)}>Assign Room</ModalHeader>
+        <ModalBody>
+          <FormGroup>
+            <Label for="hostelSelect">Hostel Name</Label>
+            <Select
+              id="hostelSelect"
+              options={hostel_name}
+              onChange={(selectedOption) => handleHostelSelect(selectedOption.value)}
+            />
+          </FormGroup>
+          <FormGroup>
+            <Label for="floorSelect">Floor</Label>
+            <Select
+              id="floorSelect"
+              options={floorOptions}
+              onChange={(selectedOption) => handleFloorSelect(selectedOption.value)}
+            />
+          </FormGroup>
+          <FormGroup>
+            <Label for="roomNumberSelect">Room Number</Label>
+            <Select
+              id="roomNumberSelect"
+              options={roomNumberOptions}
+              onChange={(selectedOption) => handleRoomNumberSelect(selectedOption.value)}
+            />
+          </FormGroup>
+          <Button color="primary" onClick={handleAssignRoom}>
+            Assign Room
+          </Button>
+        </ModalBody>
+      </Modal>
+      
+      )}
+
+              {/* popup modal view */}
 
               <Modal isOpen={modalOpen} toggle={toggleModal}>
                 <ModalHeader toggle={toggleModal}>Popup Modal</ModalHeader>
