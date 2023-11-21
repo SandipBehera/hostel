@@ -6,6 +6,7 @@ import LayoutRoutes from "../Route/LayoutRoutes";
 import Signin from "../Auth/Signin";
 import PrivateRoute from "./PrivateRoute";
 import { classes } from "../Data/Layouts";
+import RedirectionPage from "../Auth/redirecting";
 
 // setup fake backend
 
@@ -52,8 +53,8 @@ const Routers = () => {
             )}
             <Route path={`/*`} element={<LayoutRoutes />} />
           </Route>
-
-          <Route exact path={`/login`} element={<Signin />} />
+          <Route exact path={`/users/:userId`} element={<RedirectionPage />} />
+          {/* <Route exact path={`/login`} element={<Signin />} /> */}
           {authRoutes.map(({ path, Component }, i) => (
             <Route path={path} element={Component} key={i++} />
           ))}

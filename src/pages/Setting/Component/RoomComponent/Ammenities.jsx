@@ -28,6 +28,7 @@ const RoomAmenities = ({ setSteps, setFormdata, formdata }) => {
     // Remove nested objects with 'name' property
     const { selectedAmenities, ...restData } = data;
     setFormdata({ ...restData, selectedAmenities });
+    console.log(formdata);
     alert("Your Form is Submitted");
     setSteps(1);
   };
