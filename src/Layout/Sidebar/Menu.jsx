@@ -31,6 +31,7 @@ export const MENUITEMS = [
           { path: `/all-student`, title: "All Student", type: "link" },
         ],
       },
+    
       {
         title: "Food Book",
         icon: "widget",
@@ -43,20 +44,28 @@ export const MENUITEMS = [
   {
     menutitle: "Settings",
     menucontent: "Ready to use Apps",
+
     Items: [
       {
         title: "Room Management",
         icon: "widget",
-        type: "link",
+        type: "sub",
         active: false,
-        path: `/room-management`,
+        children: [
+          { path: `/room-management`, title: "Create Room", type: "link" },
+          { path: `/allroom`, title: "All Room", type: "link" },
+          { path: `/create-aminity`, title: "Create Aminity", type: "link" },
+        ]
       },
       {
-        title: "Amenities",
+        title: "AttendenceManagement",
         icon: "widget",
-        type: "link",
+        type: "sub",
         active: false,
-        path: `/create-amenities`,
+        children: [
+          { path: `/take-attendence`, title: "Take Attendence", type: "link" },
+          { path: `/attendence-repo`, title: "Attendence Repo", type: "link" },
+        ]
       },
       {
         title: "Food Planner",
@@ -69,6 +78,7 @@ export const MENUITEMS = [
         ],
       },
     ],
+    
   },
   {
     menutitle: "Components",

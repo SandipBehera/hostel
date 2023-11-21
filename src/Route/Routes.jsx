@@ -181,8 +181,12 @@ import AllStudents from "../pages/students/AllStudents";
 import RoomManagement from "../pages/Setting/RoomManagement";
 import FoodPlanner from "../pages/Setting/FoodPlanner";
 import FoodBook from "../pages/foodbook/FoodBook";
+import Take_Attendence from "../pages/Attendence-Management/Take_Attendence";
+import Attendence_Repo from "../pages/Attendence-Management/Attendence_Repo";
+
 import CreateAmenities from "../pages/Setting/CreateAmenities";
 import AllPlanner from "../pages/Setting/Component/RoomComponent/AllPlanner";
+import AllRoom from "../pages/Setting/AllRoom";
 
 export const routes = [
   { path: `/dashboard`, Component: <Default /> },
@@ -192,6 +196,9 @@ export const routes = [
   //Food Book routes
   { path: `/food-book`, Component: <FoodBook /> },
 
+    //Attendence management
+    { path: `/take-attendence`, Component: <Take_Attendence /> },
+    { path: `/attendence-repo`, Component: <Attendence_Repo /> },
   //Amenities routes
   { path: `/create-amenities`, Component: <CreateAmenities /> },
 
@@ -203,7 +210,11 @@ export const routes = [
   { path: `/create-employee`, Component: <CreateEmployee /> },
   { path: `/allemployee`, Component: <AllEmployee /> },
   { path: `/all-student`, Component: <AllStudents /> },
+
+  //ROOM MANAGEMENT
   { path: `/room-management`, Component: <RoomManagement /> },
+  { path: `/allroom`, Component: <AllRoom/> },
+  { path: `/create-aminity`, Component: <CreateAmenities/> },
 
   //employee Management routes ends
 
