@@ -115,7 +115,7 @@ const AllStudents = () => {
       room_id: selectedRoom,
     };
 
-    const response = await fetch(`${LocalApi}/assign_rooms`, {
+    const response = await fetch(`${WebApi}/assign_rooms`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
