@@ -1,8 +1,10 @@
-import React, { useContext,useState } from "react";
+import React, { useContext,useState, useEffect, Fragment } from "react";
 import { Box } from "react-feather/dist";
 import { Label, FormGroup,DropdownMenu, DropdownItem,Dropdown,CardBody,  Modal,  ModalHeader,
     ModalBody, Button,} from "reactstrap";
 import Select from "react-select";
+import { WebApi } from "../../api";
+import{Breadcrumbs} from "../../AbstractElements";
 
 import {
   Col,
@@ -13,7 +15,9 @@ import {
   InputGroupText,
   Input,
   InputGroupAddon,
-  DropdownToggle
+  DropdownToggle,
+  Row,
+  Container
 } from "reactstrap";
 import {
   BasicInputGroups,
@@ -58,11 +62,25 @@ const studentData=[
 ]
 const AllRoom = () => {
    
-  const [data,setData]=useState(studentData)
+  const [data,setData]=useState([])
    const [dropdownOpen, setDropdownOpen] = useState(false);
   const [activeDropdown, setActiveDropdown] = useState(null);
   const [modalOpen, setModalOpen] = useState(false);
 const [edit,setEdit]=useState(-1)
+
+
+useEffect(() => {
+  const roomHostel = async () =>{
+    const response = await fetch(`${WebApi}/get_rooms`, {
+      method: "GET",
+    });
+    const resproom = await response.json();
+    setData(resproom.data);
+  };
+  roomHostel();
+
+},[]);
+console.log(data)
 
   
 //    const toggleDropdown = (id) => {
@@ -102,16 +120,20 @@ function handleDelete(id){
    ))
    setData(updated)
 }
+
   return (
-    <>
-     
-      <div className="text-center">
-      <H1 style={{color:"#61A3BA"}}>All Room</H1>
-      </div> 
-        <div className="mt-5">
+    <Fragment>
+      <Breadcrumbs
+        parent="Setting"
+        mainTitle="All Room "
+        subParent="Room Management"
+        title="All Room "
+      />
+     <Container fluid={true}>
+      <Row>
           <Col sm="12">
             <Card>
-             
+             <CardBody>
               <div className="table-responsive">
                 <Table>
                   <thead>
@@ -126,23 +148,24 @@ function handleDelete(id){
                   </thead>
                   <tbody>
         {data.map((item) => (
-         edit===item.sl_no? <EditForm item={item} data={data} setData={setData} isOpen={toggleModal} setEdit={setEdit}/> :
-          <tr key={item.sl_no} className={`border-bottom-${item.color}`}>
-            <th scope="row">{item.sl_no}</th>
-            <td>{item.name}</td>
-            <td>{item.floors}</td>
+    
+         edit===item.id? <EditForm item={item} data={data} setData={setData} isOpen={toggleModal} setEdit={setEdit}/> :
+          <tr key={item.id} className={`border-bottom-${item.color}`}>
+            <th scope="row">{item.id}</th>
+            <td>{item.hostel_name}</td>
+            <td>{item.floor_count}</td>
             <td><PopUp/></td>
             <td>
               <Dropdown
                 isOpen={item.activeDropdown}
-                toggle={() => toggleDropdown(item.sl_no)}
+                toggle={() => toggleDropdown(item.id)}
               >
                 <DropdownToggle caret>{Action}</DropdownToggle>
                 <DropdownMenu>
-                  <DropdownItem onClick={() => handleOptionSelect('Edit',item.sl_no)}>
+                  <DropdownItem onClick={() => handleOptionSelect('Edit',item.id)}>
                     Edit
                   </DropdownItem>
-                  <DropdownItem onClick={()=>handleDelete(item.sl_no)}>Delete</DropdownItem>
+                  <DropdownItem onClick={()=>handleDelete(item.id)}>Delete</DropdownItem>
                 </DropdownMenu>
               </Dropdown>
             </td>
@@ -154,13 +177,13 @@ function handleDelete(id){
 
        {/* popup modal */}
 
-        
-              </div>
+        </div>  
+            </CardBody>
             </Card>
           </Col>
-        </div>
-    
-    </>
+          </Row>
+          </Container>   
+    </Fragment>
   );
 };
 
