@@ -28,7 +28,7 @@ const DynamicForm = ({ floor_no, room_count, register }) => {
             </Col>
             <Col className="col-md-3" key={floor}>
               <FormGroup className="mb-3">
-                <Label htmlFor={inputName}>Room Capacity</Label>
+                <Label htmlFor={roomCapacity}>Room Capacity</Label>
                 <input
                   className={`form-control`}
                   id={roomCapacity}

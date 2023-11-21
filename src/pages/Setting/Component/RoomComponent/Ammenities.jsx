@@ -1,7 +1,9 @@
+// RoomAmenities.jsx
 import React from "react";
-import { Row, Col, Form, Label, Button, FormGroup, Input } from "reactstrap";
+import { Col, Form, Button, FormGroup, Input } from "reactstrap";
 import { H5 } from "../../../../AbstractElements";
 import { useForm } from "react-hook-form";
+import { LocalApi, WebApi } from "../../../../api";
 
 const amenitiesList = [
   "TV",
@@ -24,13 +26,43 @@ const RoomAmenities = ({ setSteps, setFormdata, formdata }) => {
     defaultValues: formdata,
   });
 
-  const onSubmit = (data) => {
-    // Remove nested objects with 'name' property
-    const { selectedAmenities, ...restData } = data;
-    setFormdata({ ...restData, selectedAmenities });
-    console.log(formdata);
-    alert("Your Form is Submitted");
-    setSteps(1);
+  const onSubmit = async (data) => {
+    const selectedAmenities = {};
+
+    amenitiesList.forEach((amenity) => {
+      selectedAmenities[amenity] = data.selectedAmenities[amenity] || false;
+    });
+
+    const sendData = {
+      hostel_name: formdata.hostel_name,
+      floor_count: parseInt(formdata.floor_count) || 0,
+      room_count: parseInt(formdata.room_count) || 0,
+      rooms: formdata.rooms,
+      ammenities: selectedAmenities,
+    };
+
+    // Convert the JavaScript objects to JSON strings
+    sendData.rooms = JSON.stringify(sendData.rooms);
+    sendData.ammenities = JSON.stringify(sendData.ammenities);
+
+    try {
+      const response = await fetch(`${WebApi}/create_rooms`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(sendData),
+      });
+
+      if (response.status === 200) {
+        alert("Your Form is Submitted");
+        setSteps(1);
+      } else {
+        alert("Your Form is not Submitted");
+      }
+    } catch (error) {
+      console.error("Error submitting the form:", error);
+    }
   };
 
   return (
@@ -55,9 +87,9 @@ const RoomAmenities = ({ setSteps, setFormdata, formdata }) => {
                   setValue(`selectedAmenities.${amenity}`, e.target.checked);
                 }}
               />
-              <Label className="mt-0" htmlFor={`inline-sqr-${amenity}`}>
+              <label className="mt-0" htmlFor={`inline-sqr-${amenity}`}>
                 {amenity}
-              </Label>
+              </label>
             </div>
           </FormGroup>
         ))}
