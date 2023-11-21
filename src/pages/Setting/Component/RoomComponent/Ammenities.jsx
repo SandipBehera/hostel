@@ -13,7 +13,7 @@ const amenitiesList = [
   "Chair",
 ];
 
-const Amenities = ({ setSteps, setFormdata, formdata }) => {
+const RoomAmenities = ({ setSteps, setFormdata, formdata }) => {
   const {
     register,
     handleSubmit,
@@ -37,14 +37,19 @@ const Amenities = ({ setSteps, setFormdata, formdata }) => {
       <Col sm="12 ps-0">
         <H5>Choose Room Amenities</H5>
       </Col>
-      <Form onSubmit={handleSubmit(onSubmit)} className="form-bookmark needs-validation">
+      <Form
+        onSubmit={handleSubmit(onSubmit)}
+        className="form-bookmark needs-validation"
+      >
         {amenitiesList.map((amenity) => (
           <FormGroup key={amenity}>
             <div className="checkbox checkbox-dark m-squar">
               <Input
                 id={`inline-sqr-${amenity}`}
                 type="checkbox"
-                {...register(`selectedAmenities.${amenity}`, { required: false })}
+                {...register(`selectedAmenities.${amenity}`, {
+                  required: false,
+                })}
                 onChange={(e) => {
                   setValue(`selectedAmenities.${amenity}`, e.target.checked);
                 }}
@@ -63,4 +68,4 @@ const Amenities = ({ setSteps, setFormdata, formdata }) => {
   );
 };
 
-export default Amenities;
+export default RoomAmenities;
