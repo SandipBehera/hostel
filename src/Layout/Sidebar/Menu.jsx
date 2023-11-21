@@ -60,6 +60,16 @@ export const MENUITEMS = [
         children: [
           { path: `/take-attendence`, title: "Take Attendence", type: "link" },
           { path: `/attendence-repo`, title: "Attendence Repo", type: "link" },
+        ]
+      },
+      {
+        title: "Food Planner",
+        icon: "widget",
+        type: "sub",
+        active: false,
+        children: [
+          { path: `/food-planner`, title: "Create Food Planner", type: "link" },
+          { path: `/allplanner`, title: "All Planner", type: "link" },
         ],
       },
     ],

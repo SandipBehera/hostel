@@ -184,6 +184,8 @@ import FoodBook from "../pages/foodbook/FoodBook";
 import Take_Attendence from "../pages/Attendence-Management/Take_Attendence";
 import Attendence_Repo from "../pages/Attendence-Management/Attendence_Repo";
 
+import CreateAmenities from "../pages/Setting/CreateAmenities";
+import AllPlanner from "../pages/Setting/Component/RoomComponent/AllPlanner";
 
 export const routes = [
   { path: `/dashboard`, Component: <Default /> },
@@ -196,6 +198,12 @@ export const routes = [
     //Attendence management
     { path: `/take-attendence`, Component: <Take_Attendence /> },
     { path: `/attendence-repo`, Component: <Attendence_Repo /> },
+  //Amenities routes
+  { path: `/create-amenities`, Component: <CreateAmenities /> },
+
+  //Food planner routes
+  { path: `/food-planner`, Component: <FoodPlanner /> },
+  { path: `/allplanner`, Component: <AllPlanner /> },
 
   //employee Management routes
   { path: `/create-employee`, Component: <CreateEmployee /> },
