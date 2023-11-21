@@ -17,35 +17,14 @@ const FoodPlanner = () => {
     Saturday: { Breakfast: {}, Lunch: {}, Dinner: {} },
     Sunday: { Breakfast: {}, Lunch: {}, Dinner: {} },
   });
+  const [prevMonthData, setPrevMonthData] = useState(null);
 
-  const handleInputChange = (e, day, mealType, field) => {
-    const updatedMealData = { ...mealData };
-    updatedMealData[day][mealType][field] = e.target.value;
-    setMealData(updatedMealData);
-  };
-
-  const handleSubmit = () => {
-    // Display the updated meal data in the console
-    console.log(mealData);
-  };
-  const handleMonthChange = (selectedMonth) => {
-    setMonth(selectedMonth);
-    setShowDropdown(false);
-    // Logic to fetch data for the selected month
-    // You can fetch data from an API or other sources here
-    // For demonstration, I'm setting meal data as empty for simplicity
-    setMealData({
-      Monday: { Breakfast: {}, Lunch: {}, Dinner: {} },
-      Tuesday: { Breakfast: {}, Lunch: {}, Dinner: {} },
-      Wednesday: { Breakfast: {}, Lunch: {}, Dinner: {} },
-      Thursday: { Breakfast: {}, Lunch: {}, Dinner: {} },
-      Friday: { Breakfast: {}, Lunch: {}, Dinner: {} },
-      Saturday: { Breakfast: {}, Lunch: {}, Dinner: {} },
-      Sunday: { Breakfast: {}, Lunch: {}, Dinner: {} },
-    });
-  };
 
   const handleCopyPrevMonthData = () => {
+    if (!copyPrevMonthData) {
+      // Logic to copy previous month's data here
+      // Replace this logic with your actual data retrieval mechanism
+
     // Logic to copy data from the previous month
     // For demonstration, setting meal data as a copy of the previous month's data
     // You can modify this logic according to your data structure
@@ -195,10 +174,55 @@ const FoodPlanner = () => {
         Price: '25.00'
       }
     }}; // Replace this with your actual previous month's data
+    setPrevMonthData(prevMonthData);
     setMealData(prevMonthData);
     setCopyPrevMonthData(true);
+    }else{
+       // Reset meal data and previous month's data
+       setMealData({
+        Monday: { Breakfast: {}, Lunch: {}, Dinner: {} },
+        Tuesday: { Breakfast: {}, Lunch: {}, Dinner: {} },
+        Wednesday: { Breakfast: {}, Lunch: {}, Dinner: {} },
+        Thursday: { Breakfast: {}, Lunch: {}, Dinner: {} },
+        Friday: { Breakfast: {}, Lunch: {}, Dinner: {} },
+        Saturday: { Breakfast: {}, Lunch: {}, Dinner: {} },
+        Sunday: { Breakfast: {}, Lunch: {}, Dinner: {} },
+      });
+      setPrevMonthData(null);
+      setCopyPrevMonthData(false);
+    }
   };
 
+    // Function to handle input changes
+  const handleInputChange = (e, day, mealType, field) => {
+    const updatedMealData = { ...mealData };
+    updatedMealData[day][mealType][field] = e.target.value;
+    setMealData(updatedMealData);
+  };
+    // Function to handle form submission
+  const handleSubmit = () => {
+    // Display the updated meal data in the console
+    console.log(mealData);
+  };
+    // Function to handle month change
+  const handleMonthChange = (selectedMonth) => {
+    setMonth(selectedMonth);
+    setShowDropdown(false);
+    // Logic to fetch data for the selected month
+    // You can fetch data from an API or other sources here
+    // For demonstration, I'm setting meal data as empty for simplicity
+    setMealData({
+      Monday: { Breakfast: {}, Lunch: {}, Dinner: {} },
+      Tuesday: { Breakfast: {}, Lunch: {}, Dinner: {} },
+      Wednesday: { Breakfast: {}, Lunch: {}, Dinner: {} },
+      Thursday: { Breakfast: {}, Lunch: {}, Dinner: {} },
+      Friday: { Breakfast: {}, Lunch: {}, Dinner: {} },
+      Saturday: { Breakfast: {}, Lunch: {}, Dinner: {} },
+      Sunday: { Breakfast: {}, Lunch: {}, Dinner: {} },
+    });
+  };
+
+    // Function to handle cancellation
   const handleCancel = () => {
     // Reset meal data and copyPrevMonthData state to their initial values
     setMealData({
@@ -217,10 +241,12 @@ const FoodPlanner = () => {
   const days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
   const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
 
-  useEffect(() => {
-    // Enable the checkbox for copying previous month's data if there is data for the selected month
-    setCopyPrevMonthData(Object.keys(mealData['Monday']['Breakfast']).length > 0);
-  }, [mealData]);
+   // UseEffect to update the mealData when prevMonthData changes
+   useEffect(() => {
+    if (prevMonthData && copyPrevMonthData) {
+      setMealData(prevMonthData);
+    }
+  }, [prevMonthData, copyPrevMonthData]);
 
 
   return (
@@ -242,15 +268,15 @@ const FoodPlanner = () => {
                 ))}
               </DropdownMenu>
             </Dropdown>
-            <div style={{ display: 'flex', alignItems: 'center', marginLeft: '20px', border: '1px solid #ccc', padding: '5px', borderRadius: '5px' }}>
+            <div style={{ display: 'flex', alignItems: 'center', marginTop:'5px', border: '1px solid #ccc', padding: '5px', borderRadius: '5px' }}>
           <input
             type="checkbox"
             onChange={handleCopyPrevMonthData}
             checked={copyPrevMonthData}
-            disabled={!copyPrevMonthData}
+            // disabled={!copyPrevMonthData}
             style={{ marginRight: '5px' }}
           />
-          <label>Copy the previous month data</label>
+          <label style={{marginTop:'8px'}}>Copy the previous month data</label>
         </div>
            
             {/* <label style={{ marginLeft: '20px' }}>
@@ -282,13 +308,13 @@ const FoodPlanner = () => {
                       />
                       <br />
                       <label>From:</label>
-                      <input
+                      <Input
                         type="time"
                         value={mealData[day][mealType]?.From || ''}
                         onChange={(e) => handleInputChange(e, day, mealType, 'From')}
                       />
-                      <label>To:</label>
-                      <input
+                      <label style={{marginTop:"10px"}}>To:</label>
+                      <Input
                         type="time"
                         value={mealData[day][mealType]?.To || ''}
                         onChange={(e) => handleInputChange(e, day, mealType, 'To')}
