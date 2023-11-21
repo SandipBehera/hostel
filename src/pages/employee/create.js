@@ -2,7 +2,7 @@ import React, { Fragment } from "react";
 import HeaderCard from "../../Components/Common/Component/HeaderCard";
 
 import FooterCard from "../../Components/Forms/FormControl/Common/FooterCard";
-import { Col, Card, CardBody, Form, FormGroup, Label, Input } from 'reactstrap';
+import { Col, Card, CardBody, Form, FormGroup, Label, Input, CardHeader } from 'reactstrap';
 import { H6 } from '../../AbstractElements';
 import { EmailAddress, Website, BillingInformation, CompanyInformation, MegaForm, AccountInformation, UploadFile, ContactNumber, CompanyName, YourName } from '../../Constant';
 
@@ -10,9 +10,12 @@ import { EmailAddress, Website, BillingInformation, CompanyInformation, MegaForm
 export default function CreateEmployee() {
   return (
     <Fragment>
+        <Card>
+        <CardHeader>
       <div className="page-wrapper" id="pageWrapper">
         <h1 style={{ color:'#61A3BA', textAlign:'center'}}>Create Employee</h1>
       </div>
+      </CardHeader>
       <Col sm="12">
                 <Card>
                     
@@ -89,6 +92,7 @@ export default function CreateEmployee() {
                     <FooterCard />
                 </Card>
             </Col>
+            </Card>
     </Fragment>
   );
 }
