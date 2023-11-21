@@ -32,7 +32,7 @@ import { data } from "./data";
 const Take_Attendence = () => {
   const [modalOpen, setModalOpen] = useState(false);
   const [zoomedIn, setZoomedIn] = useState(false);
-
+  const [zoomedInIds, setZoomedInIds] = useState([]);
   const [student, setStudent] = useState(data);
   const [absentDetails, setAbsentDetails] = useState(null);
 
@@ -41,8 +41,11 @@ const Take_Attendence = () => {
   const currentDate = new Date();
   const time = currentDate.toTimeString();
 
-  const toggleZoom = () => {
-    setZoomedIn(!zoomedIn);
+  const toggleZoom = (id) => {
+    setZoomedInIds((prevIds) =>
+    prevIds.includes(id) ? prevIds.filter((prevId) => prevId !== id) : [...prevIds, id]
+  );
+   
   };
 
   const openModal = () => {
@@ -60,7 +63,7 @@ const Take_Attendence = () => {
     };
     console.log(data);
   }
-  function absent(name, regidNo, room, hostel, available) {
+  function absent(name, regidNo, room, hostel, available,msg) {
     const data = {
       name,
       regidNo,
@@ -68,18 +71,12 @@ const Take_Attendence = () => {
       hostel,
       available,
       time,
+      msg
     };
     setAbsentDetails(data);
     openModal();
     console.log(data);
   }
-  const sendMsg = (msg) => {
-    absentDetails;
-    setMsg("");
-    console.log(msg);
-    console.log("Absent Details:", absentDetails);
-    openModal();
-  };
 
   return (
     <>
@@ -124,15 +121,15 @@ const Take_Attendence = () => {
             <Col md="4" style={{ margintop: "50px" }}>
               
                 <Button
-                  onClick={toggleZoom}
+                  onClick={() => toggleZoom(stud.Regd_no)}
                   color="none"
                   style={{ border: "none", outline: "none" }}
                   key={index}
                 >
                   <Card
-                    className={`zoomable-image ${
-                      zoomedIn ? "zoomed-out" : "zoomed-in"
-                    }`}
+                  className={`zoomable-image ${
+                    zoomedInIds.includes(stud.Regd_no) ? "zoomed-out" :  "zoomed-in" 
+                  }`}
                     style={{
                       width: "18rem",
                     }}
@@ -169,13 +166,7 @@ const Take_Attendence = () => {
                         <Button
                           color="danger"
                           onClick={() =>
-                            absent(
-                                stud.name,
-                              stud.Regd_no,
-                              stud.Room_no,
-                              stud.Hostel_name,
-                              stud.available
-                            )
+                            openModal()
                           }
                         >
                           absent
@@ -184,38 +175,46 @@ const Take_Attendence = () => {
                     </CardBody>
                   </Card>
                 </Button>
-           
+           {/*modal */}
+      <div>
+      <Modal isOpen={modalOpen} toggle={openModal}>
+        <ModalHeader toggle={openModal}>where are you ....</ModalHeader>
+        <ModalBody>
+          <FormGroup>
+            <Label for="exampleText">write here</Label>
+            <Input
+              type="textarea"
+              name="text"
+              id="exampleText"
+              rows="5"
+              value={msg}
+              onChange={(e) => setMsg(e.target.value)}
+            />
+          </FormGroup>
+        </ModalBody>
+        <ModalFooter>
+          <Button color="secondary" onClick={() =>absent(
+            stud.name,
+          stud.Regd_no,
+          stud.Room_no,
+          stud.Hostel_name,
+          stud.available,
+          msg
+        )
+           } >
+            send
+          </Button>
+          {/* Additional buttons or actions can be added here */}
+        </ModalFooter>
+      </Modal>
+    </div>
             </Col>
             ))}
           </Row>
         </Container>
       </Card>
 
-      {/*modal */}
-      <div>
-        <Modal isOpen={modalOpen} toggle={openModal}>
-          <ModalHeader toggle={openModal}>where are you ....</ModalHeader>
-          <ModalBody>
-            <FormGroup>
-              <Label for="exampleText">write here</Label>
-              <Input
-                type="textarea"
-                name="text"
-                id="exampleText"
-                rows="5"
-                value={msg}
-                onChange={(e) => setMsg(e.target.value)}
-              />
-            </FormGroup>
-          </ModalBody>
-          <ModalFooter>
-            <Button color="secondary" onClick={() => sendMsg(msg)}>
-              send
-            </Button>
-            {/* Additional buttons or actions can be added here */}
-          </ModalFooter>
-        </Modal>
-      </div>
+      
     </>
   );
 };

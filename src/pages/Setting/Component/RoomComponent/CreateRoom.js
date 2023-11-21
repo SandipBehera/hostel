@@ -15,6 +15,7 @@ const CreateRoom = ({ setSteps, setFormdata, formdata }) => {
       setFormdata((prev) => ({ ...prev, ...data }));
       setSteps((pre) => pre + 1);
     }
+    console.log(formdata)
   };
 
   return (

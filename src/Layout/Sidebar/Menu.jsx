@@ -44,13 +44,18 @@ export const MENUITEMS = [
   {
     menutitle: "Settings",
     menucontent: "Ready to use Apps",
+
     Items: [
       {
         title: "Room Management",
         icon: "widget",
-        type: "link",
+        type: "sub",
         active: false,
-        path: `/room-management`,
+        children: [
+          { path: `/room-management`, title: "Create Room", type: "link" },
+          { path: `/allroom`, title: "All Room", type: "link" },
+          { path: `/create-aminity`, title: "Create Aminity", type: "link" },
+        ]
       },
       {
         title: "AttendenceManagement",

@@ -186,6 +186,7 @@ import Attendence_Repo from "../pages/Attendence-Management/Attendence_Repo";
 
 import CreateAmenities from "../pages/Setting/CreateAmenities";
 import AllPlanner from "../pages/Setting/Component/RoomComponent/AllPlanner";
+import AllRoom from "../pages/Setting/AllRoom";
 
 export const routes = [
   { path: `/dashboard`, Component: <Default /> },
@@ -209,7 +210,11 @@ export const routes = [
   { path: `/create-employee`, Component: <CreateEmployee /> },
   { path: `/allemployee`, Component: <AllEmployee /> },
   { path: `/all-student`, Component: <AllStudents /> },
+
+  //ROOM MANAGEMENT
   { path: `/room-management`, Component: <RoomManagement /> },
+  { path: `/allroom`, Component: <AllRoom/> },
+  { path: `/create-aminity`, Component: <CreateAmenities/> },
 
   //employee Management routes ends
 
