@@ -61,9 +61,12 @@ export const MENUITEMS = [
       {
         title: "Food Planner",
         icon: "widget",
-        type: "link",
+        type: "sub",
         active: false,
-        path: `/food-planner`,
+        children: [
+          { path: `/food-planner`, title: "Create Food Planner", type: "link" },
+          { path: `/allplanner`, title: "All Planner", type: "link" },
+        ],
       },
     ],
   },

@@ -182,7 +182,7 @@ import RoomManagement from "../pages/Setting/RoomManagement";
 import FoodPlanner from "../pages/Setting/FoodPlanner";
 import FoodBook from "../pages/foodbook/FoodBook";
 import CreateAmenities from "../pages/Setting/CreateAmenities";
-
+import AllPlanner from "../pages/Setting/Component/RoomComponent/AllPlanner";
 
 export const routes = [
   { path: `/dashboard`, Component: <Default /> },
@@ -197,6 +197,7 @@ export const routes = [
 
   //Food planner routes
   { path: `/food-planner`, Component: <FoodPlanner /> },
+  { path: `/allplanner`, Component: <AllPlanner /> },
 
   //employee Management routes
   { path: `/create-employee`, Component: <CreateEmployee /> },
