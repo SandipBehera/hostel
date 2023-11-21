@@ -31,4 +31,4 @@ export const FlagIconDataApi = `${api}/flagIconData.json`;
 export const FontawsomeDataApi = `${api}/fontawsomeData.json`;
 export const IcoDataApi = `${api}/icoData.json`;
 export const ThemifyDataApi = `${api}/themifyData.json`;
-export const WebApi = `http://localhost:3000/api`;
+export const WebApi = `http://18.224.227.40:3000/api`;
