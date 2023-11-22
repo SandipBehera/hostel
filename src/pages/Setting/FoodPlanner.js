@@ -17,17 +17,20 @@ const FoodPlanner = () => {
     Saturday: { Breakfast: {}, Lunch: {}, Dinner: {} },
     Sunday: { Breakfast: {}, Lunch: {}, Dinner: {} },
   });
+  const [prevMonthData, setPrevMonthData] = useState(null);
 
+   // Function to handle input changes
   const handleInputChange = (e, day, mealType, field) => {
     const updatedMealData = { ...mealData };
     updatedMealData[day][mealType][field] = e.target.value;
     setMealData(updatedMealData);
   };
-
+    // Function to handle form submission
   const handleSubmit = () => {
     // Display the updated meal data in the console
     console.log(mealData);
   };
+    // Function to handle month change
   const handleMonthChange = (selectedMonth) => {
     setMonth(selectedMonth);
     setShowDropdown(false);
@@ -45,160 +48,177 @@ const FoodPlanner = () => {
     });
   };
 
-  const handleCopyPrevMonthData = () => {
-    // Logic to copy data from the previous month
-    // For demonstration, setting meal data as a copy of the previous month's data
-    // You can modify this logic according to your data structure
-    // Assuming you have the previous month's data in 'prevMonthData' variable
-    const prevMonthData = {
+ // Function to handle copying previous month's data
+ const handleCopyPrevMonthData = () => {
+  if (!copyPrevMonthData) {
+    // Logic to copy previous month's data here
+    // Replace this logic with your actual data retrieval mechanism
+    const prevMonthData = { 
       Monday: {
-      Breakfast: {
-        Description: 'Previous Month Breakfast Description for Monday',
-        From: '08:00',
-        To: '09:00',
-        Price: '10.99'
+        Breakfast: {
+          Description: 'Previous Month Breakfast Description for Monday',
+          From: '08:00',
+          To: '09:00',
+          Price: '10.99'
+        },
+        Lunch: {
+          Description: 'Previous Month Lunch Description for Monday',
+          From: '12:00',
+          To: '13:00',
+          Price: '15.50'
+        },
+        Dinner: {
+          Description: 'Previous Month Dinner Description for Monday',
+          From: '18:00',
+          To: '19:30',
+          Price: '20.25'
+        }
       },
-      Lunch: {
-        Description: 'Previous Month Lunch Description for Monday',
-        From: '12:00',
-        To: '13:00',
-        Price: '15.50'
+      Tuesday: {
+        Breakfast: {
+          Description: 'Previous Month Breakfast Description for Tuesday',
+          From: '08:30',
+          To: '09:30',
+          Price: '11.50'
+        },
+        Lunch: {
+          Description: 'Previous Month Lunch Description for Tuesday',
+          From: '12:15',
+          To: '13:15',
+          Price: '16.00'
+        },
+        Dinner: {
+          Description: 'Previous Month Dinner Description for Tuesday',
+          From: '18:30',
+          To: '20:00',
+          Price: '22.00'
+        }
+        
       },
-      Dinner: {
-        Description: 'Previous Month Dinner Description for Monday',
-        From: '18:00',
-        To: '19:30',
-        Price: '20.25'
-      }
-    },
-    Tuesday: {
-      Breakfast: {
-        Description: 'Previous Month Breakfast Description for Tuesday',
-        From: '08:30',
-        To: '09:30',
-        Price: '11.50'
+      Wednesday: {
+        Breakfast: {
+          Description: 'Previous Month Breakfast Description for Monday',
+          From: '08:00',
+          To: '09:00',
+          Price: '10.99'
+        },
+        Lunch: {
+          Description: 'Previous Month Lunch Description for Monday',
+          From: '12:00',
+          To: '13:00',
+          Price: '15.50'
+        },
+        Dinner: {
+          Description: 'Previous Month Dinner Description for Monday',
+          From: '18:00',
+          To: '19:30',
+          Price: '20.25'
+        }
       },
-      Lunch: {
-        Description: 'Previous Month Lunch Description for Tuesday',
-        From: '12:15',
-        To: '13:15',
-        Price: '16.00'
+      Thursday: {
+        Breakfast: {
+          Description: 'Previous Month Breakfast Description for Tuesday',
+          From: '08:30',
+          To: '09:30',
+          Price: '11.50'
+        },
+        Lunch: {
+          Description: 'Previous Month Lunch Description for Tuesday',
+          From: '12:15',
+          To: '13:15',
+          Price: '16.00'
+        },
+        Dinner: {
+          Description: 'Previous Month Dinner Description for Tuesday',
+          From: '18:30',
+          To: '20:00',
+          Price: '22.00'
+        }
+        
       },
-      Dinner: {
-        Description: 'Previous Month Dinner Description for Tuesday',
-        From: '18:30',
-        To: '20:00',
-        Price: '22.00'
-      }
-      
-    },
-    Wednesday: {
-      Breakfast: {
-        Description: 'Previous Month Breakfast Description for Monday',
-        From: '08:00',
-        To: '09:00',
-        Price: '10.99'
+      Friday: {
+        Breakfast: {
+          Description: 'Previous Month Breakfast Description for Monday',
+          From: '08:00',
+          To: '09:00',
+          Price: '10.99'
+        },
+        Lunch: {
+          Description: 'Previous Month Lunch Description for Monday',
+          From: '12:00',
+          To: '13:00',
+          Price: '15.50'
+        },
+        Dinner: {
+          Description: 'Previous Month Dinner Description for Monday',
+          From: '18:00',
+          To: '19:30',
+          Price: '20.25'
+        }
       },
-      Lunch: {
-        Description: 'Previous Month Lunch Description for Monday',
-        From: '12:00',
-        To: '13:00',
-        Price: '15.50'
+      Saturday: {
+        Breakfast: {
+          Description: 'Previous Month Breakfast Description for Tuesday',
+          From: '08:30',
+          To: '09:30',
+          Price: '11.50'
+        },
+        Lunch: {
+          Description: 'Previous Month Lunch Description for Tuesday',
+          From: '12:15',
+          To: '13:15',
+          Price: '16.00'
+        },
+        Dinner: {
+          Description: 'Previous Month Dinner Description for Tuesday',
+          From: '18:30',
+          To: '20:00',
+          Price: '22.00'
+        }
+       
       },
-      Dinner: {
-        Description: 'Previous Month Dinner Description for Monday',
-        From: '18:00',
-        To: '19:30',
-        Price: '20.25'
-      }
-    },
-    Thursday: {
-      Breakfast: {
-        Description: 'Previous Month Breakfast Description for Tuesday',
-        From: '08:30',
-        To: '09:30',
-        Price: '11.50'
-      },
-      Lunch: {
-        Description: 'Previous Month Lunch Description for Tuesday',
-        From: '12:15',
-        To: '13:15',
-        Price: '16.00'
-      },
-      Dinner: {
-        Description: 'Previous Month Dinner Description for Tuesday',
-        From: '18:30',
-        To: '20:00',
-        Price: '22.00'
-      }
-      
-    },
-    Friday: {
-      Breakfast: {
-        Description: 'Previous Month Breakfast Description for Monday',
-        From: '08:00',
-        To: '09:00',
-        Price: '10.99'
-      },
-      Lunch: {
-        Description: 'Previous Month Lunch Description for Monday',
-        From: '12:00',
-        To: '13:00',
-        Price: '15.50'
-      },
-      Dinner: {
-        Description: 'Previous Month Dinner Description for Monday',
-        From: '18:00',
-        To: '19:30',
-        Price: '20.25'
-      }
-    },
-    Saturday: {
-      Breakfast: {
-        Description: 'Previous Month Breakfast Description for Tuesday',
-        From: '08:30',
-        To: '09:30',
-        Price: '11.50'
-      },
-      Lunch: {
-        Description: 'Previous Month Lunch Description for Tuesday',
-        From: '12:15',
-        To: '13:15',
-        Price: '16.00'
-      },
-      Dinner: {
-        Description: 'Previous Month Dinner Description for Tuesday',
-        From: '18:30',
-        To: '20:00',
-        Price: '22.00'
-      }
      
-    },
-   
-    Sunday: {
-      Breakfast: {
-        Description: 'Previous Month Breakfast Description for Sunday',
-        From: '09:00',
-        To: '10:00',
-        Price: '12.00'
-      },
-      Lunch: {
-        Description: 'Previous Month Lunch Description for Sunday',
-        From: '13:00',
-        To: '14:00',
-        Price: '18.00'
-      },
-      Dinner: {
-        Description: 'Previous Month Dinner Description for Sunday',
-        From: '19:00',
-        To: '20:30',
-        Price: '25.00'
-      }
-    }}; // Replace this with your actual previous month's data
+      Sunday: {
+        Breakfast: {
+          Description: 'Previous Month Breakfast Description for Sunday',
+          From: '09:00',
+          To: '10:00',
+          Price: '12.00'
+        },
+        Lunch: {
+          Description: 'Previous Month Lunch Description for Sunday',
+          From: '13:00',
+          To: '14:00',
+          Price: '18.00'
+        },
+        Dinner: {
+          Description: 'Previous Month Dinner Description for Sunday',
+          From: '19:00',
+          To: '20:30',
+          Price: '25.00'
+     }
+    }};
+    setPrevMonthData(prevMonthData);
     setMealData(prevMonthData);
     setCopyPrevMonthData(true);
-  };
-
+  } else {
+    // Reset meal data and previous month's data
+    setMealData({
+      Monday: { Breakfast: {}, Lunch: {}, Dinner: {} },
+      Tuesday: { Breakfast: {}, Lunch: {}, Dinner: {} },
+      Wednesday: { Breakfast: {}, Lunch: {}, Dinner: {} },
+      Thursday: { Breakfast: {}, Lunch: {}, Dinner: {} },
+      Friday: { Breakfast: {}, Lunch: {}, Dinner: {} },
+      Saturday: { Breakfast: {}, Lunch: {}, Dinner: {} },
+      Sunday: { Breakfast: {}, Lunch: {}, Dinner: {} },
+    });
+    setPrevMonthData(null);
+    setCopyPrevMonthData(false);
+  }
+};
+ 
+ 
+     // Function to handle cancellation
   const handleCancel = () => {
     // Reset meal data and copyPrevMonthData state to their initial values
     setMealData({
@@ -217,10 +237,12 @@ const FoodPlanner = () => {
   const days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
   const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
 
+  // UseEffect to update the mealData when prevMonthData changes
   useEffect(() => {
-    // Enable the checkbox for copying previous month's data if there is data for the selected month
-    setCopyPrevMonthData(Object.keys(mealData['Monday']['Breakfast']).length > 0);
-  }, [mealData]);
+    if (prevMonthData && copyPrevMonthData) {
+      setMealData(prevMonthData);
+    }
+  }, [prevMonthData, copyPrevMonthData]);
 
 
   return (
@@ -242,12 +264,12 @@ const FoodPlanner = () => {
                 ))}
               </DropdownMenu>
             </Dropdown>
-            <div style={{ display: 'flex', alignItems: 'center', marginLeft: '20px', border: '1px solid #ccc', padding: '5px', borderRadius: '5px' }}>
+            <div style={{ display: 'flex', alignItems: 'center', marginTop:'10px', border: '1px solid #ccc', padding: '5px', borderRadius: '5px' }}>
           <input
             type="checkbox"
             onChange={handleCopyPrevMonthData}
             checked={copyPrevMonthData}
-            disabled={!copyPrevMonthData}
+            
             style={{ marginRight: '5px' }}
           />
           <label>Copy the previous month data</label>
@@ -282,13 +304,13 @@ const FoodPlanner = () => {
                       />
                       <br />
                       <label>From:</label>
-                      <input
+                      <Input
                         type="time"
                         value={mealData[day][mealType]?.From || ''}
                         onChange={(e) => handleInputChange(e, day, mealType, 'From')}
                       />
                       <label>To:</label>
-                      <input
+                      <Input
                         type="time"
                         value={mealData[day][mealType]?.To || ''}
                         onChange={(e) => handleInputChange(e, day, mealType, 'To')}
