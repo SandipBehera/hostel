@@ -87,7 +87,8 @@ const AllStudents = () => {
         method: "GET",
       });
       const respdata = await response.json();
-      setTableData(respdata.data);
+      const data = respdata.data.filter((item) => item.user_type === "student");
+      setTableData(data);
     };
     getData();
   }, []);
