@@ -83,7 +83,7 @@ const AllStudents = () => {
 
   useEffect(() => {
     const getData = async () => {
-      const response = await fetch(`${LocalApi}/get_all_users`, {
+      const response = await fetch(`${WebApi}/get_all_users`, {
         method: "GET",
       });
       const respdata = await response.json();
