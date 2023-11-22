@@ -97,6 +97,7 @@ const AttendenceReport = ({attendanceData}) => {
             <th>Action</th>
           </tr>
         </thead>
+        
         <tbody>
           {data.map((item, index) => (
             <tr key={index}>
