@@ -9,21 +9,38 @@ const DynamicForm = ({ floor_no, room_count, register }) => {
       const floorField = [];
       for (let room = 1; room <= room_count; room++) {
         const inputName = `floor${floor}_room${room}`;
+        const roomCapacity = `floor${floor}_room${room}_capacity`;
         floorField.push(
-          <Col className="col-md-3" key={floor}>
-            <FormGroup className="mb-3">
-              <Label htmlFor={inputName}>Room No</Label>
-              <input
-                className={`form-control`}
-                id={inputName}
-                type="text"
-                name={inputName}
-                {...register(inputName, {
-                  required: true,
-                })}
-              />
-            </FormGroup>
-          </Col>
+          <>
+            <Col className="col-md-3" key={floor}>
+              <FormGroup className="mb-3">
+                <Label htmlFor={inputName}>Room No</Label>
+                <input
+                  className={`form-control`}
+                  id={inputName}
+                  type="text"
+                  name={inputName}
+                  {...register(inputName, {
+                    required: true,
+                  })}
+                />
+              </FormGroup>
+            </Col>
+            <Col className="col-md-3" key={floor}>
+              <FormGroup className="mb-3">
+                <Label htmlFor={roomCapacity}>Room Capacity</Label>
+                <input
+                  className={`form-control`}
+                  id={roomCapacity}
+                  type="text"
+                  name={roomCapacity}
+                  {...register(roomCapacity, {
+                    required: true,
+                  })}
+                />
+              </FormGroup>
+            </Col>
+          </>
         );
       }
       formElements.push(
