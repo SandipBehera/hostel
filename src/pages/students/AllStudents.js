@@ -83,11 +83,12 @@ const AllStudents = () => {
 
   useEffect(() => {
     const getData = async () => {
-      const response = await fetch(`${LocalApi}/get_all_users`, {
+      const response = await fetch(`${WebApi}/get_all_users`, {
         method: "GET",
       });
       const respdata = await response.json();
-      setTableData(respdata.data);
+      const data = respdata.data.filter((item) => item.user_type === "student");
+      setTableData(data);
     };
     getData();
   }, []);
