@@ -28,6 +28,7 @@ import { options2 } from "../../Components/Forms/FormWidget/FormSelect2/OptionDa
 import { H5 } from "../../AbstractElements";
 import "../styles/take_attendence.css";
 import { data } from "./data";
+import AttendenceReport from "./AttendenceReport";
 
 const Take_Attendence = () => {
   const [modalOpen, setModalOpen] = useState(false);
@@ -35,8 +36,9 @@ const Take_Attendence = () => {
   const [zoomedInIds, setZoomedInIds] = useState([]);
   const [student, setStudent] = useState(data);
   const [absentDetails, setAbsentDetails] = useState(null);
-
+  const [presentDetails, setPresentDetails] = useState(null);
   const [msg, setMsg] = useState("");
+  const [attendanceData, setAttendanceData] = useState([]);
 
   const currentDate = new Date();
   const time = currentDate.toTimeString();
@@ -62,6 +64,8 @@ const Take_Attendence = () => {
       time,
     };
     console.log(data);
+   setPresentDetails(data)
+   setAttendanceData((prevData) => [...prevData, { ...data, type: 'present' }]);
   }
   function absent(name, regidNo, room, hostel, available,msg) {
     const data = {
@@ -76,6 +80,7 @@ const Take_Attendence = () => {
     setAbsentDetails(data);
     openModal();
     console.log(data);
+    setAttendanceData((prevData) => [...prevData, { ...data, type: 'absent' }]);
   }
 
   return (
@@ -214,7 +219,8 @@ const Take_Attendence = () => {
         </Container>
       </Card>
 
-      
+    
+
     </>
   );
 };
