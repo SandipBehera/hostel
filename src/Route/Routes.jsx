@@ -189,12 +189,23 @@ import AllPlanner from "../pages/Setting/Component/RoomComponent/AllPlanner";
 import AllRoom from "../pages/Setting/AllRoom";
 import AttendenceReport from "../pages/Attendence-Management/AttendenceReport";
 import Dashboard from "../pages/Dashboard";
+import { Login } from "../Constant";
+import StudentDashboard from "../student_pages/dashboard/StudentDashboard";
+import MyProfile from "../student_pages/profile/MyProfile";
+import HealthManagement from "../student_pages/healthmanagement/HealthManagement";
+import Complaints from "../student_pages/complaints/Complaints";
+import FoodCalendar from "../student_pages/foodcalendar/FoodCalendar";
+import StudentFoodBook from "../student_pages/foodbook/StudentFoodBook";
+
+
+
 
 export const routes = [
   { path: `/dashboard`, Component: <Dashboard /> },
   { path: `/widgets/general`, Component: <General /> },
   { path: `/widgets/chart`, Component: <Chart /> },
-
+  
+ 
   //Food Book routes
   { path: `/food-book`, Component: <FoodBook /> },
 
@@ -417,3 +428,26 @@ export const routes = [
   // //Faq
   { path: `/app/faq`, Component: <FAQContent /> },
 ];
+
+
+ export const studentRoutes = [
+  { path: `/dashboard`, Component: <StudentDashboard /> },
+
+  //My Profile routes
+  { path: `/my-profile`, Component: <MyProfile/> },
+
+  //Health Management routes
+  { path:`/health-management`, Component: <HealthManagement /> },
+
+   //Food Book routes
+   { path: `/student-foodbook`, Component: <StudentFoodBook /> },
+
+  //  //Complaints routes
+   { path: `/complaints`, Component: <Complaints /> },
+
+  //   //Food Calender routes
+  { path: `/food-calendar`, Component: <FoodCalendar /> },
+
+  //
+];
+

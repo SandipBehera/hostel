@@ -5,7 +5,7 @@ import Searchbar from './Searchbar';
 import Notificationbar from './Notificationbar';
 import MoonLight from './MoonLight';
 import CartHeader from './CartHeader';
-import BookmarkHeader from './BookmarkHeader';
+// import BookmarkHeader from './BookmarkHeader';
 import UserHeader from './UserHeader';
 import { UL } from '../../../AbstractElements';
 import { Col } from 'reactstrap';
@@ -18,7 +18,7 @@ const RightHeader = () => {
         <UL attrUL={{ className: 'simple-list nav-menus flex-row' }}>
           <Language />
           <Searchbar />
-          <BookmarkHeader />
+          {/* <BookmarkHeader /> */}
           <MoonLight />
           <CartHeader />
           <Notificationbar />
