@@ -1,75 +1,8 @@
 import React, { useState, Fragment, useEffect } from "react";
-import {
-  Table,
-  Row,
-  Col,
-  Card,
-  CardHeader,
-  Button,
-  Input,
-  ModalFooter,
-  ModalBody,
-  ModalHeader,
-  Modal,
-  FormGroup,
-  Label,
-} from "reactstrap";
+import { Table, Row, Col, Card, CardHeader, Button } from "reactstrap";
 import { H5 } from "../../AbstractElements";
-import {
-  Page,
-  Text,
-  View,
-  StyleSheet,
-  PDFDownloadLink,
-  Document,
-} from "@react-pdf/renderer";
 import Papa from "papaparse";
 import { LocalApi, WebApi } from "../../api";
-import { co } from "@fullcalendar/core/internal-common";
-
-const mockData = [
-  {
-    sNo: 1,
-    registrationNo: "REG001",
-    studentName: "Rahul",
-    type: "hostler",
-    breakfast: "Cereal",
-    lunch: "Sandwich",
-    dinner: "Pasta",
-    payment: "$50",
-  },
-  {
-    sNo: 2,
-    registrationNo: "REG002",
-    studentName: "Sanu",
-    type: "Day Scholar",
-    breakfast: "Toast",
-    lunch: "Salad",
-    dinner: "Chicken",
-    payment: "$40",
-  },
-  {
-    sNo: 3,
-    registrationNo: "REG003",
-    studentName: "Sangram",
-    type: "hostler",
-    breakfast: "Cereal",
-    lunch: "Sandwich",
-    dinner: "Pasta",
-    payment: "$90",
-  },
-  {
-    sNo: 4,
-    registrationNo: "REG004",
-    studentName: "Sandy",
-    type: "Day Scholar",
-    breakfast: "Toast",
-    lunch: "Salad",
-    dinner: "Chicken",
-    payment: "$100",
-  },
-  // Add more objects as needed
-];
 
 const FoodBook = () => {
   const [data, setData] = useState([]);
