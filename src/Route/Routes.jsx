@@ -189,6 +189,8 @@ import AllPlanner from "../pages/Setting/Component/RoomComponent/AllPlanner";
 import AllRoom from "../pages/Setting/AllRoom";
 import AttendenceReport from "../pages/Attendence-Management/AttendenceReport";
 import Dashboard from "../pages/Dashboard";
+import CreateComplain from "../pages/General/CreateComplain";
+import ViewComplain from "../pages/General/ViewComplain";
 
 export const routes = [
   { path: `/dashboard`, Component: <Dashboard /> },
@@ -217,7 +219,10 @@ export const routes = [
   { path: `/room-management`, Component: <RoomManagement /> },
   { path: `/allroom`, Component: <AllRoom /> },
   { path: `/create-aminity`, Component: <CreateAmenities /> },
-
+   //Compain Management
+   
+   { path: `/create-complain`, Component: <CreateComplain /> },
+   { path: `/view-complain`, Component: <ViewComplain /> },
   //employee Management routes ends
 
   { path: `/ui-kits/typography`, Component: <Typography /> },
