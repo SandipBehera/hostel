@@ -14,7 +14,7 @@ const UserHeader = () => {
   const [name, setName] = useState(localStorage.getItem("Name"));
   const { layoutURL } = useContext(CustomizerContext);
   const authenticated = JSON.parse(localStorage.getItem("authenticated"));
-  const userId = JSON.parse(localStorage.getItem("userId"));
+  const userId = localStorage.getItem("userId");
   // const auth0_profile = JSON.parse(localStorage.getItem("auth0_profile"));
 
   useEffect(() => {

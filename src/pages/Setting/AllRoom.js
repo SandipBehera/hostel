@@ -6,60 +6,12 @@ import Select from "react-select";
 import { WebApi } from "../../api";
 import{Breadcrumbs} from "../../AbstractElements";
 
-import {
-  Col,
-  Card,
-  CardHeader,
-  Table,
-  InputGroup,
-  InputGroupText,
-  Input,
-  InputGroupAddon,
-  DropdownToggle,
-  Row,
-  Container
-} from "reactstrap";
-import {
-  BasicInputGroups,
-  LeftAddon,
-  RightAddon,
-  JointAddon,
-  LeftRightAddon,
-  SolidStyle,
-  FlatStyle,
-  RaiseStyle,
-  Action,
-  AnotherAction,
-  SomethingElseHere
-} from "../../Constant";
-import { FaSearch } from "react-icons/fa";
-import { H5, Image,H1,Btn } from "../../AbstractElements";
-import TableContext from "../../_helper/Table";
-import { BasicColorData } from '../../Components/Common/Data/Ui-kits/index';
-import CommonDropDown from '../../Components/UiKits/Dropdown/Common/CommonDropDown';
-import {useNavigate} from 'react-router-dom';
+import { Col, Card,Table,DropdownToggle,Row,Container } from "reactstrap";
+import {Action} from "../../Constant";
 import PopUp from "./PopUp";
 import EditForm from "./EditForm";
-import { it } from "date-fns/locale";
 
-const studentData=[
-    {   "sl_no":1,
-        "name":"aravali",
-        "floors":"2",      
-},
-{   "sl_no":2,
-"name":"nilgiri",
-"floors":"3",      
-},
-{   "sl_no":3,
-"name":"sivalik",
-"floors":"4",      
-},
-{   "sl_no":4,
-"name":"udayagiro",
-"floors":"5",      
-},
-]
+
 const AllRoom = () => {
    
   const [data,setData]=useState([])
@@ -74,13 +26,17 @@ useEffect(() => {
     const response = await fetch(`${WebApi}/get_rooms`, {
       method: "GET",
     });
+    
     const resproom = await response.json();
+    console.log("resproom data is",resproom)
     setData(resproom.data);
+    if(resproom&&resproom.status){
+      console.log("data fetched")
+    }
   };
   roomHostel();
-
 },[]);
-console.log(data)
+
 
   
 //    const toggleDropdown = (id) => {
@@ -95,32 +51,29 @@ console.log(data)
       }))
     );
   };
+  
 
   const handleOptionSelect = (option,id) => {
     if (option === 'Edit') {
         setModalOpen(true);
       }
     toggleModal()
-    setEdit(id)
-    console.log(id)
+    setEdit(id);
+  
   };
 
   const toggleModal = () => {
     setModalOpen(!modalOpen);
   };
 
-//   function edit(id){
-//     const edit=data.filter((id)=>(
-//         id===data.id
-//     ))
-//   }
+
 function handleDelete(id){
    const updated=data.filter((item)=>(
        item.sl_no!==id
    ))
    setData(updated)
 }
-
+console.log(data)
   return (
     <Fragment>
       <Breadcrumbs
@@ -135,8 +88,8 @@ function handleDelete(id){
             <Card>
              <CardBody>
               <div className="table-responsive">
-                <Table>
-                  <thead>
+                <Table >
+                  <thead style={{textAlign:'center'}}>
                     <tr className="border-bottom-primary">
                       <th scope="col">{"SL.NO"}</th>
                       <th scope="col">{" H-Name"}</th>
@@ -146,15 +99,15 @@ function handleDelete(id){
                      
                     </tr>
                   </thead>
-                  <tbody>
-        {data.map((item) => (
+                  <tbody style={{textAlign:'center'}}>
+        {data && data.length > 0 ?(data.map((item) => (
     
          edit===item.id? <EditForm item={item} data={data} setData={setData} isOpen={toggleModal} setEdit={setEdit}/> :
           <tr key={item.id} className={`border-bottom-${item.color}`}>
             <th scope="row">{item.id}</th>
             <td>{item.hostel_name}</td>
             <td>{item.floor_count}</td>
-            <td><PopUp/></td>
+            <td><PopUp data={data} id={item.id}/></td>
             <td>
               <Dropdown
                 isOpen={item.activeDropdown}
@@ -170,7 +123,14 @@ function handleDelete(id){
               </Dropdown>
             </td>
           </tr>
-        ))}
+        ))
+        ):(
+          <tr>
+          <td colSpan="5">Loading...</td>
+        </tr>
+        )
+      }
+        
       </tbody>
 
                 </Table>

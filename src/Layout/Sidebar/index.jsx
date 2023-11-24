@@ -1,6 +1,6 @@
 import React, { Fragment, useState, useEffect, useContext } from "react";
 import CustomContext from "../../_helper/Customizer";
-import { MENUITEMS } from "./Menu";
+import { EmployeeMenu, StudentMenu } from "./Menu";
 import SidebarIcon from "./SidebarIcon";
 import SidebarLogo from "./SidebarLogo";
 import SidebarMenu from "./SidebarMenu";
@@ -13,7 +13,7 @@ const Sidebar = (props) => {
 
   const layout = id ? id : defaultLayout;
   // eslint-disable-next-line
-  const [mainmenu, setMainMenu] = useState(MENUITEMS);
+  const [mainmenu, setMainMenu] = useState([]);
 
   const [width, setWidth] = useState(0);
 
@@ -31,12 +31,21 @@ const Sidebar = (props) => {
     }
   };
 
+
   useEffect(() => {
+    const userType = localStorage.getItem('userType');
+    if(userType==="employee"){
+      setMainMenu(EmployeeMenu);
+    }
+    else{
+      setMainMenu(StudentMenu);
+    }
     document.querySelector(".left-arrow").classList.add("d-none");
     window.addEventListener("resize", handleResize);
     handleResize();
     const currentUrl = window.location.pathname;
-    MENUITEMS.map((items) => {
+    if(mainmenu.length<0){
+    mainmenu.map((items) => {
       items.Items.filter((Items) => {
         if (Items.path === currentUrl) setNavActive(Items);
         if (!Items.children) return false;
@@ -57,13 +66,15 @@ const Sidebar = (props) => {
       });
       return items;
     });
+    }
+    
     window.addEventListener("scroll", handleScroll);
     handleScroll();
     return () => {
       window.removeEventListener("scroll", handleScroll);
       window.removeEventListener("resize", handleResize);
     };
-  }, [layout]);
+  }, [layout, mainmenu]);
 
   const handleResize = () => {
     setWidth(window.innerWidth - 500);
@@ -75,7 +86,7 @@ const Sidebar = (props) => {
   };
 
   const setNavActive = (item) => {
-    MENUITEMS.map((menuItems) => {
+    mainmenu.map((menuItems) => {
       menuItems.Items.filter((Items) => {
         if (Items !== item) {
           Items.active = false;
@@ -101,7 +112,7 @@ const Sidebar = (props) => {
       return menuItems;
     });
     item.active = !item.active;
-    setMainMenu({ mainmenu: MENUITEMS });
+    setMainMenu({ mainmenu: mainmenu });
   };
 
   const closeOverlay = () => {
