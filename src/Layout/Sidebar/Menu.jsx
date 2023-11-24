@@ -64,7 +64,7 @@ export const MENUITEMS = [
         active: false,
         children: [
           { path: `/take-attendence`, title: "Take Attendence", type: "link" },
-          { path: `/attendence-repo`, title: "Attendence Repo", type: "link" },
+          { path: `/attendencereport`, title: "Attendence Report", type: "link" },
         ]
       },
       {

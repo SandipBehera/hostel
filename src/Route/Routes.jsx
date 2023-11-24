@@ -182,11 +182,12 @@ import RoomManagement from "../pages/Setting/RoomManagement";
 import FoodPlanner from "../pages/Setting/FoodPlanner";
 import FoodBook from "../pages/foodbook/FoodBook";
 import Take_Attendence from "../pages/Attendence-Management/Take_Attendence";
-import Attendence_Repo from "../pages/Attendence-Management/Attendence_Repo";
+
 
 import CreateAmenities from "../pages/Setting/CreateAmenities";
 import AllPlanner from "../pages/Setting/Component/RoomComponent/AllPlanner";
 import AllRoom from "../pages/Setting/AllRoom";
+import AttendenceReport from "../pages/Attendence-Management/AttendenceReport";
 import Dashboard from "../pages/Dashboard";
 
 export const routes = [
@@ -199,7 +200,7 @@ export const routes = [
 
   //Attendence management
   { path: `/take-attendence`, Component: <Take_Attendence /> },
-  { path: `/attendence-repo`, Component: <Attendence_Repo /> },
+  { path: `/attendencereport`, Component: <AttendenceReport /> },
   //Amenities routes
   { path: `/create-amenities`, Component: <CreateAmenities /> },
 
