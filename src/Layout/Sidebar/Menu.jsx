@@ -31,6 +31,16 @@ export const MENUITEMS = [
           { path: `/all-student`, title: "All Student", type: "link" },
         ],
       },
+      {
+        title: "AttendenceManagement",
+        icon: "widget",
+        type: "sub",
+        active: false,
+        children: [
+          { path: `/take-attendence`, title: "Take Attendence", type: "link" },
+          { path: `/attendencereport`, title: "Attendence Report", type: "link" },
+        ]
+      },
     
       {
         title: "Food Book",
@@ -55,16 +65,6 @@ export const MENUITEMS = [
           { path: `/room-management`, title: "Create Room", type: "link" },
           { path: `/allroom`, title: "All Room", type: "link" },
           { path: `/create-aminity`, title: "Create Aminity", type: "link" },
-        ]
-      },
-      {
-        title: "AttendenceManagement",
-        icon: "widget",
-        type: "sub",
-        active: false,
-        children: [
-          { path: `/take-attendence`, title: "Take Attendence", type: "link" },
-          { path: `/attendencereport`, title: "Attendence Report", type: "link" },
         ]
       },
       {

@@ -80,6 +80,7 @@ const AllStudents = () => {
     setAssignRoomModalOpen(!assignRoomModalOpen);
     setSelectedRowId(rowId);
   };
+  
 
   useEffect(() => {
     const getData = async () => {
@@ -108,6 +109,8 @@ const AllStudents = () => {
     return { value: key.id, label: key.hostel_name };
   });
 
+  
+
   const handleAssignRoom = async () => {
     const data = {
       user_id: userid,
@@ -124,14 +127,18 @@ const AllStudents = () => {
       body: JSON.stringify(data),
     });
     const resproom = await response.json();
-    console.log(resproom);
 
-    // Close the modal after assigning the room
-    setAssignRoomModalOpen(false);
+   if(resproom.ok){
+  updateTableData(userid, selectedHostel, selectedRoom);
+  setAssignRoomModalOpen(false);
+}
+   
+    
+
   };
 
   const handleHostelSelect = (hostelName) => {
-    console.log(hostelName);
+   
     setSelectedHostel(hostelName);
     const floors = hostelName
       ? Array.from(
@@ -164,6 +171,7 @@ const AllStudents = () => {
 
   const handleChange = (e) => {
     setSearchTerm(e.target.value);
+  
   };
 
   const toggleDropdown = (id) => {
@@ -183,7 +191,7 @@ const AllStudents = () => {
   const toggleModal = () => {
     setModalOpen(!modalOpen);
   };
-  console.log(tableData);
+  
   return (
     <div className="page-wrapper" id="pageWrapper">
       <div className="text-center">
@@ -266,9 +274,12 @@ const AllStudents = () => {
                         <td>{item.semesterYear}</td>
                         <td>{item.branch}</td>
                         <td>
-                          {item.room_id !== null
-                            ? `${item?.hostel_name}:${item.room_id}`
-                            : "need to assign"}
+                        
+                        {
+                          item.room_id !== null
+                          ? `${item?.hostel_name}:${item.room_id}`
+                           : "need to assign"
+                          }
                         </td>
                         <td>
                           <PopUpButton />
@@ -293,7 +304,7 @@ const AllStudents = () => {
                                   )
                                 }
                               >
-                                Assign Room
+                               {item.hostel_name ?"Reassign Room": "Assign Room"}
                               </DropdownItem>
                               <DropdownItem onClick={() => setActive(!active)}>
                                 {active ? "ACTIVE" : "IN ACTIVE"}
