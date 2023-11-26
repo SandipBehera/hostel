@@ -59,6 +59,15 @@ export const MENUITEMS = [
      { path: `/view-complain`, title: "View Complain", type: "link" },
    ]
  },
+ {
+  title: "Outing",
+  icon: "widget",
+  type: "sub",
+  active: false,
+  children: [
+    { path: `/outing`, title: "Outing", type: "link" },
+  ]
+},
     ],
   },
 

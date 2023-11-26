@@ -191,6 +191,7 @@ import AttendenceReport from "../pages/Attendence-Management/AttendenceReport";
 import Dashboard from "../pages/Dashboard";
 import CreateComplain from "../pages/General/CreateComplain";
 import ViewComplain from "../pages/General/ViewComplain";
+import OutingForm from "../pages/OutingApproval/OutingForm";
 
 export const routes = [
   { path: `/dashboard`, Component: <Dashboard /> },
@@ -219,10 +220,11 @@ export const routes = [
   { path: `/room-management`, Component: <RoomManagement /> },
   { path: `/allroom`, Component: <AllRoom /> },
   { path: `/create-aminity`, Component: <CreateAmenities /> },
-   //Compain Management
-   
+   //Compain Management  
    { path: `/create-complain`, Component: <CreateComplain /> },
    { path: `/view-complain`, Component: <ViewComplain /> },
+   //outing approval
+   { path: `/outing`, Component: <OutingForm/> },
   //employee Management routes ends
 
   { path: `/ui-kits/typography`, Component: <Typography /> },
