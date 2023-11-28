@@ -13,11 +13,7 @@ RUN yarn install
 # Copy the entire project to the working directory
 COPY . .
 
-# Build the React app for production
-RUN npm run build
-
-# Expose the port that the app will run on
-EXPOSE 3000
+EXPOSE 3001
 
 # Specify the command to run on container startup
-CMD ["yarn", "start"]
+CMD ["npm", "run", "start"]
