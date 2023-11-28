@@ -7,13 +7,13 @@ import { ActivityData } from "../../Data/DefaultDashboard";
 import { H5, H6, LI, P, UL } from "../../AbstractElements";
 import DropdownCommon from "../../Components/Common/Dropdown";
 
-const ActivityCard = () => {
+const ActivityCard = (props) => {
   return (
     <Col xxl="4" xl="5" md="6" sm="7" className="notification box-col-6">
       <Card className="height-equal">
         <CardHeader className="card-no-border">
           <div className="header-top">
-            <H5 attrH5={{ className: "m-0" }}>{Activity}</H5>
+            <H5 attrH5={{ className: "m-0" }}>{props.columnHeadder}</H5>
             <div className="card-header-right-icon">
               <DropdownCommon
                 icon={false}
@@ -25,7 +25,7 @@ const ActivityCard = () => {
         </CardHeader>
         <CardBody className="pt-0">
           <UL>
-            {ActivityData.map((item, i) => (
+            {props.ActivityData.map((item, i) => (
               <LI key={i} attrLI={{ className: "d-flex" }}>
                 <div className={`activity-dot-${item.color}`} />
                 <div className="w-100 ms-3">

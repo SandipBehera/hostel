@@ -12,6 +12,7 @@ import PreAccountCard from "./PreAccountCard";
 import TotalUserAndFollower from "./TotalUserAndFollower";
 import PaperNote from "./PaperNote";
 import RecentSales from "./RecentSales";
+import { ActivityData } from "../../Data/DefaultDashboard";
 
 const Dashboard = () => {
   return (
@@ -23,7 +24,7 @@ const Dashboard = () => {
           <WidgetsWrapper />
           <OverallBalance />
           <RecentOrders />
-          <ActivityCard />
+          <ActivityCard  ActivityData={ActivityData} columnHeadder={"activity"}/>
           <RecentSales />
           <TimelineCard />
           <PreAccountCard />
