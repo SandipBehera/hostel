@@ -86,7 +86,7 @@ const AttendenceReport = ({ attendanceData }) => {
   });
 
   const handleHostelSelect = async (hostelId) => {
-    const response = await fetch(`${LocalApi}/get_attendence`, {
+    const response = await fetch(`${WebApi}/get_attendence`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ hostel_id: hostelId }),
