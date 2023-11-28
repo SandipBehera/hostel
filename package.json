@@ -57,6 +57,7 @@
     "leaflet": "^1.9.3",
     "mini-css-extract-plugin": "^2.4.5",
     "node-sass": "^8.0.0",
+    "papaparse": "^5.4.1",
     "pigeon-maps": "^0.21.3",
     "postcss": "^8.4.4",
     "postcss-flexbugs-fixes": "^5.0.2",
