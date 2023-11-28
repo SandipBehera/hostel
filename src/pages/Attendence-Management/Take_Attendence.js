@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, Fragment } from "react";
 import {
   Row,
   Col,
@@ -23,7 +23,7 @@ import {
 } from "reactstrap";
 import Select from "react-select";
 import { options2 } from "../../Components/Forms/FormWidget/FormSelect2/OptionDatas";
-import { H5 } from "../../AbstractElements";
+import { Breadcrumbs, H5 } from "../../AbstractElements";
 import "../styles/take_attendence.css";
 import { data } from "./data";
 import AttendenceReport from "./AttendenceReport";
@@ -179,52 +179,61 @@ const Take_Attendence = () => {
   };
 
   return (
-    <>
+    <Fragment>
+      <Breadcrumbs
+        parent="Student"
+        mainTitle="Attandance"
+        subParent="Take Attandance"
+        title="Take Attandance"
+      />
       <Card>
-        <H5>Take Attendence</H5>
-        {/*drop down*/}
-        <Row style={{ padding: "6px" }}>
-          <Col md="3">
-            <div className="mb-2" style={{ width: "100%" }}>
-              <Label className="col-form-label">Select Hostel name</Label>
-              <Select
-                options={hostel_name}
-                className="js-example-basic-single col-sm-12"
-                onChange={(selectedOption) =>
-                  handleHostelSelect(selectedOption.value)
-                }
-              />
-            </div>
-          </Col>
-          <Col md="3">
-            <div className="mb-2" style={{ width: "100%" }}>
-              <Label className="col-form-label">Select Floor Name</Label>
-              <Select
-                options={floorData}
-                className="js-example-basic-single col-sm-12"
-                onChange={(selectedOption) =>
-                  handleFloorSelect(selectedOption.value)
-                }
-              />
-            </div>
-          </Col>
-          <Col md="3">
-            <div className="mb-2" style={{ width: "100%" }}>
-              <Label className="col-form-label">Select Room No</Label>
-              <Select
-                options={roomData}
-                onChange={(selectedOption) =>
-                  setSelectedRoom(selectedOption.value)
-                }
-              />
-            </div>
-          </Col>
-          <Col md="3">
-            <div className="mb-2" style={{ width: "100%", marginTop: "35px" }}>
-              <Button onClick={handleSubmit}>submit</Button>
-            </div>
-          </Col>
-        </Row>
+        <CardBody>
+          <Row>
+            <Col md="3">
+              <div className="mb-2" style={{ width: "100%" }}>
+                <Label className="col-form-label">Select Hostel name</Label>
+                <Select
+                  options={hostel_name}
+                  className="js-example-basic-single col-sm-12"
+                  onChange={(selectedOption) =>
+                    handleHostelSelect(selectedOption.value)
+                  }
+                />
+              </div>
+            </Col>
+            <Col md="3">
+              <div className="mb-2" style={{ width: "100%" }}>
+                <Label className="col-form-label">Select Floor Name</Label>
+                <Select
+                  options={floorData}
+                  className="js-example-basic-single col-sm-12"
+                  onChange={(selectedOption) =>
+                    handleFloorSelect(selectedOption.value)
+                  }
+                />
+              </div>
+            </Col>
+            <Col md="3">
+              <div className="mb-2" style={{ width: "100%" }}>
+                <Label className="col-form-label">Select Room No</Label>
+                <Select
+                  options={roomData}
+                  onChange={(selectedOption) =>
+                    setSelectedRoom(selectedOption.value)
+                  }
+                />
+              </div>
+            </Col>
+            <Col md="3">
+              <div
+                className="mb-2"
+                style={{ width: "100%", marginTop: "35px" }}
+              >
+                <Button onClick={handleSubmit}>submit</Button>
+              </div>
+            </Col>
+          </Row>
+        </CardBody>
         <hr></hr>
         {/*student available in room */}
         <Container className="mt-4" style={{ margintop: "10px" }}>
@@ -328,7 +337,7 @@ const Take_Attendence = () => {
           </Row>
         </Container>
       </Card>
-    </>
+    </Fragment>
   );
 };
 

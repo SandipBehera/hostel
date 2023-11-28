@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom';
 import CustomContext from '../../_helper/Customizer';
 import Leftbar from './Leftbar/index';
 import RightHeader from './RightHeader/index';
-import { MENUITEMS } from '../Sidebar/Menu';
+import { EmployeeMenu, StudentMenu } from '../Sidebar/Menu';
 import { Loading } from '../../Constant';
 import SvgIcon from '../../Components/Common/Component/SvgIcon';
 
@@ -14,7 +14,7 @@ const Header = () => {
   const layout = id;
   const { toggleIcon } = useContext(CustomContext);
   // eslint-disable-next-line
-  const [mainmenu, setMainMenu] = useState(MENUITEMS);
+  const [mainmenu, setMainMenu] = useState([]);
   const [searchValue, setsearchValue] = useState('');
   // eslint-disable-next-line
   const [searchResult, setSearchResult] = useState(false);
@@ -34,6 +34,13 @@ const Header = () => {
   }, []);
 
   useEffect(() => {
+    const userType = localStorage.getItem('user_type');
+    if(userType==="employee"){
+      setMainMenu(EmployeeMenu);
+    }
+    else{
+      setMainMenu(StudentMenu);
+    }
     document.addEventListener('keydown', escFunction, false);
     return () => {
       document.removeEventListener('keydown', escFunction, false);

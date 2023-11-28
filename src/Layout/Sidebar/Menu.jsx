@@ -1,4 +1,4 @@
-export const MENUITEMS = [
+export const EmployeeMenu = [
   {
     menutitle: "General",
     menucontent: "Dashboards,Widgets",
@@ -750,3 +750,62 @@ export const MENUITEMS = [
     ],
   },
 ];
+
+export const StudentMenu = [
+  {
+    menutitle: "General",
+    menucontent: "Dashboards,Widgets",
+    Items: [
+      {
+        path: `/dashboard`,
+        icon: "home",
+        title: "Dashboard",
+        type: "link",
+        badge: "badge badge-light-primary",
+        active: false,
+      },
+      {
+        path: `/my-profile`,
+        icon: "widget",
+        title: "My Profile",
+        type: "link",
+        badge: "badge badge-light-primary",
+        active: false,
+      },
+      {
+        path: `/health-management`,
+        icon: "widget",
+        title: "Health Management",
+        type: "link",
+        badge: "badge badge-light-primary",
+        active: false,
+      },
+      {
+        path: `/student-foodbook`,
+        icon: "widget",
+        title: "Student FoodBook",
+        type: "link",
+        badge: "badge badge-light-primary",
+        active: false,
+      },
+     
+      {
+        path: `/complaints`,
+        icon: "widget",
+        title: "Complaints",
+        type: "link",
+        badge: "badge badge-light-primary",
+        active: false,
+      },
+      {
+        path: `/food-calendar`,
+        icon: "widget",
+        title: "Food Calendar",
+        type: "link",
+        badge: "badge badge-light-primary",
+        active: false,
+      },
+      
+    ]
+  }
+]
