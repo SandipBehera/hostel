@@ -5,19 +5,19 @@ FROM node:18-alpine
 WORKDIR /hostel_managment/src/app
 
 # Copy package.json and package-lock.json to the working directory
-COPY package*.json ./
+COPY package*.json ./ yarn.lock ./
 
 # Install project dependencies
-RUN npm install
+RUN yarn install
 
 # Copy the entire project to the working directory
 COPY . .
 
 # Build the React app for production
-RUN npm run build
+RUN yarn build
 
 # Expose the port that the app will run on
 EXPOSE 3000
 
 # Specify the command to run on container startup
-CMD ["npm", "start"]
+CMD ["yarn", "start"]
