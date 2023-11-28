@@ -128,10 +128,9 @@ const AllStudents = () => {
     });
     const resproom = await response.json();
 
-   if(resproom.ok){
-  updateTableData(userid, selectedHostel, selectedRoom);
+ 
   setAssignRoomModalOpen(false);
-}
+
    
     
 

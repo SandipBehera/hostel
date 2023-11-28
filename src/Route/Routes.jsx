@@ -192,6 +192,7 @@ import Dashboard from "../pages/Dashboard";
 import CreateComplain from "../pages/General/CreateComplain";
 import ViewComplain from "../pages/General/ViewComplain";
 import OutingForm from "../pages/OutingApproval/OutingForm";
+import ComplaintStatus from "../pages/General/ComplaintStatus";
 
 export const routes = [
   { path: `/dashboard`, Component: <Dashboard /> },
@@ -223,6 +224,8 @@ export const routes = [
    //Compain Management  
    { path: `/create-complain`, Component: <CreateComplain /> },
    { path: `/view-complain`, Component: <ViewComplain /> },
+   { path: `/view-complain/complain-status/:id`, Component: <ComplaintStatus /> },
+
    //outing approval
    { path: `/outing`, Component: <OutingForm/> },
   //employee Management routes ends
