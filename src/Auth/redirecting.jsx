@@ -20,12 +20,13 @@ const RedirectionPage = () => {
         localStorage.setItem("login", JSON.stringify(true));
         if (data) {
           // User exists, redirect to the dashboard
-          navigation("/dashboard");
+
           localStorage.setItem("login", JSON.stringify(true));
           localStorage.setItem("authenticated", JSON.stringify(true));
           localStorage.setItem("userId", data.data.user_id);
           localStorage.setItem("Name", data.data.name);
           localStorage.setItem("userType", data.data.user_type);
+          navigation(`/${data.data.user_type}/${data.data.user_id}/dashboard`);
         } else {
           // User does not exist, redirect to the login page
           navigation("/login");

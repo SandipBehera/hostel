@@ -14,18 +14,20 @@ const SidebarMenuItems = ({
   const { layout } = useContext(CustomizerContext);
   const layout1 = localStorage.getItem("sidebar_layout") || layout;
 
-  const [MENUITEMS, setMenuitem]= React.useState([]);
+  const [MENUITEMS, setMenuitem] = React.useState([]);
+  const [userType, setUserType] = React.useState();
+  const [userId, setUserId] = React.useState();
 
-  React.useEffect(()=>{
-    const userType = localStorage.getItem('userType');
-    console.log(userType);
-    if(userType==="employee"){
+  React.useEffect(() => {
+    const userType = localStorage.getItem("userType");
+    setUserType(localStorage.getItem("userType"));
+    setUserId(localStorage.getItem("userId"));
+    if (userType === "employee") {
       setMenuitem(EmployeeMenu);
-    }
-    else{
+    } else {
       setMenuitem(StudentMenu);
     }
-  },[]);
+  }, []);
 
   console.log(MENUITEMS);
   const id = window.location.pathname.split("/").pop();
@@ -126,7 +128,7 @@ const SidebarMenuItems = ({
 
               {menuItem.type === "link" ? (
                 <Link
-                  to={menuItem.path}
+                  to={`/${userType}/${userId}${menuItem.path}`}
                   className={`sidebar-link sidebar-title link-nav  ${
                     CurrentPath.includes(menuItem.title.toLowerCase())
                       ? "active"
@@ -206,7 +208,7 @@ const SidebarMenuItems = ({
 
                         {childrenItem.type === "link" ? (
                           <Link
-                            to={childrenItem.path}
+                            to={`/${userType}/${userId}${childrenItem.path}`}
                             className={`${
                               CurrentPath.includes(
                                 childrenItem?.title?.toLowerCase()
