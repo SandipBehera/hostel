@@ -22,6 +22,8 @@ export default function CreateComplain() {
     setContent(newContent);
   };
 
+  const role  = localStorage.getItem("userType");
+
   const [issueType, setIssueType] = useState("");
   const [hostelNumber, setHostelNumber] = useState("");
   const [roomNumber, setRoomNumber] = useState("");
@@ -121,7 +123,8 @@ export default function CreateComplain() {
               </Input>
             </FormGroup>
 
-            <FormGroup>
+            {role==="employee" ? (
+              <FormGroup>
               <label>Assign To:</label>
               <Input
                 className="form-control form-control-secondary-fill btn-square w-50"
@@ -138,32 +141,31 @@ export default function CreateComplain() {
                 ))}
               </Input>
             </FormGroup>
+
+            ): ""}
           </div>
         )}
 
         {(issueType === "Mess Issue" || issueType === "General Issue") && (
           <div>
-            <FormGroup>
-              <Label>
-                {issueType === "Mess Issue"
-                  ? "Assign Employee:"
-                  : "Assign Employee:"}
-              </Label>
+            {role==="employee" ? (<FormGroup>
+              <label>Assign To:</label>
               <Input
                 className="form-control form-control-secondary-fill btn-square w-50"
                 name="select"
                 type="select"
-                value={selectedEmployee}
-                onChange={(e) => setSelectedEmployee(e.target.value)}
+                value={assignTo}
+                onChange={(e) => setAssignTo (e.target.value)}
               >
-                <option value="">Select an employee</option>
-                {employees.map((employee) => (
-                  <option key={employee} value={employee}>
-                    {employee}
+                <option value="">Select a person to assign</option>
+                {Object.values(wardenNames).map((warden) => (
+                  <option key={warden} value={warden}>
+                    {warden}
                   </option>
                 ))}
               </Input>
-            </FormGroup>
+            </FormGroup>) 
+          :""}
           </div>
         )}
 
