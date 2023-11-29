@@ -7,22 +7,31 @@ import { LocalApi, WebApi } from "../../api";
 const FoodBook = () => {
   const [data, setData] = useState([]);
 
-  useEffect(async () => {
-    const response = await fetch(`${WebApi}/today_booking`, {
-      method: "GET",
-    });
-    const respData = await response.json();
-    setData(respData.data);
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await fetch(`${WebApi}/today_booking`, {
+          method: "GET",
+        });
+        const respData = await response.json();
+        setData(respData.data);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+        // Handle the error, for example, set an error state
+      }
+    };
+
+    fetchData(); // Call the async function immediately
   }, []);
 
-  const handleExport = () => {
-    const csv = Papa.unparse(data);
-    const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
-    const link = document.createElement("a");
-    link.href = window.URL.createObjectURL(blob);
-    link.download = "food_book.csv";
-    link.click();
-  };
+  // const handleExport = () => {
+  //   const csv = Papa.unparse(data);
+  //   const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+  //   const link = document.createElement("a");
+  //   link.href = window.URL.createObjectURL(blob);
+  //   link.download = "food_book.csv";
+  //   link.click();
+  // };
 
   return (
     <Fragment>
@@ -34,7 +43,7 @@ const FoodBook = () => {
                 <H5 className="mb-0">Food Book</H5>
               </Col>
               <Col xs="auto">
-                <Button onClick={handleExport}>Export</Button>
+                {/* <Button onClick={handleExport}>Export</Button> */}
               </Col>
             </Row>
           </CardHeader>
@@ -53,18 +62,26 @@ const FoodBook = () => {
                 </tr>
               </thead>
               <tbody>
-                {data.map((item, index) => (
-                  <tr key={index}>
-                    <td>{item.id}</td>
-                    <td>{item.regd_no}</td>
-                    {/* <td>{item.studentName}</td>
+                {data.length < 0 ? (
+                  data.map((item, index) => (
+                    <tr key={index}>
+                      <td>{item.id}</td>
+                      <td>{item.regd_no}</td>
+                      {/* <td>{item.studentName}</td>
               <td>{item.type}</td>
               <td>{item.breakfast}</td>
               <td>{item.lunch}</td>
               <td>{item.dinner}</td>
               <td > {item.type==="hostler"?"paid":item.payment}</td> */}
+                    </tr>
+                  ))
+                ) : (
+                  <tr>
+                    <td colSpan="8" style={{ textAlign: "center" }}>
+                      <p style={{ color: "red" }}>No Data Found</p>
+                    </td>
                   </tr>
-                ))}
+                )}
               </tbody>
             </Table>
           </div>
