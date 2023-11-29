@@ -1,7 +1,11 @@
-import React from "react";
+import React, { Fragment } from "react";
 import { Container, Row, Col, Card, CardBody, CardHeader } from "reactstrap";
-import { H5 } from "../../AbstractElements";
+import { Breadcrumbs, H5 } from "../../AbstractElements";
 import ActivityCard from "../../pages/Dashboard/ActivityCard";
+import GreetingCard from "../../pages/Dashboard/GreetingCard";
+import { ActivityData } from "../../Data/DefaultDashboard";
+import WidgetsWrapper from "../../pages/Dashboard/WidgetsWraper";
+import RecentOrders from "../../pages/Dashboard/RecentOrders";
 
 const StudentDashboard = () => {
   // Simulated data (you'll fetch this data from API/backend)
@@ -55,7 +59,7 @@ const StudentDashboard = () => {
 
   return (
     <Container className="mt-4">
-      <Row>
+      {/* <Row>
         <Col lg="12" className="mb-4">
           <Card>
             <CardHeader>
@@ -140,7 +144,7 @@ const StudentDashboard = () => {
               </Row>
 
               <Row>
-                <Col lg="6" className="mb-4">
+                <Col lg="6" className="mb-6">
                   <Card
                     style={{ ...cardStyle, backgroundColor: "whitesmoke" }}
                     onMouseOver={handleMouseOver}
@@ -155,31 +159,39 @@ const StudentDashboard = () => {
                     </CardBody>
                   </Card>
                 </Col>
+                <ActivityCard/>
               </Row>
               {/* Health Management Section */}
-              <Row>
-                <Col lg="6" className="mt-4" backgroundColor="white">
-                  <Card
-                    style={{ ...cardStyle, backgroundColor: "whitesmoke" }}
-                    onMouseOver={handleMouseOver}
-                    onMouseOut={handleMouseOut}
-                  >
-                    <CardHeader>
-                      <H5>Health Information</H5>
-                    </CardHeader>
-                    <CardBody>
-                      <p>Blood Pressure: {healthInfo.bloodPressure}</p>
-                      <p>Heart Rate: {healthInfo.heartRate}</p>
-                      <p>Temperature: {healthInfo.temperature}</p>
-                      <p>Weight: {healthInfo.weight}</p>
-                      <p>Height: {healthInfo.height}</p>
-                    </CardBody>
-                  </Card>
-                </Col>
-              </Row>
+      {/* <Row>
+        <Col lg="6" className="mt-4" backgroundColor="white">
+          <Card
+            style={{ ...cardStyle, backgroundColor: 'whitesmoke' }}
+            onMouseOver={handleMouseOver}
+            onMouseOut={handleMouseOut}
+          >
+            <CardHeader><H5>Health Information</H5></CardHeader>
+            <CardBody>
+              <p>Blood Pressure: {healthInfo.bloodPressure}</p>
+              <p>Heart Rate: {healthInfo.heartRate}</p>
+              <p>Temperature: {healthInfo.temperature}</p>
+              <p>Weight: {healthInfo.weight}</p>
+              <p>Height: {healthInfo.height}</p>
             </CardBody>
           </Card>
         </Col>
+      </Row>
+            </CardBody>
+          </Card>
+        </Col> */}
+      {/* </Row> */}
+      <Row className="widget-grid">
+        <GreetingCard name={localStorage.getItem("Name")} />
+        <WidgetsWrapper />
+        <ActivityCard
+          ActivityData={ActivityData}
+          columnHeadder={"Complaint Tracker"}
+        />
+        <RecentOrders />
       </Row>
     </Container>
   );

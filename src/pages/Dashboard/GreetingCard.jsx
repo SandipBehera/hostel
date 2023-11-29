@@ -5,7 +5,7 @@ import { WelcomeMessage, WelcomeToCuba, WhatsNew } from "../../Constant";
 
 import CarToon from "../../assets/images/dashboard/cartoon.svg";
 
-const GreetingCard = () => {
+const GreetingCard = ({name}) => {
   return (
     <Col className="col-xxl-4 col-sm-6 box-col-6">
       <Card className=" profile-box">
@@ -13,7 +13,7 @@ const GreetingCard = () => {
           <Media>
             <Media body>
               <div className="greeting-user">
-                <H4 attrH4={{ className: "f-w-600" }}>Welcome to HMS</H4>
+                <H4 attrH4={{ className: "f-w-600" }}>Welcome {name} to HMS</H4>
                 <P>{WelcomeMessage}</P>
                 <div className="whatsnew-btn">
                   <Btn

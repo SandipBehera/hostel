@@ -12,6 +12,7 @@ import PreAccountCard from "./PreAccountCard";
 import TotalUserAndFollower from "./TotalUserAndFollower";
 import PaperNote from "./PaperNote";
 import RecentSales from "./RecentSales";
+import { ActivityData } from "../../Data/DefaultDashboard";
 
 const Dashboard = () => {
   return (
@@ -19,11 +20,14 @@ const Dashboard = () => {
       <Breadcrumbs mainTitle="Default" parent="Dashboard" title="Default" />
       <Container fluid={true}>
         <Row className="widget-grid">
-          <GreetingCard />
+          <GreetingCard name={localStorage.getItem("Name")} />
           <WidgetsWrapper />
           <OverallBalance />
           <RecentOrders />
-          <ActivityCard />
+          <ActivityCard
+            ActivityData={ActivityData}
+            columnHeadder={"activity"}
+          />
           <RecentSales />
           <TimelineCard />
           <PreAccountCard />

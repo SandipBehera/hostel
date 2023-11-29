@@ -1,83 +1,78 @@
-// import React from 'react'
-
-// const Complaints = () => {
-//   return (
-//     <div>
-//       <p>complain</p>
-//     </div>
-//   )
-// }
-
-// export default Complaints
-
-
-import React, { useState } from 'react';
-import { Container, Row, Col, Button, Form, FormGroup, Label, Input } from 'reactstrap';
+import React, { Fragment, useState, useEffect } from 'react';
+import { Form, FormGroup, Label, Input, Button, Card, CardBody, CardTitle, CardText } from 'reactstrap';
 import { H5 } from '../../AbstractElements';
-import ActivityCard from '../../pages/Dashboard/ActivityCard';
-
 
 const Complaints = () => {
-  const [studentIdBiometric, setStudentIdBiometric] = useState('');
-  const [studentIdManual, setStudentIdManual] = useState('');
+  const [complaint, setComplaint] = useState('');
+  const [userComplaints, setUserComplaints] = useState([]);
 
-  const handleBiometricCheckIn = () => {
-    // Perform actions to record student's check-in using biometric system
-    // Update attendance data in the state or database
-    console.log(`Student ${studentIdBiometric} checked in.`);
-  };
+  // Simulated user ID (replace this with actual user ID if available)
+  const userId = 123;
 
-  const handleManualAttendance = () => {
-    // Perform actions to manually mark student attendance
-    // Update attendance data in the state or database
-    console.log(`Attendance marked for Student ${studentIdManual}.`);
+  // Fetch user's complaints (simulated data fetching)
+  useEffect(() => {
+    // Simulated data for demonstration
+    const dummyData = [
+      { id: 1, issue: 'Room cleanliness issue', status: 'Pending' },
+      { id: 2, issue: 'AC not working', status: 'In Progress' },
+      // Add more complaints here
+    ];
+
+    setUserComplaints(dummyData);
+  }, []);
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    // Simulated API call to add a new complaint
+    const newComplaint = {
+      id: userComplaints.length + 1,
+      issue: complaint,
+      status: 'Pending',
+    };
+    setUserComplaints([...userComplaints, newComplaint]);
+    // Clear form after submission
+    setComplaint('');
   };
 
   return (
-    <Container>
-      <Row>
-        <Col md="6">
-          <h3>Biometric Check-In</h3>
-          <Form>
-            <FormGroup>
-              <Label for="studentIdBiometric">Student ID</Label>
-              <Input
-                type="text"
-                name="studentIdBiometric"
-                id="studentIdBiometric"
-                placeholder="Enter Student ID"
-                value={studentIdBiometric}
-                onChange={(e) => setStudentIdBiometric(e.target.value)}
-              />
-            </FormGroup>
-            <Button onClick={handleBiometricCheckIn} color="primary">Check In</Button>
-          </Form>
-        </Col>
-        <Col md="6">
-          <h3>Manual Attendance</h3>
-          <Form>
-            <FormGroup>
-              <Label for="studentIdManual">Student ID</Label>
-              <Input
-                type="text"
-                name="studentIdManual"
-                id="studentIdManual"
-                placeholder="Enter Student ID"
-                value={studentIdManual}
-                onChange={(e) => setStudentIdManual(e.target.value)}
-              />
-            </FormGroup>
-            <Button onClick={handleManualAttendance} color="success">Mark Attendance</Button>
-          </Form>
-        </Col>
-      </Row>
-      {/* Add other dashboard components */}
-      <ActivityCard />
-    </Container>
-   
-    
+    <Fragment>
+      <H5>Submit Complaint</H5>
+      <Form onSubmit={handleSubmit}>
+        <FormGroup>
+          <Label for="complaintText">Enter Your Complaint:</Label>
+          <Input
+            type="textarea"
+            name="complaintText"
+            id="complaintText"
+            placeholder="Describe your issue..."
+            value={complaint}
+            onChange={(e) => setComplaint(e.target.value)}
+          />
+        </FormGroup>
+        <Button type="submit" color="secondary">Submit</Button>
+      </Form>
+      <div className="d-flex justify-content-center align-items-center mt-4">
+        <Card style={{ minWidth: '300px', maxWidth: '600px', marginTop: '-30px' }}>
+          <CardBody>
+            <CardTitle tag="h5">My Complaints</CardTitle>
+            {userComplaints.length > 0 ? (
+              userComplaints.map((complaint) => (
+                <CardText key={complaint.id}>
+                  <strong>Issue:</strong> {complaint.issue}
+                  <br />
+                  <strong>Status:</strong> {complaint.status}
+                </CardText>
+              ))
+            ) : (
+              <CardText>No complaints found.</CardText>
+            )}
+          </CardBody>
+        </Card>
+      </div>
+    </Fragment>
   );
 };
 
 export default Complaints;
+
 
