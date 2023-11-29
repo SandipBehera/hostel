@@ -58,142 +58,24 @@ const StudentDashboard = () => {
   };
 
   return (
-    <Container className="mt-4">
-      {/* <Row>
-        <Col lg="12" className="mb-4">
-          <Card>
-            <CardHeader>
-              <H5>Student Information</H5>
-            </CardHeader>
-            <CardBody>
-              <Row>
-                <Col lg="6" className="mb-4">
-                  <Card
-                    style={{ ...cardStyle, backgroundColor: "whitesmoke" }}
-                    onMouseOver={handleMouseOver}
-                    onMouseOut={handleMouseOut}
-                  >
-                    <CardHeader>
-                      <H5>Attendance Information</H5>
-                    </CardHeader>
-                    <CardBody>
-                      <p>Present: {studentInfo.daysPresent} days</p>
-                      <p>Absent: {studentInfo.daysAbsent} days</p>
-                    </CardBody>
-                  </Card>
-                </Col>
-
-                <Col lg="6" className="mb-4">
-                  <Card
-                    style={{ ...cardStyle, backgroundColor: "whitesmoke" }}
-                    onMouseOver={handleMouseOver}
-                    onMouseOut={handleMouseOut}
-                  >
-                    <CardHeader>
-                      <H5>Outing Information</H5>
-                    </CardHeader>
-                    <CardBody>
-                      <p>Planned: {studentInfo.outingInfo.planned}</p>
-                      <p>Unplanned: {studentInfo.outingInfo.unplanned}</p>
-                    </CardBody>
-                  </Card>
-                </Col>
-              </Row>
-
-              <Row>
-                <Col lg="6" className="mb-4">
-                  <Card
-                    style={{ ...cardStyle, backgroundColor: "whitesmoke" }}
-                    onMouseOver={handleMouseOver}
-                    onMouseOut={handleMouseOut}
-                  >
-                    <CardHeader>
-                      <H5>Fee Data</H5>
-                    </CardHeader>
-                    <CardBody>
-                      <p>Total Fees: ${studentInfo.feeData.totalFees}</p>
-                      <p>Fees Paid: ${studentInfo.feeData.feesPaid}</p>
-                      <p>Fees Pending: ${studentInfo.feeData.feesPending}</p>
-                    </CardBody>
-                  </Card>
-                </Col>
-
-                <Col lg="6" className="mb-4">
-                  <Card
-                    style={{ ...cardStyle, backgroundColor: "whitesmoke" }}
-                    onMouseOver={handleMouseOver}
-                    onMouseOut={handleMouseOut}
-                  >
-                    <CardHeader>
-                      <H5>Complaints Status</H5>
-                    </CardHeader>
-                    <CardBody>
-                      <p>
-                        Total Complaints:{" "}
-                        {studentInfo.complaints.totalComplaints}
-                      </p>
-                      <p>
-                        Pending Issues: {studentInfo.complaints.pendingIssues}
-                      </p>
-                      <p>
-                        Issues Resolved: {studentInfo.complaints.issueResolved}
-                      </p>
-                    </CardBody>
-                  </Card>
-                </Col>
-              </Row>
-
-              <Row>
-                <Col lg="6" className="mb-6">
-                  <Card
-                    style={{ ...cardStyle, backgroundColor: "whitesmoke" }}
-                    onMouseOver={handleMouseOver}
-                    onMouseOut={handleMouseOut}
-                  >
-                    <CardHeader>
-                      <H5>Academic Information</H5>
-                    </CardHeader>
-                    <CardBody>
-                      <p>Grade: {studentInfo.academicInfo.grade}</p>
-                      <p>Rank: {studentInfo.academicInfo.rank}</p>
-                    </CardBody>
-                  </Card>
-                </Col>
-                <ActivityCard/>
-              </Row>
-              {/* Health Management Section */}
-      {/* <Row>
-        <Col lg="6" className="mt-4" backgroundColor="white">
-          <Card
-            style={{ ...cardStyle, backgroundColor: 'whitesmoke' }}
-            onMouseOver={handleMouseOver}
-            onMouseOut={handleMouseOut}
-          >
-            <CardHeader><H5>Health Information</H5></CardHeader>
-            <CardBody>
-              <p>Blood Pressure: {healthInfo.bloodPressure}</p>
-              <p>Heart Rate: {healthInfo.heartRate}</p>
-              <p>Temperature: {healthInfo.temperature}</p>
-              <p>Weight: {healthInfo.weight}</p>
-              <p>Height: {healthInfo.height}</p>
-            </CardBody>
-          </Card>
-        </Col>
-      </Row>
-            </CardBody>
-          </Card>
-        </Col> */}
-      {/* </Row> */}
-      <Row className="widget-grid">
-        <GreetingCard name={localStorage.getItem("Name")} />
-        <WidgetsWrapper />
-        <ActivityCard
-          ActivityData={ActivityData}
-          columnHeadder={"Complaint Tracker"}
-        />
-        <RecentOrders />
-      </Row>
-    </Container>
+    <Fragment>
+      <Breadcrumbs
+        mainTitle="Student Dashboard"
+        parent="Dashboard"
+        title="Student Dashboard"
+      />
+      <Container className="mt-4">
+        <Row className="widget-grid">
+          <GreetingCard name={localStorage.getItem("Name")} />
+          <WidgetsWrapper />
+          <ActivityCard
+            ActivityData={ActivityData}
+            columnHeadder={"Complaint Tracker"}
+          />
+          <RecentOrders />
+        </Row>
+      </Container>
+    </Fragment>
   );
 };
 
