@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { Fragment, useContext, useEffect, useState } from "react";
 import { Box } from "react-feather/dist";
 import {
   Label,
@@ -11,6 +11,8 @@ import {
   ModalHeader,
   ModalBody,
   Button,
+  Container,
+  Row,
 } from "reactstrap";
 import Select from "react-select";
 import { options2 } from "../../Components/Forms/FormWidget/FormSelect2/OptionDatas";
@@ -39,7 +41,7 @@ import {
   SomethingElseHere,
 } from "../../Constant";
 import { FaSearch } from "react-icons/fa";
-import { H5, Image, H1, Btn } from "../../AbstractElements";
+import { H5, Image, H1, Btn, Breadcrumbs } from "../../AbstractElements";
 import TableContext from "../../_helper/Table";
 import { BasicColorData } from "../../Components/Common/Data/Ui-kits/index";
 import CommonDropDown from "../../Components/UiKits/Dropdown/Common/CommonDropDown";
@@ -80,7 +82,6 @@ const AllStudents = () => {
     setAssignRoomModalOpen(!assignRoomModalOpen);
     setSelectedRowId(rowId);
   };
-  
 
   useEffect(() => {
     const getData = async () => {
@@ -109,8 +110,6 @@ const AllStudents = () => {
     return { value: key.id, label: key.hostel_name };
   });
 
-  
-
   const handleAssignRoom = async () => {
     const data = {
       user_id: userid,
@@ -128,17 +127,13 @@ const AllStudents = () => {
     });
     const resproom = await response.json();
 
-   if(resproom.ok){
-  updateTableData(userid, selectedHostel, selectedRoom);
-  setAssignRoomModalOpen(false);
-}
-   
-    
-
+    if (resproom.ok) {
+      updateTableData(userid, selectedHostel, selectedRoom);
+      setAssignRoomModalOpen(false);
+    }
   };
 
   const handleHostelSelect = (hostelName) => {
-   
     setSelectedHostel(hostelName);
     const floors = hostelName
       ? Array.from(
@@ -171,7 +166,6 @@ const AllStudents = () => {
 
   const handleChange = (e) => {
     setSearchTerm(e.target.value);
-  
   };
 
   const toggleDropdown = (id) => {
@@ -191,195 +185,208 @@ const AllStudents = () => {
   const toggleModal = () => {
     setModalOpen(!modalOpen);
   };
-  
+
   return (
-    <div className="page-wrapper" id="pageWrapper">
-      <div className="text-center">
-        <H1 style={{ color: "#61A3BA" }}>All Students</H1>
-      </div>
+    <Fragment>
+      <Breadcrumbs
+        parent="Student"
+        mainTitle="All Hostel Students "
+        subParent="Hostel Students"
+        title="All Hostel Students"
+      />
+      <Container fluid={true}>
+        <Card>
+          <CardBody>
+            <Row style={{ padding: "6px" }}>
+              <Col sm="12">
+                <div
+                  style={{ display: "flex", justifyContent: "space-between" }}
+                >
+                  <div className="mb-2" style={{ width: "30%" }}>
+                    <Label className="col-form-label"></Label>
+                    <Select
+                      options={options2}
+                      className="js-example-basic-single col-sm-12"
+                    />
+                  </div>
 
-      <div style={{ display: "flex", justifyContent: "space-between" }}>
-        <div className="mb-2" style={{ width: "30%" }}>
-          <Label className="col-form-label"></Label>
-          <Select
-            options={options2}
-            className="js-example-basic-single col-sm-12"
-          />
-        </div>
+                  <div className="" style={{ width: "30%" }}>
+                    <Label className="col-form-label"></Label>
+                    <Select
+                      options={options2}
+                      className="js-example-basic-single col-sm-12"
+                    />
+                  </div>
+                  <div className="">
+                    <Label className="col-form-label"></Label>
+                    <InputGroup>
+                      <InputGroupText>
+                        <FaSearch />
+                      </InputGroupText>
 
-        <div className="" style={{ width: "30%" }}>
-          <Label className="col-form-label"></Label>
-          <Select
-            options={options2}
-            className="js-example-basic-single col-sm-12"
-          />
-        </div>
-        <div className="">
-          <Label className="col-form-label"></Label>
-          <InputGroup>
-            <InputGroupText>
-              <FaSearch />
-            </InputGroupText>
+                      <Input
+                        type="text"
+                        placeholder="Search"
+                        value={searchTerm}
+                        onChange={handleChange}
+                      />
+                    </InputGroup>
+                  </div>
+                </div>
+              </Col>
+            </Row>
 
-            <Input
-              type="text"
-              placeholder="Search"
-              value={searchTerm}
-              onChange={handleChange}
-            />
-          </InputGroup>
-        </div>
-      </div>
-
-      <div className="mt-5">
-        <Col sm="12">
-          <Card>
-            <div className="table-responsive">
-              <Table>
-                <thead>
-                  <tr className="border-bottom-primary">
-                    <th scope="col">{"Id"}</th>
-                    <th scope="col">{" Name"}</th>
-                    <th scope="col">{"Semester Year"}</th>
-                    <th scope="col">{"Branch"}</th>
-                    <th scope="col">{"Assigned Hostel"}</th>
-                    <th scope="col">{"View"}</th>
-                    <th scope="col">{"Action"}</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {tableData
-                    // .filter((item) => {
-                    //   return searchTerm.toLowerCase() === " "
-                    //     ? item
-                    //     : item.first_name.toLowerCase().includes(searchTerm);
-                    // })
-                    .map((item) => (
-                      <tr
-                        key={item.id}
-                        className={`border-bottom-${item.color}`}
-                      >
-                        <th scope="row">{item.id}</th>
-                        <td>
-                          {/* <Image
+            <Col sm="12">
+              <Card>
+                <div className="table-responsive">
+                  <Table>
+                    <thead>
+                      <tr className="border-bottom-primary">
+                        <th scope="col">{"Id"}</th>
+                        <th scope="col">{" Name"}</th>
+                        <th scope="col">{"Semester Year"}</th>
+                        <th scope="col">{"Branch"}</th>
+                        <th scope="col">{"Assigned Hostel"}</th>
+                        <th scope="col">{"View"}</th>
+                        <th scope="col">{"Action"}</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {tableData
+                        // .filter((item) => {
+                        //   return searchTerm.toLowerCase() === " "
+                        //     ? item
+                        //     : item.first_name.toLowerCase().includes(searchTerm);
+                        // })
+                        .map((item) => (
+                          <tr
+                            key={item.id}
+                            className={`border-bottom-${item.color}`}
+                          >
+                            <th scope="row">{item.id}</th>
+                            <td>
+                              {/* <Image
                               attrImage={{
                                 className: "img-30 me-2",
                                 src: require(`../../assets/images/user/${item.image}`),
                                 alt: "user",
                               }}
                             /> */}
-                          {item.name}
-                        </td>
+                              {item.name}
+                            </td>
 
-                        <td>{item.semesterYear}</td>
-                        <td>{item.branch}</td>
-                        <td>
-                        
-                        {
-                          item.room_id !== null
-                          ? `${item?.hostel_name}:${item.room_id}`
-                           : "need to assign"
-                          }
-                        </td>
-                        <td>
-                          <PopUpButton />
-                        </td>
-                        <td>
-                          <Dropdown
-                            isOpen={activeDropdown === item.id}
-                            toggle={() => toggleDropdown(item.id)}
-                          >
-                            <DropdownToggle caret>{Action}</DropdownToggle>
-                            <DropdownMenu>
-                              <DropdownItem
-                                onClick={() => handleOptionSelect("Edit")}
+                            <td>{item.semesterYear}</td>
+                            <td>{item.branch}</td>
+                            <td>
+                              {item.room_id !== null
+                                ? `${item?.hostel_name}:${item.room_id}`
+                                : "need to assign"}
+                            </td>
+                            <td>
+                              <PopUpButton />
+                            </td>
+                            <td>
+                              <Dropdown
+                                isOpen={activeDropdown === item.id}
+                                toggle={() => toggleDropdown(item.id)}
                               >
-                                Edit
-                              </DropdownItem>
-                              <DropdownItem
-                                onClick={() =>
-                                  handleOptionSelect(
-                                    "Assign Room",
-                                    item.username
-                                  )
-                                }
-                              >
-                               {item.hostel_name ?"Reassign Room": "Assign Room"}
-                              </DropdownItem>
-                              <DropdownItem onClick={() => setActive(!active)}>
-                                {active ? "ACTIVE" : "IN ACTIVE"}
-                              </DropdownItem>
-                            </DropdownMenu>
-                          </Dropdown>
-                        </td>
-                      </tr>
-                    ))}
-                </tbody>
-              </Table>
+                                <DropdownToggle caret>{Action}</DropdownToggle>
+                                <DropdownMenu>
+                                  <DropdownItem
+                                    onClick={() => handleOptionSelect("Edit")}
+                                  >
+                                    Edit
+                                  </DropdownItem>
+                                  <DropdownItem
+                                    onClick={() =>
+                                      handleOptionSelect(
+                                        "Assign Room",
+                                        item.username
+                                      )
+                                    }
+                                  >
+                                    {item.hostel_name
+                                      ? "Reassign Room"
+                                      : "Assign Room"}
+                                  </DropdownItem>
+                                  <DropdownItem
+                                    onClick={() => setActive(!active)}
+                                  >
+                                    {active ? "ACTIVE" : "IN ACTIVE"}
+                                  </DropdownItem>
+                                </DropdownMenu>
+                              </Dropdown>
+                            </td>
+                          </tr>
+                        ))}
+                    </tbody>
+                  </Table>
 
-              {assignRoomModalOpen && (
-                <Modal
-                  isOpen={assignRoomModalOpen}
-                  toggle={() => toggleAssignRoomModal(null)}
-                >
-                  <ModalHeader toggle={() => toggleAssignRoomModal(null)}>
-                    Assign Room
-                  </ModalHeader>
-                  <ModalBody>
-                    <FormGroup>
-                      <Label for="hostelSelect">Hostel Name</Label>
-                      <Select
-                        id="hostelSelect"
-                        options={hostel_name}
-                        onChange={(selectedOption) =>
-                          handleHostelSelect(selectedOption.value)
-                        }
-                      />
-                    </FormGroup>
-                    <FormGroup>
-                      <Label for="floorSelect">Floor</Label>
-                      <Select
-                        id="floorSelect"
-                        options={floorData}
-                        onChange={(selectedOption) =>
-                          handleFloorSelect(selectedOption.value)
-                        }
-                      />
-                    </FormGroup>
-                    <FormGroup>
-                      <Label for="roomNumberSelect">Room Number</Label>
-                      <Select
-                        id="roomNumberSelect"
-                        options={roomData}
-                        onChange={(selectedOption) =>
-                          setSelectedRoom(selectedOption.value)
-                        }
-                      />
-                    </FormGroup>
-                    <Button color="primary" onClick={handleAssignRoom}>
-                      Assign Room
-                    </Button>
-                  </ModalBody>
-                </Modal>
-              )}
+                  {assignRoomModalOpen && (
+                    <Modal
+                      isOpen={assignRoomModalOpen}
+                      toggle={() => toggleAssignRoomModal(null)}
+                    >
+                      <ModalHeader toggle={() => toggleAssignRoomModal(null)}>
+                        Assign Room
+                      </ModalHeader>
+                      <ModalBody>
+                        <FormGroup>
+                          <Label for="hostelSelect">Hostel Name</Label>
+                          <Select
+                            id="hostelSelect"
+                            options={hostel_name}
+                            onChange={(selectedOption) =>
+                              handleHostelSelect(selectedOption.value)
+                            }
+                          />
+                        </FormGroup>
+                        <FormGroup>
+                          <Label for="floorSelect">Floor</Label>
+                          <Select
+                            id="floorSelect"
+                            options={floorData}
+                            onChange={(selectedOption) =>
+                              handleFloorSelect(selectedOption.value)
+                            }
+                          />
+                        </FormGroup>
+                        <FormGroup>
+                          <Label for="roomNumberSelect">Room Number</Label>
+                          <Select
+                            id="roomNumberSelect"
+                            options={roomData}
+                            onChange={(selectedOption) =>
+                              setSelectedRoom(selectedOption.value)
+                            }
+                          />
+                        </FormGroup>
+                        <Button color="primary" onClick={handleAssignRoom}>
+                          Assign Room
+                        </Button>
+                      </ModalBody>
+                    </Modal>
+                  )}
 
-              {/* popup modal view */}
+                  {/* popup modal view */}
 
-              <Modal isOpen={modalOpen} toggle={toggleModal}>
-                <ModalHeader toggle={toggleModal}>Popup Modal</ModalHeader>
-                <ModalBody>
-                  {/* Content for the modal */}
-                  <p>Popup content goes here.</p>
-                  <Button color="primary" onClick={toggleModal}>
-                    Close
-                  </Button>
-                </ModalBody>
-              </Modal>
-            </div>
-          </Card>
-        </Col>
-      </div>
-    </div>
+                  <Modal isOpen={modalOpen} toggle={toggleModal}>
+                    <ModalHeader toggle={toggleModal}>Popup Modal</ModalHeader>
+                    <ModalBody>
+                      {/* Content for the modal */}
+                      <p>Popup content goes here.</p>
+                      <Button color="primary" onClick={toggleModal}>
+                        Close
+                      </Button>
+                    </ModalBody>
+                  </Modal>
+                </div>
+              </Card>
+            </Col>
+          </CardBody>
+        </Card>
+      </Container>
+    </Fragment>
   );
 };
 

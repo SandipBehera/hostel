@@ -183,9 +183,8 @@ import FoodPlanner from "../pages/Setting/FoodPlanner";
 import FoodBook from "../pages/foodbook/FoodBook";
 import Take_Attendence from "../pages/Attendence-Management/Take_Attendence";
 
-
 import CreateAmenities from "../pages/Setting/CreateAmenities";
-import AllPlanner from "../pages/Setting/Component/RoomComponent/AllPlanner";
+import AllPlanner from "../pages/Setting/AllPlanner";
 import AllRoom from "../pages/Setting/AllRoom";
 import AttendenceReport from "../pages/Attendence-Management/AttendenceReport";
 import Dashboard from "../pages/Dashboard";
@@ -196,16 +195,16 @@ import HealthManagement from "../student_pages/healthmanagement/HealthManagement
 import Complaints from "../student_pages/complaints/Complaints";
 import FoodCalendar from "../student_pages/foodcalendar/FoodCalendar";
 import StudentFoodBook from "../student_pages/foodbook/StudentFoodBook";
-
-
-
+import CreateComplain from "../pages/General/CreateComplain";
+import ViewComplain from "../pages/General/ViewComplain";
+import OutingForm from "../pages/OutingApproval/OutingForm";
+import ComplaintStatus from "../pages/General/ComplaintStatus";
 
 export const routes = [
   { path: `/dashboard`, Component: <Dashboard /> },
   { path: `/widgets/general`, Component: <General /> },
   { path: `/widgets/chart`, Component: <Chart /> },
-  
- 
+
   //Food Book routes
   { path: `/food-book`, Component: <FoodBook /> },
 
@@ -228,7 +227,16 @@ export const routes = [
   { path: `/room-management`, Component: <RoomManagement /> },
   { path: `/allroom`, Component: <AllRoom /> },
   { path: `/create-aminity`, Component: <CreateAmenities /> },
+  //Compain Management
+  { path: `/create-complain`, Component: <CreateComplain /> },
+  { path: `/view-complain`, Component: <ViewComplain /> },
+  {
+    path: `/view-complain/complain-status/:id`,
+    Component: <ComplaintStatus />,
+  },
 
+  //outing approval
+  { path: `/outing`, Component: <OutingForm /> },
   //employee Management routes ends
 
   { path: `/ui-kits/typography`, Component: <Typography /> },
@@ -429,25 +437,23 @@ export const routes = [
   { path: `/app/faq`, Component: <FAQContent /> },
 ];
 
-
- export const studentRoutes = [
+export const studentRoutes = [
   { path: `/dashboard`, Component: <StudentDashboard /> },
 
   //My Profile routes
-  { path: `/my-profile`, Component: <MyProfile/> },
+  { path: `/my-profile`, Component: <MyProfile /> },
 
   //Health Management routes
-  { path:`/health-management`, Component: <HealthManagement /> },
+  { path: `/health-management`, Component: <HealthManagement /> },
 
-   //Food Book routes
-   { path: `/student-foodbook`, Component: <StudentFoodBook /> },
+  //Food Book routes
+  { path: `/student-foodbook`, Component: <StudentFoodBook /> },
 
   //  //Complaints routes
-   { path: `/complaints`, Component: <Complaints /> },
+  { path: `/complaints`, Component: <Complaints /> },
 
   //   //Food Calender routes
   { path: `/food-calendar`, Component: <FoodCalendar /> },
 
   //
 ];
-

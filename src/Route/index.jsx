@@ -13,6 +13,8 @@ import RedirectionPage from "../Auth/redirecting";
 const Routers = () => {
   const login = useState(JSON.parse(localStorage.getItem("login")))[0];
   const [authenticated, setAuthenticated] = useState(false);
+  const [userType, setUserType] = useState();
+  const [userId, setUserId] = useState();
   const defaultLayoutObj = classes.find(
     (item) => Object.values(item).pop(1) === "compact-wrapper"
   );
@@ -23,6 +25,9 @@ const Routers = () => {
     let abortController = new AbortController();
     let i = 0;
     setAuthenticated(JSON.parse(localStorage.getItem("authenticated")));
+    setUserType(localStorage.getItem("userType"));
+    setUserId(localStorage.getItem("userId"));
+
     console.ignoredYellowBox = ["Warning: Each", "Warning: Failed"];
     console.disableYellowBox = true;
     return () => {
@@ -34,24 +39,27 @@ const Routers = () => {
     <BrowserRouter basename={"/"}>
       <Suspense fallback={<Loader />}>
         <Routes>
-          <Route path={"/"} element={<PrivateRoute />}>
+          <Route path={`/${userType}/${userId}/`} element={<PrivateRoute />}>
             {login || authenticated ? (
               <>
                 <Route
                   exact
                   path={``}
-                  element={<Navigate to={`/dashboard`} />}
+                  element={<Navigate to={`/${userType}/${userId}/dashboard`} />}
                 />
                 <Route
                   exact
-                  path={`/`}
-                  element={<Navigate to={`/dashboard`} />}
+                  path={`/${userType}/${userId}/`}
+                  element={<Navigate to={`${userType}/${userId}/dashboard`} />}
                 />
               </>
             ) : (
               ""
             )}
-            <Route path={`/*`} element={<LayoutRoutes />} />
+            <Route
+              path={`/${userType}/${userId}/*`}
+              element={<LayoutRoutes />}
+            />
           </Route>
           <Route exact path={`/users/:userId`} element={<RedirectionPage />} />
           {/* <Route exact path={`/login`} element={<Signin />} /> */}

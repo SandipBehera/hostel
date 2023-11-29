@@ -1,0 +1,12 @@
+.link-text{
+    color: white;
+   
+}
+.link-text:hover {
+    color: wheat;
+    
+}
+
+.complaint-card {
+    margin-top: 7rem !important;
+}

@@ -18,21 +18,34 @@ const AppLayout = ({ children, classNames, ...rest }) => {
   const { sidebarIconType } = useContext(CustomizerContext);
 
   const layout1 = localStorage.getItem("sidebar_layout") || layout;
-  const sideBarIcon = localStorage.getItem("sidebar_icon_type") || sidebarIconType;
+  const sideBarIcon =
+    localStorage.getItem("sidebar_icon_type") || sidebarIconType;
   const location = useLocation();
   const { animation } = useContext(AnimationThemeContext);
-  const animationTheme = localStorage.getItem("animation") || animation || ConfigDB.data.router_animation;
+  const animationTheme =
+    localStorage.getItem("animation") ||
+    animation ||
+    ConfigDB.data.router_animation;
 
   return (
     <Fragment>
       <Loader />
       <Taptop />
-      <div className={`page-wrapper ${layout1}`} sidebar-layout={sideBarIcon} id="pageWrapper">
+      <div
+        className={`page-wrapper ${layout1}`}
+        sidebar-layout={sideBarIcon}
+        id="pageWrapper"
+      >
         <Header />
         <div className="page-body-wrapper">
           <Sidebar />
           <TransitionGroup {...rest}>
-            <CSSTransition key={location.key} timeout={100} classNames={animationTheme} unmountOnExit>
+            <CSSTransition
+              key={location.key}
+              timeout={100}
+              classNames={animationTheme}
+              unmountOnExit
+            >
               <div className="page-body">
                 <div>
                   <div>
@@ -45,7 +58,6 @@ const AppLayout = ({ children, classNames, ...rest }) => {
           <Footer />
         </div>
       </div>
-      <ThemeCustomize />
       <ToastContainer />
     </Fragment>
   );

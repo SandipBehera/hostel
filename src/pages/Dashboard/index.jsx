@@ -20,11 +20,14 @@ const Dashboard = () => {
       <Breadcrumbs mainTitle="Default" parent="Dashboard" title="Default" />
       <Container fluid={true}>
         <Row className="widget-grid">
-          <GreetingCard />
+          <GreetingCard name={localStorage.getItem("Name")} />
           <WidgetsWrapper />
           <OverallBalance />
           <RecentOrders />
-          <ActivityCard  ActivityData={ActivityData} columnHeadder={"activity"}/>
+          <ActivityCard
+            ActivityData={ActivityData}
+            columnHeadder={"activity"}
+          />
           <RecentSales />
           <TimelineCard />
           <PreAccountCard />
