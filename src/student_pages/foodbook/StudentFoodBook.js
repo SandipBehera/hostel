@@ -93,6 +93,22 @@ const StudentFoodBook = () => {
     }
   }, [gracePeriodExpired]);
 
+  useEffect(() => {
+    // Function to fetch data from the backend API for the Month's table
+    const fetchMonthData = async () => {
+      try {
+        // Replace 'YOUR_API_ENDPOINT' with the actual endpoint to fetch month data
+        const response = await fetch('YOUR_API_ENDPOINT');
+        const data = await response.json();
+        setMealData(data); // Set fetched data to state
+      } catch (error) {
+        console.error('Error fetching month data:', error);
+      }
+    };
+
+    fetchMonthData(); // Fetch data when the component mounts
+  }, []);
+
   return (
     <Fragment>
       <Card>
@@ -157,6 +173,31 @@ const StudentFoodBook = () => {
             ))}
           </tbody>
         </Table>
+                {/* New Table */}
+                <div style={{textAlign:'center',marginTop: '30px', marginBottom: '20px'}} >
+          <H5 >Month</H5>
+          <Table>
+            <thead>
+              <tr>
+                <th>Date</th>
+                <th>Type</th>
+                <th>Check In</th>
+              </tr>
+            </thead>
+            <tbody>
+              {/* Render month's data fetched from the backend */}
+              {mealData.map((dataItem, index) => (
+                <tr key={index}>
+                  <td>{dataItem.date}</td>
+                  <td>{dataItem.type}</td>
+                  <td>{dataItem.checkIn}</td>
+                </tr>
+              ))}
+              {/* Add more rows as needed */}
+            </tbody>
+          </Table>
+        </div>
+
       </Card>
     </Fragment>
   );
