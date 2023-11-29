@@ -1,6 +1,5 @@
-import React, { Fragment, useState, useEffect } from "react";
-import {Link} from "react-router-dom";
-import "./Complaints.css";
+
+import React, { useState } from "react";
 import {
   Table,
   Button,
@@ -8,228 +7,185 @@ import {
   ModalHeader,
   ModalBody,
   ModalFooter,
-  Label,
-  Input
+  Input,
 } from "reactstrap";
+import {Link} from "react-router-dom";
 import { Breadcrumbs } from "../../AbstractElements";
+import "./Complaints.css";
 
-const ViewComplain = (args) => {
-  const [complaints, setComplaints] = useState([
+const ViewComplaint = () => {
+
+  
+  const [data, setData] = useState([
     {
       id: 1,
-      text: "Abhishek Gupta",
-      room: 101,
-      hostel: "Hostel-1",
-      assignedEmployee: null,
+      student: "Student 1",
+      hostel: "Hostel A",
+      description: "Complaint 1 description",
+      processing: false,
     },
     {
       id: 2,
-      text: "Rahul",
-      room: 102,
-      hostel: "Hostel-2",
-      assignedEmployee: null,
+      student: "Student 2",
+      hostel: "Hostel B",
+      description: "Complaint 2 description",
+      processing: false,
     },
     {
       id: 3,
-      text: "Dhanajaya",
-      room: 103,
-      hostel: "Hostel-3",
-      assignedEmployee: null,
+      student: "Student 3",
+      hostel: "Hostel A",
+      description: "Complaint 1 description",
+      processing: false,
     },
     {
       id: 4,
-      text: "Sandip",
-      room: 104,
-      hostel: "Hostel-4",
-      assignedEmployee: null,
+      student: "Student 4",
+      hostel: "Hostel B",
+      description: "Complaint 2 description",
+      processing: false,
     },
+    
   ]);
 
   const [selectedComplaint, setSelectedComplaint] = useState(null);
-  const [viewModal, setViewModal] = useState(false);
-  const [actionModal, setActionModal] = useState(false);
-  const [assignedEmployee, setAssignedEmployee] = useState(null);
+  const [employeeId, setEmployeeId] = useState("");
+  const [processModalOpen, setProcessModalOpen] = useState(false);
+  const [viewModalOpen, setViewModalOpen] = useState(false);
   const [successMessage, setSuccessMessage] = useState("");
-  const [selectedComplaintId, setSelectedComplaintId] = useState(null);
-  const [inProcessingComplaints, setInProcessingComplaints] = useState([]);
 
-  
-
-  useEffect(() => {
-    const storedData = localStorage.getItem("assignedEmployeeData");
-    if (storedData) {
-      const parsedData = JSON.parse(storedData);
-      setAssignedEmployee(parsedData.assignedEmployee);
-      setSuccessMessage(parsedData.successMessage);
-      setSelectedComplaintId(parsedData.selectedComplaintId);
-      setInProcessingComplaints(parsedData.inProcessingComplaints || []);
-    }
-  }, []);
-
-  useEffect(() => {
-    const dataToStore = {
-      assignedEmployee,
-      successMessage,
-      selectedComplaintId,
-      inProcessingComplaints,
-    };
-    localStorage.setItem("assignedEmployeeData", JSON.stringify(dataToStore));
-  }, [assignedEmployee, successMessage, selectedComplaintId, inProcessingComplaints]);
-
-  const openViewModal = (complaint) => {
+  const handleView = (complaint) => {
     setSelectedComplaint(complaint);
-    setViewModal(!viewModal);
+    setViewModalOpen(true);
+    setProcessModalOpen(false); // Close the process modal
   };
 
-  const openActionModal = (complaint) => {
-    if (complaint) {
-      setSelectedComplaint(complaint);
-      setSuccessMessage("");
-      setAssignedEmployee(complaint.assignedEmployee || null);
-      setSelectedComplaintId(complaint.id);
-      setActionModal(!actionModal);
-    }
-    else {
-      setActionModal(false);
-      
-    }
+  const handleStartProcess = (complaint) => {
+    setSelectedComplaint(complaint);
+    setProcessModalOpen(true);
+    setViewModalOpen(false); // Close the view modal
   };
 
-  const handleEmployeeSelection = (employee) => {
-    setAssignedEmployee(employee);
-    setSuccessMessage(`${employee} has been assigned.`);
+  const handleProcessSubmit = () => {
+    // Perform the process assignment logic here
+    // For simplicity, just showing a success message
+    setSuccessMessage("Employee assigned successfully!");
 
-    setInProcessingComplaints((prevInProcessing) => [
-      ...prevInProcessing,
-      selectedComplaintId,
-    ]);
+    // Update the processing status in the data
+    const updatedData = data.map((complaint) =>
+      complaint.id === selectedComplaint.id
+        ? { ...complaint, processing: true }
+        : complaint
+    );
+    setData(updatedData);
+
+    setProcessModalOpen(false);
   };
-  
 
   return (
-    <Fragment>
+    <div>
       <Breadcrumbs
         parent="General"
         mainTitle="View Complain"
         title="View Complain"
       />
-
       <Table style={{ textAlign: "center" }}>
         <thead>
           <tr>
-            <th>Id</th>
+            <th>ID</th>
             <th>Student</th>
             <th>Hostel</th>
-            <th>Room</th>
             <th>View</th>
             <th>Action</th>
           </tr>
         </thead>
         <tbody>
-          {complaints.map((complaint) => (
+          {data.map((complaint) => (
             <tr key={complaint.id}>
-              <th scope="row">{complaint.id}</th>
-              <td>{complaint.text}</td>
+              <td>{complaint.id}</td>
+              <td>{complaint.student}</td>
               <td>{complaint.hostel}</td>
-              <td>{complaint.room}</td>
-              <td className="modal-body">
-                <Button onClick={() => openViewModal(complaint)}>View</Button>
+              <td>
+                <Button color="info" onClick={() => handleView(complaint)}>
+                  View
+                </Button>
               </td>
               <td>
-              <Button
-              color="success"
-              size="sm"
-              className="mr-2"
-              onClick={() => openActionModal(complaint)}
-              disabled={complaint.assignedEmployee !== null}
-            >
-              {assignedEmployee && inProcessingComplaints.includes(complaint.id)
-                ? <Link to={`/view-complain/complain-status/${complaint.id}`} className="link-text">In Processing</Link>
-                : "Start Process"}
-            </Button>
-
-                <Modal
-                  isOpen={viewModal}
-                  toggle={() => openViewModal(null)}
-                  {...args}
+                <Button
+                  color={complaint.processing ? "success" : "primary"}
+                  onClick={() => handleStartProcess(complaint)}
                 >
-                  <ModalHeader
-                    toggle={() => openViewModal(null)}
-                    className="modal-header"
-                  >
-                    {selectedComplaint ? "Complaint Details" : ""}
-                  </ModalHeader>
-                  <ModalBody>
-                    {selectedComplaint ? (
-                      <>
-                        Complaint Description
-                      </>
-                    ) : null}
-                  </ModalBody>
-                  <ModalFooter>
-                    <Button
-                      color="secondary"
-                      onClick={() => openViewModal(null)}
-                    >
-                      Close
-                    </Button>
-                  </ModalFooter>
-                </Modal>
-
-                <Modal
-                  isOpen={actionModal}
-                  toggle={() => openActionModal(null)}
-                  {...args}
-                >
-                  <ModalHeader
-                    toggle={() => openActionModal(null)}
-                    className="modal-header"
-                  >
-                    {selectedComplaint ? "Assign Employee" : ""}
-                  </ModalHeader>
-                  <ModalBody>
-                    {assignedEmployee === null && (
-                      <>
-                      
-
-                        <Label className="col-form-label">Primary Select</Label>
-                        <Input className="form-control form-control-primary-fill btn-square" name="select" type="select"  value={assignedEmployee}
-                        onChange={(e) =>
-                          handleEmployeeSelection(e.target.value)
-                        }>
-                            <option value="opt1">Select Employee</option>
-                            <option value="opt2">Employee-1</option>
-                            <option value="opt3">Employee-2</option>
-                            <option value="opt4">Employee-3</option>
-                            <option value="opt5">Employee-4</option>
-                            <option value="opt6">Employee-5</option>
-                            <option value="opt7">Employee-6</option>
-                            <option value="opt8">Employee-7</option>
-                        </Input>
-                      </>
-                    )}
-                    <p>{successMessage}</p>
-                  </ModalBody>
-                  <ModalFooter>
-                    <Button
-                      color="secondary"
-                      onClick={() => openActionModal(null)}
-                    >
-                      Close
-                    </Button>
-                  </ModalFooter>
-                </Modal>
+                  {complaint.processing ? <Link className="link-text" to={`complain-status/${complaint.id}`}>In processing</Link> : "Start Process"}
+                </Button>
               </td>
             </tr>
           ))}
         </tbody>
       </Table>
-    </Fragment>
+
+      {/* View Complaint Modal */}
+      <Modal isOpen={viewModalOpen}>
+        <ModalHeader>Complaint Details</ModalHeader>
+        <ModalBody>
+          {selectedComplaint && (
+            <div>
+              <p>{selectedComplaint.description}</p>
+            </div>
+          )}
+        </ModalBody>
+        <ModalFooter>
+          <Button color="secondary" onClick={() => setViewModalOpen(false)}>
+            Close
+          </Button>
+        </ModalFooter>
+      </Modal>
+
+      {/* Start Process Modal */}
+      <Modal isOpen={processModalOpen}>
+        <ModalHeader>Assign Employee</ModalHeader>
+        <ModalBody>
+      
+
+          <Input className="form-control form-control-primary-fill btn-square" name="select" type="select" 
+          value={employeeId}
+              onChange={(e) => setEmployeeId(e.target.value)}
+          >
+              <option value="opt1">Select Employee</option>
+              <option value="opt2">Employee-1</option>
+              <option value="opt3">Employee-2</option>
+              <option value="opt4">Employee-3</option>
+              <option value="opt5">Employee-4</option>
+              <option value="opt6">Employee-5</option>
+              <option value="opt7">Employee-6</option>
+              <option value="opt8">Employee-7</option>
+          </Input>
+
+
+        </ModalBody>
+        <ModalFooter>
+          <Button color="primary" onClick={handleProcessSubmit}>
+            Assign
+          </Button>{" "}
+          <Button color="secondary" onClick={() => setProcessModalOpen(false)}>
+            Cancel
+          </Button>
+        </ModalFooter>
+      </Modal>
+
+      {/* Success Message Modal */}
+      <Modal isOpen={successMessage !== ""}>
+        <ModalHeader>Success!</ModalHeader>
+        <ModalBody>
+          <p>{successMessage}</p>
+        </ModalBody>
+        <ModalFooter>
+          <Button color="secondary" onClick={() => setSuccessMessage("")}>
+            Close
+          </Button>
+        </ModalFooter>
+      </Modal>
+    </div>
   );
 };
 
-export default ViewComplain;
-
-
-
-
+export default ViewComplaint;

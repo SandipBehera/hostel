@@ -6,7 +6,9 @@
     color: wheat;
     
 }
-
-.complaint-card {
-    margin-top: 7rem !important;
+.complaint-status-footer{
+    display: flex;
+    justify-content: flex-end;
+    align-items: flex-end;
 }
+
