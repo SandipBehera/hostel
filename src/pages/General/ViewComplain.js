@@ -1,5 +1,4 @@
-
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Table,
   Button,
@@ -9,44 +8,16 @@ import {
   ModalFooter,
   Input,
 } from "reactstrap";
-import {Link} from "react-router-dom";
+import { Link } from "react-router-dom";
 import { Breadcrumbs } from "../../AbstractElements";
 import "./Complaints.css";
+import socketIOClient from "socket.io-client";
+import { LocalApi, WebApi } from "../../api";
 
 const ViewComplaint = () => {
+  const socket = socketIOClient("http://localhost:3001/");
 
-  
-  const [data, setData] = useState([
-    {
-      id: 1,
-      student: "Student 1",
-      hostel: "Hostel A",
-      description: "Complaint 1 description",
-      processing: false,
-    },
-    {
-      id: 2,
-      student: "Student 2",
-      hostel: "Hostel B",
-      description: "Complaint 2 description",
-      processing: false,
-    },
-    {
-      id: 3,
-      student: "Student 3",
-      hostel: "Hostel A",
-      description: "Complaint 1 description",
-      processing: false,
-    },
-    {
-      id: 4,
-      student: "Student 4",
-      hostel: "Hostel B",
-      description: "Complaint 2 description",
-      processing: false,
-    },
-    
-  ]);
+  const [data, setData] = useState([]);
 
   const [selectedComplaint, setSelectedComplaint] = useState(null);
   const [employeeId, setEmployeeId] = useState("");
@@ -54,8 +25,36 @@ const ViewComplaint = () => {
   const [viewModalOpen, setViewModalOpen] = useState(false);
   const [successMessage, setSuccessMessage] = useState("");
 
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await fetch(`${WebApi}/get_complaints`, {
+          method: "GET",
+        });
+        const respData = await response.json();
+        setData(respData.data);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+        // Handle the error, for example, set an error state
+      }
+    };
+    const handleNewComplaint = (newComplaint) => {
+      setData((prevComplaints) => [...prevComplaints, newComplaint]);
+    };
+    fetchData();
+    socket.on("newComplaint", handleNewComplaint);
+    // Cleanup the socket listener when the component unmounts
+    return () => {
+      socket.off("newComplaint", handleNewComplaint);
+    };
+  }, []);
+
   const handleView = (complaint) => {
-    setSelectedComplaint(complaint);
+    data.filter((item) => {
+      if (item.id === complaint) {
+        setSelectedComplaint(item);
+      }
+    });
     setViewModalOpen(true);
     setProcessModalOpen(false); // Close the process modal
   };
@@ -81,6 +80,8 @@ const ViewComplaint = () => {
 
     setProcessModalOpen(false);
   };
+  console.log(data);
+  console.log(selectedComplaint);
 
   return (
     <div>
@@ -93,8 +94,8 @@ const ViewComplaint = () => {
         <thead>
           <tr>
             <th>ID</th>
-            <th>Student</th>
-            <th>Hostel</th>
+            <th>Name</th>
+            <th>Issue Type</th>
             <th>View</th>
             <th>Action</th>
           </tr>
@@ -103,19 +104,29 @@ const ViewComplaint = () => {
           {data.map((complaint) => (
             <tr key={complaint.id}>
               <td>{complaint.id}</td>
-              <td>{complaint.student}</td>
-              <td>{complaint.hostel}</td>
+              <td>{complaint.issued_by}</td>
+              <td>{complaint.issue_type}</td>
               <td>
-                <Button color="info" onClick={() => handleView(complaint)}>
+                <Button color="info" onClick={() => handleView(complaint.id)}>
                   View
                 </Button>
               </td>
               <td>
                 <Button
-                  color={complaint.processing ? "success" : "primary"}
+                  color={complaint.status ? "success" : "primary"}
                   onClick={() => handleStartProcess(complaint)}
                 >
-                  {complaint.processing ? <Link className="link-text" to={`complain-status/${complaint.id}`}>In processing</Link> : "Start Process"}
+                  {complaint.status !== "NEW" ? (
+                    <Link
+                      className="link-text"
+                      to={`complain-status/${complaint.id}`}
+                    >
+                      Assigned to:{complaint.assigned_to} and Status:
+                      {complaint.status}
+                    </Link>
+                  ) : (
+                    "Start Process"
+                  )}
                 </Button>
               </td>
             </tr>
@@ -128,9 +139,11 @@ const ViewComplaint = () => {
         <ModalHeader>Complaint Details</ModalHeader>
         <ModalBody>
           {selectedComplaint && (
-            <div>
-              <p>{selectedComplaint.description}</p>
-            </div>
+            <div
+              dangerouslySetInnerHTML={{
+                __html: selectedComplaint.details.content,
+              }}
+            />
           )}
         </ModalBody>
         <ModalFooter>
@@ -144,23 +157,22 @@ const ViewComplaint = () => {
       <Modal isOpen={processModalOpen}>
         <ModalHeader>Assign Employee</ModalHeader>
         <ModalBody>
-      
-
-          <Input className="form-control form-control-primary-fill btn-square" name="select" type="select" 
-          value={employeeId}
-              onChange={(e) => setEmployeeId(e.target.value)}
+          <Input
+            className="form-control form-control-primary-fill btn-square"
+            name="select"
+            type="select"
+            value={employeeId}
+            onChange={(e) => setEmployeeId(e.target.value)}
           >
-              <option value="opt1">Select Employee</option>
-              <option value="opt2">Employee-1</option>
-              <option value="opt3">Employee-2</option>
-              <option value="opt4">Employee-3</option>
-              <option value="opt5">Employee-4</option>
-              <option value="opt6">Employee-5</option>
-              <option value="opt7">Employee-6</option>
-              <option value="opt8">Employee-7</option>
+            <option value="opt1">Select Employee</option>
+            <option value="opt2">Employee-1</option>
+            <option value="opt3">Employee-2</option>
+            <option value="opt4">Employee-3</option>
+            <option value="opt5">Employee-4</option>
+            <option value="opt6">Employee-5</option>
+            <option value="opt7">Employee-6</option>
+            <option value="opt8">Employee-7</option>
           </Input>
-
-
         </ModalBody>
         <ModalFooter>
           <Button color="primary" onClick={handleProcessSubmit}>

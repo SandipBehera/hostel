@@ -10,19 +10,23 @@ import {
   Row,
   Col,
   CardBody,
+  Toast,
 } from "reactstrap";
 import "./Complaints.css";
 import CKEditors from "react-ckeditor-component";
+import { LocalApi, WebApi } from "../../api";
+import socketIOClient from "socket.io-client";
+import { json } from "react-router";
+import { toast } from "react-toastify";
 
 export default function CreateComplain() {
-
   const [content, setContent] = useState("");
   const onChange = (evt) => {
     const newContent = evt.editor.getData();
     setContent(newContent);
   };
 
-  const role  = localStorage.getItem("userType");
+  const role = localStorage.getItem("userType");
 
   const [issueType, setIssueType] = useState("");
   const [hostelNumber, setHostelNumber] = useState("");
@@ -30,6 +34,9 @@ export default function CreateComplain() {
   const [assignTo, setAssignTo] = useState(""); // Updated state for Assign To dropdown
   const [selectedEmployee, setSelectedEmployee] = useState("");
   const [complaint, setComplaint] = useState("");
+  const [status, setStatus] = useState("");
+  const userid = localStorage.getItem("userId");
+  const socket = socketIOClient("http://localhost:3001/");
 
   const issueTypes = ["Hostel Issue", "Mess Issue", "General Issue"];
   const hostels = ["Hostel 1", "Hostel 2", "Hostel 3"]; // Replace with your actual hostel numbers
@@ -42,21 +49,59 @@ export default function CreateComplain() {
     "Hostel 3": "Warden C",
   };
 
-  
+  const complaint_stages = [
+    {
+      label: "New",
+      value: "New",
+    },
+    {
+      label: "In Progress",
+      value: "In Progress",
+    },
+    {
+      label: "Resolved",
+      value: "Resolved",
+    },
+  ];
 
   const handleHostelNumberChange = (value) => {
     setHostelNumber(value);
     setAssignTo(wardenNames[value] || "");
   };
 
-  const handleSubmit = () => {
- 
-    console.log("Complaint submitted:", complaint, "Assigned to:", assignTo, "Complaint", content);
-  
+  const handleSubmit = async () => {
+    const data = {
+      issue_type: issueType,
+      issued_by: userid,
+      hostel_id: hostelNumber,
+      floor_no: roomNumber,
+      assigned_to: assignTo,
+      details: { content: content.replace(/\n/g, "\\n").replace(/\t/g, "\\t") },
+      status: status,
+    };
+    data.details = JSON.stringify(data.details);
+    try {
+      const response = await fetch(`${WebApi}/create_complaint`, {
+        method: "POST",
+        body: JSON.stringify(data),
+        headers: {
+          "Content-Type": "application/json",
+          "Access-Control-Allow-Origin": "*",
+        },
+      });
+      console.log("response", response);
+      if (response.status === 200) {
+        // Emit the "newComplaint" event directly without wrapping in an extra object
+        socket.emit("newComplaint", data);
+
+        toast.success("Complaint Created Successfully");
+      } else {
+        toast.error("Something went wrong");
+      }
+    } catch (err) {
+      console.error("Error:", err);
+    }
   };
-
- 
-
 
   return (
     <Fragment>
@@ -123,67 +168,86 @@ export default function CreateComplain() {
               </Input>
             </FormGroup>
 
-            {role==="employee" ? (
+            {role === "employee" ? (
               <FormGroup>
-              <label>Assign To:</label>
-              <Input
-                className="form-control form-control-secondary-fill btn-square w-50"
-                name="select"
-                type="select"
-                value={assignTo}
-                onChange={(e) => setAssignTo (e.target.value)}
-              >
-                <option value="">Select a person to assign</option>
-                {Object.values(wardenNames).map((warden) => (
-                  <option key={warden} value={warden}>
-                    {warden}
-                  </option>
-                ))}
-              </Input>
-            </FormGroup>
-
-            ): ""}
+                <label>Assign To:</label>
+                <Input
+                  className="form-control form-control-secondary-fill btn-square w-50"
+                  name="select"
+                  type="select"
+                  value={assignTo}
+                  onChange={(e) => setAssignTo(e.target.value)}
+                >
+                  <option value="">Select a person to assign</option>
+                  {Object.values(wardenNames).map((warden) => (
+                    <option key={warden} value={warden}>
+                      {warden}
+                    </option>
+                  ))}
+                </Input>
+              </FormGroup>
+            ) : (
+              ""
+            )}
           </div>
         )}
 
+        <FormGroup>
+          <label>Status</label>
+          <Input
+            className="form-control form-control-secondary-fill btn-square w-50"
+            name="select"
+            type="select"
+            value={status}
+            onChange={(e) => setStatus(e.target.value)}
+          >
+            {complaint_stages.map((item) => (
+              <option key={item.label} value={item.value}>
+                {item.label}
+              </option>
+            ))}
+          </Input>
+        </FormGroup>
+
         {(issueType === "Mess Issue" || issueType === "General Issue") && (
           <div>
-            {role==="employee" ? (<FormGroup>
-              <label>Assign To:</label>
-              <Input
-                className="form-control form-control-secondary-fill btn-square w-50"
-                name="select"
-                type="select"
-                value={assignTo}
-                onChange={(e) => setAssignTo (e.target.value)}
-              >
-                <option value="">Select a person to assign</option>
-                {Object.values(wardenNames).map((warden) => (
-                  <option key={warden} value={warden}>
-                    {warden}
-                  </option>
-                ))}
-              </Input>
-            </FormGroup>) 
-          :""}
+            {role === "employee" ? (
+              <FormGroup>
+                <label>Assign To:</label>
+                <Input
+                  className="form-control form-control-secondary-fill btn-square w-50"
+                  name="select"
+                  type="select"
+                  value={assignTo}
+                  onChange={(e) => setAssignTo(e.target.value)}
+                >
+                  <option value="">Select a person to assign</option>
+                  {Object.values(wardenNames).map((warden) => (
+                    <option key={warden} value={warden}>
+                      {warden}
+                    </option>
+                  ))}
+                </Input>
+              </FormGroup>
+            ) : (
+              ""
+            )}
           </div>
         )}
 
         <Container fluid={true}>
           <Row>
             <Col sm="12">
-              
-                Complaint
-                <CardBody>
-                  <CKEditors
-                    activeclassName="p10"
-                    content={content}
-                    events={{
-                      change: onChange,
-                    }}
-                  />
-                </CardBody>
-              
+              Complaint
+              <CardBody>
+                <CKEditors
+                  activeclassName="p10"
+                  content={content}
+                  events={{
+                    change: onChange,
+                  }}
+                />
+              </CardBody>
             </Col>
           </Row>
         </Container>
