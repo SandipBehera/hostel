@@ -12,10 +12,10 @@ import { Link } from "react-router-dom";
 import { Breadcrumbs } from "../../AbstractElements";
 import "./Complaints.css";
 import socketIOClient from "socket.io-client";
-import { LocalApi, WebApi } from "../../api";
+import { LocalApi, WebApi, WebSocketAPI } from "../../api";
 
 const ViewComplaint = () => {
-  const socket = socketIOClient("http://localhost:3001/");
+  const socket = socketIOClient(WebSocketAPI);
 
   const [data, setData] = useState([]);
 
