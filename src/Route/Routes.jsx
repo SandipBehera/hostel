@@ -204,8 +204,6 @@ import OutingForm from "../pages/OutingApproval/OutingForm";
 import ComplaintStatus from "../pages/General/ComplaintStatus";
 import DayToDayOrder from "../pages/purchase-order/DayToDayOrder";
 import PurchaseReport from "../pages/purchase-order/PurchaseReport";
-import Purchases from "../pages/Stock-Management/Purchases";
-import AllPurchases from "../pages/Stock-Management/AllPurchases";
 
 export const routes = [
   { path: `/dashboard`, Component: <Dashboard /> },
