@@ -199,6 +199,9 @@ import CreateComplain from "../pages/General/CreateComplain";
 import ViewComplain from "../pages/General/ViewComplain";
 import OutingForm from "../pages/OutingApproval/OutingForm";
 import ComplaintStatus from "../pages/General/ComplaintStatus";
+import DayToDayOrder from "../pages/purchase-order/DayToDayOrder";
+import PurchaseReport from "../pages/purchase-order/PurchaseReport";
+
 
 export const routes = [
   { path: `/dashboard`, Component: <Dashboard /> },
@@ -218,6 +221,10 @@ export const routes = [
   { path: `/food-planner`, Component: <FoodPlanner /> },
   { path: `/allplanner`, Component: <AllPlanner /> },
 
+  //Purchase Order routes
+  { path: `/day-to-day-order`, Component: <DayToDayOrder /> },
+  { path: `/purchase-report`, Component: <PurchaseReport /> },
+  
   //employee Management routes
   { path: `/create-employee`, Component: <CreateEmployee /> },
   { path: `/allemployee`, Component: <AllEmployee /> },

@@ -67,7 +67,19 @@ export const EmployeeMenu = [
   children: [
     { path: `/outing`, title: "Outing", type: "link" },
   ]
-},
+  },
+  {
+    title: "Purchase Order",
+    icon: "widget",
+    type: "sub",
+    active: false,
+    children: [
+      { path: `/day-to-day-order`, title: "Day to Day Order", type: "link" },
+      { path: `/purchase-report`, title: "Purchase Report", type: "link" },
+     
+    ]
+  },
+ 
     ],
   },
 
@@ -100,6 +112,7 @@ export const EmployeeMenu = [
     ],
     
   },
+  
   {
     menutitle: "Components",
     menucontent: "Ready to use Apps",
