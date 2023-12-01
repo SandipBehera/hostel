@@ -12,53 +12,30 @@ import {
   DropdownItem,
   Container,
   Label,
+  Modal,
+  ModalHeader,
+  ModalBody,
+  FormGroup,
+  Input,
+  ModalFooter,
 } from "reactstrap";
 import { Breadcrumbs, H5 } from "../../AbstractElements";
 import Papa from "papaparse";
 import { Action } from "../../Constant";
 import Select from "react-select";
-import { LocalApi, WebApi } from "../../api";
-const mockData = [
-  {
-    sNo: 1,
-    registrationNo: "REG001",
-    studentName: "Rahul",
-    HName: "Aravali",
-    Rno: "100",
-    available: "present",
-  },
-  {
-    sNo: 2,
-    registrationNo: "REG002",
-    studentName: "Sanu",
-    HName: "Nilgiri",
-    Rno: "101",
-    available: "absent",
-  },
-  {
-    sNo: 3,
-    registrationNo: "REG003",
-    studentName: "Sangram",
-    HName: "sivalik",
-    Rno: "102",
-    available: "absent",
-  },
-  {
-    sNo: 4,
-    registrationNo: "REG004",
-    studentName: "Sandy",
-    HName: "Udayagiri",
-    Rno: "103",
-    available: "present",
-  },
-  // Add more objects as needed
-];
+import { WebApi } from "../../api";
+import { toast } from "react-toastify";
+
 const AttendenceReport = ({ attendanceData }) => {
   const [data, setData] = useState([]);
-  console.log(attendanceData);
+  const [modalOpen, setModalOpen] = useState(false);
   const [activeDropdown, setActiveDropdown] = useState(null);
-  const [selectedAction, setSelectedAction] = useState("");
+  const [dropdownOpen, setDropdownOpen] = useState(false);
   const [hostelData, setHostelData] = useState([]);
+  const [msg, setMsg] = useState("");
+  const [ID, setID] = useState("");
+  const [status, setStatus] = useState("");
+
   const handleExport = () => {
     const csv = Papa.unparse(data);
     const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
@@ -69,6 +46,7 @@ const AttendenceReport = ({ attendanceData }) => {
   };
   const toggleDropdown = (id) => {
     setActiveDropdown(activeDropdown === id ? null : id);
+    setDropdownOpen(!dropdownOpen);
   };
 
   useEffect(() => {
@@ -96,15 +74,42 @@ const AttendenceReport = ({ attendanceData }) => {
     setData(resproom.data);
   };
 
-  const handleActionSelect = (action, index) => {
+  const handleActionSelect = async (action, index, comment) => {
+    const datas = {
+      id: index,
+      status: action,
+      comments: comment,
+    };
+    datas.comments = JSON.stringify({ comments: datas.comments });
+    try {
+      const response = await fetch(`${WebApi}/update_attendence`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(datas),
+      });
+      const respData = await response.json();
+      if (respData.status === "success") {
+        setModalOpen(!modalOpen);
+        setActiveDropdown(null);
+        toast.success("Attendence Updated Successfully");
+      } else {
+        toast.error("Something went wrong");
+        setModalOpen(!modalOpen);
+        setActiveDropdown(null);
+      }
+    } catch (error) {
+      console.error("Error fetching:", error);
+      // Handle the error, for example, set an error state
+    }
+
     // Create a copy of the data array
-    const newData = [...data];
+    // const newData = [...data];
     // Update the 'available' property of the selected row
-    newData[index].available = action;
+    // newData[index].available = action;
     // Update the state with the modified data
-    setData(newData);
+    // setData(newData);
     // Close the dropdown
-    setActiveDropdown(null);
+    // setActiveDropdown(null);
   };
 
   return (
@@ -152,42 +157,98 @@ const AttendenceReport = ({ attendanceData }) => {
                 </thead>
 
                 <tbody>
-                  {data.map((item, index) => (
-                    <tr key={index}>
-                      <td>{item.sNo}</td>
-                      <td>{item.registrationNo}</td>
-                      <td>{item.studentName}</td>
-                      <td>{item.HName}</td>
-                      <td>{item.Rno}</td>
-                      <td>{item.available}</td>
-                      <td>
-                        <Dropdown
-                          isOpen={activeDropdown === item.sNo}
-                          toggle={() => toggleDropdown(item.sNo)}
-                        >
-                          <DropdownToggle caret>
-                            {selectedAction || Action}
-                          </DropdownToggle>
-                          <DropdownMenu>
-                            <DropdownItem
-                              onClick={() =>
-                                handleActionSelect("present", index)
-                              }
+                  {data.length > 0 ? (
+                    data.map((item) => (
+                      <>
+                        <tr key={item.id}>
+                          <td>{item.id}</td>
+                          <td>{item.username}</td>
+                          <td>{item.name}</td>
+                          <td>{item.hostel_name}</td>
+                          <td>{item.room_id}</td>
+                          <td>{item.status === 1 ? "present" : "absent"}</td>
+                          <td>
+                            <Dropdown
+                              isOpen={activeDropdown === item.id}
+                              toggle={() => toggleDropdown(item.id)}
                             >
-                              present
-                            </DropdownItem>
-                            <DropdownItem
-                              onClick={() =>
-                                handleActionSelect("absent", index)
-                              }
+                              <DropdownToggle caret>{Action}</DropdownToggle>
+                              <DropdownMenu>
+                                {item.status === 1 ? (
+                                  <DropdownItem
+                                    onClick={() => {
+                                      setID(item.id);
+                                      setStatus(item.status);
+                                      setModalOpen(!modalOpen);
+                                    }}
+                                  >
+                                    Make Absent
+                                  </DropdownItem>
+                                ) : (
+                                  <DropdownItem
+                                    onClick={() => {
+                                      setID(item.id);
+                                      setStatus(item.status);
+                                      setModalOpen(!modalOpen);
+                                    }}
+                                  >
+                                    Make Present
+                                  </DropdownItem>
+                                )}
+                              </DropdownMenu>
+                            </Dropdown>
+                          </td>
+                          <div>
+                            <Modal
+                              isOpen={modalOpen}
+                              toggle={() => setModalOpen(!modalOpen)}
                             >
-                              absent
-                            </DropdownItem>
-                          </DropdownMenu>
-                        </Dropdown>
+                              <ModalHeader
+                                toggle={() => setModalOpen(!modalOpen)}
+                              >
+                                where are you ....
+                              </ModalHeader>
+                              <ModalBody>
+                                <FormGroup>
+                                  <Label for="exampleText">write here</Label>
+                                  <Input
+                                    type="textarea"
+                                    name="text"
+                                    id="exampleText"
+                                    rows="5"
+                                    value={msg}
+                                    onChange={(e) => setMsg(e.target.value)}
+                                  />
+                                </FormGroup>
+                              </ModalBody>
+                              <ModalFooter>
+                                <Button
+                                  color="secondary"
+                                  onClick={() => {
+                                    handleActionSelect(
+                                      status === 1 ? "0" : "1",
+                                      ID,
+                                      msg
+                                    );
+                                  }}
+                                >
+                                  send
+                                </Button>
+                              </ModalFooter>
+                            </Modal>
+                          </div>
+                        </tr>
+                      </>
+                    ))
+                  ) : (
+                    <tr>
+                      <td colSpan="8" style={{ textAlign: "center" }}>
+                        <p style={{ color: "red" }}>
+                          Please Select the hostel Name
+                        </p>
                       </td>
                     </tr>
-                  ))}
+                  )}
                 </tbody>
               </Table>
             </div>

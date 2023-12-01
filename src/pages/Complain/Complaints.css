@@ -1,0 +1,14 @@
+.link-text{
+    color: white;
+   
+}
+.link-text:hover {
+    color: wheat;
+    
+}
+.complaint-status-footer{
+    display: flex;
+    justify-content: flex-end;
+    align-items: flex-end;
+}
+

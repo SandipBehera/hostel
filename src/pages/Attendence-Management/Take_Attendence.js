@@ -20,6 +20,7 @@ import {
   ModalBody,
   ModalFooter,
   FormGroup,
+  Toast,
 } from "reactstrap";
 import Select from "react-select";
 import { options2 } from "../../Components/Forms/FormWidget/FormSelect2/OptionDatas";
@@ -28,6 +29,7 @@ import "../styles/take_attendence.css";
 import { data } from "./data";
 import AttendenceReport from "./AttendenceReport";
 import { WebApi } from "../../api";
+import { toast } from "react-toastify";
 
 const Take_Attendence = () => {
   const [modalOpen, setModalOpen] = useState(false);
@@ -127,12 +129,15 @@ const Take_Attendence = () => {
     });
     const result = await response.json();
     console.log(result);
-    setStudentData(result.data);
+    if (result.data.length === 0) {
+      toast.error("Room is not assigned to any person");
+    } else {
+      toast.success("Room is data fetched Successfully");
+      setStudentData(result.data);
+    }
   };
 
   const makeAttandance = async (studentregistration, status, comments) => {
-    console.log("disabled option is", disabledOptions);
-
     const processAttendance = async () => {
       let comment = "";
       if (comments === null) {
@@ -157,18 +162,22 @@ const Take_Attendence = () => {
         });
 
         const responseData = await response.json();
+        if (responseData.status === "success") {
+          setAttendanceData((prevData) => [
+            ...prevData,
+            { ...responseData.data, type: status === 1 ? "present" : "absent" },
+          ]);
 
-        setAttendanceData((prevData) => [
-          ...prevData,
-          { ...responseData.data, type: status === 1 ? "present" : "absent" },
-        ]);
-
-        console.log(
-          `Response Data: ${JSON.stringify(responseData)}, i am ${
-            status === 1 ? "Present" : "Absent"
-          } `
-        );
-        console.log("Response Data:", responseData);
+          console.log(
+            `Response Data: ${JSON.stringify(responseData)}, i am ${
+              status === 1 ? "Present" : "Absent"
+            } `
+          );
+          console.log("Response Data:", responseData);
+          toast.success("Attendance marked successfully");
+        } else {
+          toast.error("Something went wrong!!");
+        }
       } catch (error) {
         console.error("Error Making Attendance Request:", error.message);
       }

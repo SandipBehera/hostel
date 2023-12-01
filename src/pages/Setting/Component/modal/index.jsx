@@ -13,6 +13,8 @@ export default function ViewModal({ data, id }) {
   const [modalData, setModalData] = useState([]);
   const [filterData, setFilterData] = useState([]);
 
+  const [userType, setUserType]= useState(localStorage.getItem("userType"))
+
   const toggleModal = () => {
     setModalOpen(!modalOpen);
     const fData = data
@@ -50,8 +52,10 @@ export default function ViewModal({ data, id }) {
                       from:{filterData[day].Breakfast.From} to:{" "}
                       {filterData[day].Breakfast.To}
                     </p>
-                    - rs./
-                    {filterData[day].Breakfast.Price}
+                    {userType==="employee"? (
+                      <p>{filterData[day].Breakfast.Price}rs./</p>
+                    ):""}
+                   
                   </td>
                   <td>
                     {filterData[day].Lunch.Description}
@@ -59,8 +63,9 @@ export default function ViewModal({ data, id }) {
                       from:{filterData[day].Lunch.From} to:{" "}
                       {filterData[day].Lunch.To}
                     </p>
-                    - rs./
-                    {filterData[day].Lunch.Price}
+                    {userType==="employee"? (
+                      <p>{filterData[day].Lunch.Price}rs./</p>
+                    ):""}
                   </td>
                   <td>
                     {filterData[day].Dinner.Description}
@@ -68,8 +73,9 @@ export default function ViewModal({ data, id }) {
                       from:{filterData[day].Dinner.From} to:{" "}
                       {filterData[day].Dinner.To}
                     </p>
-                    - rs./
-                    {filterData[day].Dinner.Price}
+                    {userType==="employee"? (
+                      <p>{filterData[day].Dinner.Price}rs./</p>
+                    ):""}
                   </td>
                 </tr>
               ))}

@@ -195,13 +195,12 @@ import HealthManagement from "../student_pages/healthmanagement/HealthManagement
 import Complaints from "../student_pages/complaints/Complaints";
 import FoodCalendar from "../student_pages/foodcalendar/FoodCalendar";
 import StudentFoodBook from "../student_pages/foodbook/StudentFoodBook";
-import CreateComplain from "../pages/General/CreateComplain";
-import ViewComplain from "../pages/General/ViewComplain";
+import CreateComplain from "../pages/Complain/CreateComplain";
+import ViewComplain from "../pages/Complain/ViewComplain";
 import OutingForm from "../pages/OutingApproval/OutingForm";
 import ComplaintStatus from "../pages/General/ComplaintStatus";
 import DayToDayOrder from "../pages/purchase-order/DayToDayOrder";
 import PurchaseReport from "../pages/purchase-order/PurchaseReport";
-
 
 export const routes = [
   { path: `/dashboard`, Component: <Dashboard /> },
@@ -224,7 +223,7 @@ export const routes = [
   //Purchase Order routes
   { path: `/day-to-day-order`, Component: <DayToDayOrder /> },
   { path: `/purchase-report`, Component: <PurchaseReport /> },
-  
+
   //employee Management routes
   { path: `/create-employee`, Component: <CreateEmployee /> },
   { path: `/allemployee`, Component: <AllEmployee /> },
