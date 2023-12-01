@@ -44,7 +44,7 @@ const Header = () => {
     const userRoles = localStorage.getItem("roles");
     if (userType === "admin") {
       setMainMenu(EmployeeMenu);
-    } else if (userType === "employee") {
+    } else if (userType === "employee" && userRoles === "warden") {
       setMainMenu(WardenMenu);
     } else {
       setMainMenu(StudentMenu);
