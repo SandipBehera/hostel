@@ -200,10 +200,10 @@ import Purchases from "../pages/Stock-Management/Purchases";
 import AllPurchases from "../pages/Stock-Management/AllPurchases";
 import CreateComplain from "../pages/Complain/CreateComplain";
 import ViewComplain from "../pages/Complain/ViewComplain";
-import OutingForm from "../pages/OutingApproval/OutingForm";
-import ComplaintStatus from "../pages/General/ComplaintStatus";
+import ComplaintStatus from "../pages/Complain/ComplaintStatus";
 import DayToDayOrder from "../pages/purchase-order/DayToDayOrder";
 import PurchaseReport from "../pages/purchase-order/PurchaseReport";
+import WardenDashboard from "../wardenPages/dashboard";
 
 export const routes = [
   { path: `/dashboard`, Component: <Dashboard /> },
