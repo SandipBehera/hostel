@@ -196,6 +196,13 @@ import StudentFoodBook from "../student_pages/foodbook/StudentFoodBook";
 
 import Purchases from "../pages/Stock-Management/Purchases";
 import AllPurchases from "../pages/Stock-Management/AllPurchases";
+import { Component } from "react-image-crop";
+import Warden from "../pages/Employee_Dashboard/Complaint";
+import HouseKeeping from "../pages/Employee_Dashboard/Attendance";
+import Attendence from "../pages/Employee_Dashboard/Attendance";
+import Complaint from "../pages/Employee_Dashboard/Complaint";
+import Outing from "../pages/Employee_Dashboard/Outing";
+import ComplainAction from "../pages/Employee_Dashboard/ComplainAction";
 import CreateComplain from "../pages/Complain/CreateComplain";
 import ViewComplain from "../pages/Complain/ViewComplain";
 import OutingForm from "../student_pages/OutingApproval/OutingForm";
@@ -232,6 +239,7 @@ export const routes = [
   { path: `/create-employee`, Component: <CreateEmployee /> },
   { path: `/allemployee`, Component: <AllEmployee /> },
   { path: `/all-student`, Component: <AllStudents /> },
+  { path: `/complaint/complain-action/:id`, Component: <ComplainAction /> },
 
   //ROOM MANAGEMENT
   { path: `/room-management`, Component: <RoomManagement /> },
@@ -249,8 +257,13 @@ export const routes = [
   { path: `/purchases`, Component: <Purchases /> },
   { path: `/allpurchases`, Component: <AllPurchases /> },
 
-  //employee Management routes ends
+  //Employee Dashboard
+  { path: `/complaint`, Component: <Complaint /> },
+  { path: `/attendence`, Component: <Attendence /> },
+  { path: "/house_keeping", Component: <HouseKeeping /> },
+  { path: "/outing", Component: <Outing /> },
 
+  //employee Management routes ends
   { path: `/ui-kits/typography`, Component: <Typography /> },
   { path: `/ui-kits/avatar`, Component: <Avatars /> },
   { path: `/ui-kits/helper-class`, Component: <HelperClasses /> },

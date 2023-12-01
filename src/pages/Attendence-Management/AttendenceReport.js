@@ -115,10 +115,9 @@ const AttendenceReport = ({ attendanceData }) => {
   return (
     <Fragment>
       <Breadcrumbs
-        parent="Student"
-        mainTitle="Attendence Report"
-        subParent="Attandance Report"
-        title="Attendence Report"
+        parent="Employee"
+        mainTitle="Attendance"
+        title="Attendance"
       />
       <Container>
         <Col sm="12">

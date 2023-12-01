@@ -62,7 +62,7 @@ export const EmployeeMenu = [
         children: [{ path: `/outing`, title: "Outing", type: "link" }],
       },
       {
-        title: "Purchase Order",
+        title: "Purchase Data",
         icon: "widget",
         type: "sub",
         active: false,
@@ -77,7 +77,7 @@ export const EmployeeMenu = [
       },
 
       {
-        title: "Complains",
+        title: "Tickets & Complains",
         icon: "widget",
         type: "sub",
         active: false,
@@ -92,6 +92,15 @@ export const EmployeeMenu = [
         type: "sub",
         active: false,
         children: [{ path: `/outing`, title: "Outing", type: "link" }],
+      },
+      {
+        title: "Outing",
+        icon: "widget",
+        type: "sub",
+        active: false,
+        children: [
+          { path: `/outing`, title: "Outing", type: "link" },
+        ],
       },
     ],
   },
@@ -840,23 +849,6 @@ export const StudentMenu = [
         path: `/food-calendar`,
         icon: "widget",
         title: "Food Calendar",
-        type: "link",
-        badge: "badge badge-light-primary",
-        active: false,
-      },
-    ],
-  },
-];
-
-export const WardenMenu = [
-  {
-    menutitle: "General",
-    menucontent: "Dashboards,Widgets",
-    Items: [
-      {
-        path: `/dashboard`,
-        icon: "home",
-        title: "Dashboard",
         type: "link",
         badge: "badge badge-light-primary",
         active: false,
