@@ -12,10 +12,10 @@ import { Link } from "react-router-dom";
 import { Breadcrumbs } from "../../AbstractElements";
 import "./Complaints.css";
 import socketIOClient from "socket.io-client";
-import { LocalApi, WebApi } from "../../api";
+import { LocalApi, WebApi, WebSocketAPI } from "../../api";
 
 const ViewComplaint = () => {
-  const socket = socketIOClient("http://localhost:3001/");
+  const socket = socketIOClient(WebSocketAPI);
 
   const [data, setData] = useState([]);
 
@@ -33,6 +33,7 @@ const ViewComplaint = () => {
         });
         const respData = await response.json();
         setData(respData.data);
+        console.log(respData.data);
       } catch (error) {
         console.error("Error fetching data:", error);
         // Handle the error, for example, set an error state
@@ -101,36 +102,44 @@ const ViewComplaint = () => {
           </tr>
         </thead>
         <tbody>
-          {data.map((complaint) => (
-            <tr key={complaint.id}>
-              <td>{complaint.id}</td>
-              <td>{complaint.issued_by}</td>
-              <td>{complaint.issue_type}</td>
-              <td>
-                <Button color="info" onClick={() => handleView(complaint.id)}>
-                  View
-                </Button>
-              </td>
-              <td>
-                <Button
-                  color={complaint.status ? "success" : "primary"}
-                  onClick={() => handleStartProcess(complaint)}
-                >
-                  {complaint.status !== "NEW" ? (
-                    <Link
-                      className="link-text"
-                      to={`complain-status/${complaint.id}`}
-                    >
-                      Assigned to:{complaint.assigned_to} and Status:
-                      {complaint.status}
-                    </Link>
-                  ) : (
-                    "Start Process"
-                  )}
-                </Button>
+          {data !== undefined && data.length > 0 ? (
+            data.map((complaint) => (
+              <tr key={complaint.id}>
+                <td>{complaint.id}</td>
+                <td>{complaint.issued_by}</td>
+                <td>{complaint.issue_type}</td>
+                <td>
+                  <Button color="info" onClick={() => handleView(complaint.id)}>
+                    View
+                  </Button>
+                </td>
+                <td>
+                  <Button
+                    color={complaint.status ? "success" : "primary"}
+                    onClick={() => handleStartProcess(complaint)}
+                  >
+                    {complaint.status !== "NEW" ? (
+                      <Link
+                        className="link-text"
+                        to={`complain-status/${complaint.id}`}
+                      >
+                        Assigned to:{complaint.assigned_to} <br /> Status:
+                        {complaint.status === "" ? "NEW" : complaint.status}
+                      </Link>
+                    ) : (
+                      "Start Process"
+                    )}
+                  </Button>
+                </td>
+              </tr>
+            ))
+          ) : (
+            <tr>
+              <td colSpan="5" style={{ textAlign: "center" }}>
+                <p style={{ color: "red" }}>No Data Found</p>
               </td>
             </tr>
-          ))}
+          )}
         </tbody>
       </Table>
 

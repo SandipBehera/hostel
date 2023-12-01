@@ -14,16 +14,16 @@ import {
 } from "reactstrap";
 import "./Complaints.css";
 import CKEditors from "react-ckeditor-component";
-import { LocalApi, WebApi } from "../../api";
+import { LocalApi, WebApi, WebSocketAPI } from "../../api";
 import socketIOClient from "socket.io-client";
-import { json } from "react-router";
 import { toast } from "react-toastify";
+import SimpleMDE from "react-simplemde-editor";
+import { set } from "date-fns";
 
 export default function CreateComplain() {
   const [content, setContent] = useState("");
   const onChange = (evt) => {
-    const newContent = evt.editor.getData();
-    setContent(newContent);
+    setContent(evt.target.value);
   };
 
   const role = localStorage.getItem("userType");
@@ -36,7 +36,7 @@ export default function CreateComplain() {
   const [complaint, setComplaint] = useState("");
   const [status, setStatus] = useState("");
   const userid = localStorage.getItem("userId");
-  const socket = socketIOClient("http://localhost:3001/");
+  const socket = socketIOClient(WebSocketAPI);
 
   const issueTypes = ["Hostel Issue", "Mess Issue", "General Issue"];
   const hostels = ["Hostel 1", "Hostel 2", "Hostel 3"]; // Replace with your actual hostel numbers
@@ -239,15 +239,22 @@ export default function CreateComplain() {
           <Row>
             <Col sm="12">
               Complaint
-              <CardBody>
-                <CKEditors
+              <SimpleMDE
+                id="editor_container"
+                onChange={(e) => setContent(e)}
+                value={content}
+                options={{
+                  autofocus: true,
+                  spellChecker: false,
+                }}
+              />
+              {/* <CKEditors
                   activeclassName="p10"
                   content={content}
                   events={{
                     change: onChange,
                   }}
-                />
-              </CardBody>
+                /> */}
             </Col>
           </Row>
         </Container>

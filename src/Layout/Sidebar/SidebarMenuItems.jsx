@@ -3,7 +3,7 @@ import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 import SvgIcon from "../../Components/Common/Component/SvgIcon";
 import CustomizerContext from "../../_helper/Customizer";
-import { EmployeeMenu, StudentMenu } from "./Menu";
+import { EmployeeMenu, StudentMenu, WardenMenu } from "./Menu";
 
 const SidebarMenuItems = ({
   setMainMenu,
@@ -17,18 +17,24 @@ const SidebarMenuItems = ({
   const [MENUITEMS, setMenuitem] = React.useState([]);
   const [userType, setUserType] = React.useState();
   const [userId, setUserId] = React.useState();
+  const [userRoles, setUserRoles] = React.useState();
 
   React.useEffect(() => {
     const userType = localStorage.getItem("userType");
+    const userRoles = localStorage.getItem("roles");
     setUserType(localStorage.getItem("userType"));
     setUserId(localStorage.getItem("userId"));
-    if (userType === "employee") {
+    setUserRoles(localStorage.getItem("roles"));
+    console.log(userType);
+    console.log(userRoles);
+    if (userType === "admin") {
       setMenuitem(EmployeeMenu);
+    } else if (userRoles === "warden" && userType === "employee") {
+      setMenuitem(WardenMenu);
     } else {
       setMenuitem(StudentMenu);
     }
   }, []);
-
   console.log(MENUITEMS);
   const id = window.location.pathname.split("/").pop();
   const layoutId = id;

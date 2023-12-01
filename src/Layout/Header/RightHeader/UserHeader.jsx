@@ -34,6 +34,7 @@ const UserHeader = () => {
       localStorage.removeItem("Name");
       localStorage.setItem("authenticated", false);
       localStorage.setItem("login", false);
+      localStorage.removeItem("roles");
       history(`/login`);
     }
   };

@@ -188,17 +188,12 @@ import AllPlanner from "../pages/Setting/AllPlanner";
 import AllRoom from "../pages/Setting/AllRoom";
 import AttendenceReport from "../pages/Attendence-Management/AttendenceReport";
 import Dashboard from "../pages/Dashboard";
-import { Login } from "../Constant";
 import StudentDashboard from "../student_pages/dashboard/StudentDashboard";
 import MyProfile from "../student_pages/profile/MyProfile";
-import HealthManagement from "../student_pages/healthmanagement/HealthManagement";
 import Complaints from "../student_pages/complaints/Complaints";
 import FoodCalendar from "../student_pages/foodcalendar/FoodCalendar";
 import StudentFoodBook from "../student_pages/foodbook/StudentFoodBook";
-import CreateComplain from "../pages/General/CreateComplain";
-import ViewComplain from "../pages/General/ViewComplain";
 
-import ComplaintStatus from "../pages/General/ComplaintStatus";
 import Purchases from "../pages/Stock-Management/Purchases";
 import AllPurchases from "../pages/Stock-Management/AllPurchases";
 import { Component } from "react-image-crop";
@@ -208,6 +203,15 @@ import Attendence from "../pages/Employee_Dashboard/Attendance";
 import Complaint from "../pages/Employee_Dashboard/Complaint";
 import Outing from "../pages/Employee_Dashboard/Outing";
 import ComplainAction from "../pages/Employee_Dashboard/ComplainAction";
+import CreateComplain from "../pages/Complain/CreateComplain";
+import ViewComplain from "../pages/Complain/ViewComplain";
+import OutingForm from "../student_pages/OutingApproval/OutingForm";
+import ComplaintStatus from "../pages/Complain/ComplaintStatus";
+import DayToDayOrder from "../pages/purchase-order/DayToDayOrder";
+import PurchaseReport from "../pages/purchase-order/PurchaseReport";
+import NewPatient from "../student_pages/healthmanagement/NewPatient";
+import AllPatient from "../student_pages/healthmanagement/AllPatient";
+import WardenDashboard from "../wardenPages/dashboard";
 
 export const routes = [
   { path: `/dashboard`, Component: <Dashboard /> },
@@ -227,12 +231,15 @@ export const routes = [
   { path: `/food-planner`, Component: <FoodPlanner /> },
   { path: `/allplanner`, Component: <AllPlanner /> },
 
+  //Purchase Order routes
+  { path: `/day-to-day-order`, Component: <DayToDayOrder /> },
+  { path: `/purchase-report`, Component: <PurchaseReport /> },
+
   //employee Management routes
   { path: `/create-employee`, Component: <CreateEmployee /> },
   { path: `/allemployee`, Component: <AllEmployee /> },
   { path: `/all-student`, Component: <AllStudents /> },
   { path: `/complaint/complain-action/:id`, Component: <ComplainAction /> },
-
 
   //ROOM MANAGEMENT
   { path: `/room-management`, Component: <RoomManagement /> },
@@ -251,12 +258,10 @@ export const routes = [
   { path: `/allpurchases`, Component: <AllPurchases /> },
 
   //Employee Dashboard
-   {path: `/complaint`, Component: <Complaint />},
-   {path: `/attendence`, Component: <Attendence/>},
-   {path: '/house_keeping', Component:<HouseKeeping/>},
-   {path: '/outing', Component: <Outing/>},
-
-
+  { path: `/complaint`, Component: <Complaint /> },
+  { path: `/attendence`, Component: <Attendence /> },
+  { path: "/house_keeping", Component: <HouseKeeping /> },
+  { path: "/outing", Component: <Outing /> },
 
   //employee Management routes ends
   { path: `/ui-kits/typography`, Component: <Typography /> },
@@ -457,6 +462,13 @@ export const routes = [
   { path: `/app/faq`, Component: <FAQContent /> },
 ];
 
+export const Wardenroutes = [
+  {
+    path: `/dashboard`,
+    Component: <WardenDashboard />,
+  },
+];
+
 export const studentRoutes = [
   { path: `/dashboard`, Component: <StudentDashboard /> },
 
@@ -464,7 +476,8 @@ export const studentRoutes = [
   { path: `/my-profile`, Component: <MyProfile /> },
 
   //Health Management routes
-  { path: `/health-management`, Component: <HealthManagement /> },
+  { path: `/new-patient`, Component: <NewPatient /> },
+  { path: `/all-patient`, Component: <AllPatient /> },
 
   //Food Book routes
   { path: `/student-foodbook`, Component: <StudentFoodBook /> },
@@ -474,6 +487,10 @@ export const studentRoutes = [
 
   //   //Food Calender routes
   { path: `/food-calendar`, Component: <FoodCalendar /> },
+
+  //outing approval
+  { path: `/create-request`, Component: <OutingForm /> },
+  // { path: `/all-request`, Component: < /> },
 
   //
 ];

@@ -14,15 +14,14 @@ import {
   Row,
 } from "reactstrap";
 
-import CKEditors from 'react-ckeditor-component';
-import { Breadcrumbs,   H5 } from "../../AbstractElements";
+import CKEditors from "react-ckeditor-component";
+import { Breadcrumbs, H5 } from "../../AbstractElements";
 export default function ComplaintStatus() {
-
-    const [content, setContent] = useState('content');
-    const onChange = (evt) => {
-        const newContent = evt.editor.getData();
-        setContent(newContent);
-    };
+  const [content, setContent] = useState("content");
+  const onChange = (evt) => {
+    const newContent = evt.editor.getData();
+    setContent(newContent);
+  };
   const [data, setData] = useState([
     {
       id: 4,
@@ -58,38 +57,29 @@ export default function ComplaintStatus() {
                     <h6>Complaint Description</h6>
                     <p>{complaint.complaintDetails}</p>
 
-
-
                     <div>
-                    <Container fluid={true}>
-                    <Row>
-                        <Col sm="12">
+                      <Container fluid={true}>
+                        <Row>
+                          <Col sm="12">
                             <Card>
-                                
-                                    <H5>Status</H5>
-                                
-                                <CardBody>
-                                    <CKEditors
-                                        activeclassName="p10"
-                                        content={content}
-                                        events={{
-                                            'change': onChange
-                                        }}
-                                    />
-                                </CardBody>
+                              <H5>Status</H5>
+
+                              <CardBody>
+                                <CKEditors
+                                  activeclassName="p10"
+                                  content={content}
+                                  events={{
+                                    change: onChange,
+                                  }}
+                                />
+                              </CardBody>
                             </Card>
-                        </Col>
-                    </Row>
-
-                    </Container>
-                    
+                          </Col>
+                        </Row>
+                      </Container>
                     </div>
 
-
-
-                    <div>
-                    
-                    </div>
+                    <div></div>
                   </div>
                 </>
               ))}
@@ -104,5 +94,3 @@ export default function ComplaintStatus() {
     </Fragment>
   );
 }
-
-

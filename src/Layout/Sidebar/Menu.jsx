@@ -53,8 +53,31 @@ export const EmployeeMenu = [
         active: false,
         path: "/food-book",
       },
+
       {
-        title: "Tickets and Complain",
+        title: "Outing",
+        icon: "widget",
+        type: "sub",
+        active: false,
+        children: [{ path: `/outing`, title: "Outing", type: "link" }],
+      },
+      {
+        title: "Purchase Data",
+        icon: "widget",
+        type: "sub",
+        active: false,
+        children: [
+          {
+            path: `/day-to-day-order`,
+            title: "Day to Day Order",
+            type: "link",
+          },
+          { path: `/purchase-report`, title: "Purchase Report", type: "link" },
+        ],
+      },
+
+      {
+        title: "Tickets & Complains",
         icon: "widget",
         type: "sub",
         active: false,
@@ -64,14 +87,11 @@ export const EmployeeMenu = [
         ],
       },
       {
-        title: "Stock Management",
+        title: "Outing",
         icon: "widget",
         type: "sub",
         active: false,
-        children: [
-          { path: `/purchases`, title: "Purchase", type: "link" },
-          { path: `/allpurchases`, title: "All Purchases", type: "link" },
-        ],
+        children: [{ path: `/outing`, title: "Outing", type: "link" }],
       },
     ],
   },
@@ -89,7 +109,7 @@ export const EmployeeMenu = [
         children: [
           { path: `/room-management`, title: "Create Room", type: "link" },
           { path: `/allroom`, title: "All Room", type: "link" },
-          
+          { path: `/create-aminity`, title: "Create Aminity", type: "link" },
         ],
       },
       {
@@ -104,6 +124,7 @@ export const EmployeeMenu = [
       },
     ],
   },
+
   {
     menutitle: "Components",
     menucontent: "Ready to use Apps",
@@ -780,9 +801,23 @@ export const StudentMenu = [
         path: `/health-management`,
         icon: "widget",
         title: "Health Management",
-        type: "link",
-        badge: "badge badge-light-primary",
+        type: "sub",
         active: false,
+        children: [
+          { path: `/new-patient`, title: "New Patient", type: "link" },
+          { path: `/all-patient`, title: "All Patient", type: "link" },
+        ],
+      },
+      {
+        path: `/outing-management`,
+        icon: "widget",
+        title: "Outing Management",
+        type: "sub",
+        active: false,
+        children: [
+          { path: `/create-request`, title: "New Request", type: "link" },
+          { path: `/all-request`, title: "All Request", type: "link" },
+        ],
       },
       {
         path: `/student-foodbook`,
