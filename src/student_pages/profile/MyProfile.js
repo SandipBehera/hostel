@@ -1,6 +1,7 @@
 import React, { Fragment,useState } from 'react';
-import { Card, CardHeader,Container, Row, Col, Form, FormGroup, Label, Input } from 'reactstrap';
-import { H5 } from '../../AbstractElements';
+import { Card,Container, Row, Col, Form, FormGroup, Label, Input } from 'reactstrap';
+import { Breadcrumbs, H5 } from '../../AbstractElements';
+import image from "./images/pexels-pixabay-36717.jpg"
 
 const MyProfile = () => {
   const [name, setName] = useState('');
@@ -12,12 +13,6 @@ const MyProfile = () => {
   const [previousHostelName, setPreviousHostelName] = useState('');
   const [previousRoomNo, setPreviousRoomNo] = useState('');
   const [profileImage, setProfileImage] = useState(null);
-
-  
-  const formStyles = {
-    margin: '20px', // Adjust margin as needed
-    padding: '20px', // Adjust padding as needed
-  };
 
   
   const handleImageChange = (e) => {
@@ -36,21 +31,41 @@ const MyProfile = () => {
 
   return (
     <Fragment>
+      <Breadcrumbs
+            parent="My Profile"
+            mainTitle="Student Profile"
+            title="Student Profile"
+            />
     <Container>
-        <Card style={formStyles}>
-            <CardHeader>
-                <H5>Student Profile</H5>
-            </CardHeader>
-      <Form >
-      <div style={{ textAlign: 'center', marginTop: '20px' }}>
+        <Card >
+            
+      
+      <div  style={{
+              textAlign: 'center',
+              marginTop: '0px',
+              borderTopLeftRadius:'18px',
+              borderTopRightRadius:'18px',
+              backgroundImage: `url(${image})`, // Add your background image URL here
+              backgroundSize: 'cover',
+              backgroundPosition: 'center',
+              width: '100%', // Cover the entire width of the container
+              height: '250px', // Adjust the height as per your requirement
+             
+              cursor: 'pointer',
+              position: 'relative',
+            }}>
             <label htmlFor="upload-input">
               <img
-                src={profileImage || 'https://via.placeholder.com/150'}
+                src={profileImage || 'https://via.placeholder.com/200'}
                 alt="Profile"
                 style={{
-                  width: '150px',
-                  height: '150px',
+                  width: '200px',
+                  height: '200px',
                   borderRadius: '50%',
+                  position: 'absolute',
+                  top: '50%', // Position the image in the center vertically
+                  left: '50%', // Position the image in the center horizontally
+                  transform: 'translate(-50%, -50%)', // Center the image
                   cursor: 'pointer',
                 }}
               />
@@ -62,10 +77,11 @@ const MyProfile = () => {
               />
             </label>
           </div>
+          <Form className='p-3'>
         <Row>
           <Col sm="6"  >
             <FormGroup >
-              <Label for="name">Name</Label>
+              <Label for="name" className='mt-3' >Name</Label>
               <Input
                 type="text"
                 name="name"
@@ -77,7 +93,7 @@ const MyProfile = () => {
           </Col>
           <Col sm="6">
             <FormGroup>
-              <Label for="regNo">Registration No.</Label>
+              <Label for="regNo" className='mt-3'>Registration No.</Label>
               <Input
                 type="text"
                 name="regNo"
@@ -116,7 +132,7 @@ const MyProfile = () => {
         </Row>
         <Row>
           <Col>
-            <H5>Current Hostel</H5>
+            <H5 >Current Hostel</H5>
             <FormGroup>
               <Row>
                 <Col sm="6">

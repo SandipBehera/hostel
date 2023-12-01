@@ -801,9 +801,23 @@ export const StudentMenu = [
         path: `/health-management`,
         icon: "widget",
         title: "Health Management",
-        type: "link",
-        badge: "badge badge-light-primary",
+        type: "sub",
         active: false,
+        children: [
+          { path: `/new-patient`, title: "New Patient", type: "link" },
+          { path: `/all-patient`, title: "All Patient", type: "link" },
+        ],
+      },
+      {
+        path: `/outing-management`,
+        icon: "widget",
+        title: "Outing Management",
+        type: "sub",
+        active: false,
+        children: [
+          { path: `/create-request`, title: "New Request", type: "link" },
+          { path: `/all-request`, title: "All Request", type: "link" },
+        ],
       },
       {
         path: `/student-foodbook`,

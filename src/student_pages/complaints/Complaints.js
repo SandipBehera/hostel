@@ -1,6 +1,6 @@
 import React, { Fragment, useState, useEffect } from 'react';
 import { Form, FormGroup, Label, Input, Button, Card, CardBody, CardTitle, CardText } from 'reactstrap';
-import { H5 } from '../../AbstractElements';
+import { Breadcrumbs, H5 } from '../../AbstractElements';
 
 const Complaints = () => {
   const [complaint, setComplaint] = useState('');
@@ -36,7 +36,12 @@ const Complaints = () => {
 
   return (
     <Fragment>
-      <H5>Submit Complaint</H5>
+      <Breadcrumbs
+           parent="Complaints"
+           mainTitle="Student Complaints"
+           title="Student Complaints"
+           />
+      
       <Form onSubmit={handleSubmit}>
         <FormGroup>
           <Label for="complaintText">Enter Your Complaint:</Label>
