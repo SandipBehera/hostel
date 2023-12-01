@@ -188,19 +188,19 @@ import AllPlanner from "../pages/Setting/AllPlanner";
 import AllRoom from "../pages/Setting/AllRoom";
 import AttendenceReport from "../pages/Attendence-Management/AttendenceReport";
 import Dashboard from "../pages/Dashboard";
-import { Login } from "../Constant";
 import StudentDashboard from "../student_pages/dashboard/StudentDashboard";
 import MyProfile from "../student_pages/profile/MyProfile";
-import HealthManagement from "../student_pages/healthmanagement/HealthManagement";
 import Complaints from "../student_pages/complaints/Complaints";
 import FoodCalendar from "../student_pages/foodcalendar/FoodCalendar";
 import StudentFoodBook from "../student_pages/foodbook/StudentFoodBook";
 import CreateComplain from "../pages/Complain/CreateComplain";
 import ViewComplain from "../pages/Complain/ViewComplain";
 import OutingForm from "../pages/OutingApproval/OutingForm";
-import ComplaintStatus from "../pages/General/ComplaintStatus";
+import ComplaintStatus from "../pages/Complain/ComplaintStatus";
 import DayToDayOrder from "../pages/purchase-order/DayToDayOrder";
 import PurchaseReport from "../pages/purchase-order/PurchaseReport";
+import NewPatient from "../student_pages/healthmanagement/NewPatient";
+import AllPatient from "../student_pages/healthmanagement/AllPatient";
 
 export const routes = [
   { path: `/dashboard`, Component: <Dashboard /> },
@@ -450,7 +450,8 @@ export const studentRoutes = [
   { path: `/my-profile`, Component: <MyProfile /> },
 
   //Health Management routes
-  { path: `/health-management`, Component: <HealthManagement /> },
+  { path: `/new-patient`, Component: <NewPatient /> },
+  { path: `/all-patient`, Component: <AllPatient /> },
 
   //Food Book routes
   { path: `/student-foodbook`, Component: <StudentFoodBook /> },
