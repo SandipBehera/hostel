@@ -50,7 +50,7 @@ export const EmployeeMenu = [
         path: "/food-book",
       },
          {
-   title: "General",
+   title: "Tickets and Complain",
    icon: "widget",
    type: "sub",
    active: false,
@@ -60,12 +60,13 @@ export const EmployeeMenu = [
    ]
  },
  {
-  title: "Outing",
+  title: "Stock Management",
   icon: "widget",
   type: "sub",
   active: false,
   children: [
-    { path: `/outing`, title: "Outing", type: "link" },
+    { path: `/purchases`, title: "Purchase", type: "link" },
+    { path: `/allpurchases`, title: "All Purchases", type: "link" },
   ]
 },
     ],

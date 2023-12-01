@@ -197,8 +197,10 @@ import FoodCalendar from "../student_pages/foodcalendar/FoodCalendar";
 import StudentFoodBook from "../student_pages/foodbook/StudentFoodBook";
 import CreateComplain from "../pages/General/CreateComplain";
 import ViewComplain from "../pages/General/ViewComplain";
-import OutingForm from "../pages/OutingApproval/OutingForm";
+
 import ComplaintStatus from "../pages/General/ComplaintStatus";
+import Purchases from "../pages/Stock-Management/Purchases";
+import AllPurchases from "../pages/Stock-Management/AllPurchases";
 
 export const routes = [
   { path: `/dashboard`, Component: <Dashboard /> },
@@ -235,8 +237,10 @@ export const routes = [
     Component: <ComplaintStatus />,
   },
 
-  //outing approval
-  { path: `/outing`, Component: <OutingForm /> },
+  //Stock Management
+  { path: `/purchases`, Component: <Purchases /> },
+  { path: `/allpurchases`, Component: <AllPurchases /> },
+
   //employee Management routes ends
 
   { path: `/ui-kits/typography`, Component: <Typography /> },
