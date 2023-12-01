@@ -199,6 +199,7 @@ import CreateComplain from "../pages/Complain/CreateComplain";
 import ViewComplain from "../pages/Complain/ViewComplain";
 import OutingForm from "../pages/OutingApproval/OutingForm";
 import ComplaintStatus from "../pages/Complain/ComplaintStatus";
+import WardenDashboard from "../wardenPages/dashboard";
 
 export const routes = [
   { path: `/dashboard`, Component: <Dashboard /> },
@@ -435,6 +436,13 @@ export const routes = [
 
   // //Faq
   { path: `/app/faq`, Component: <FAQContent /> },
+];
+
+export const Wardenroutes = [
+  {
+    path: `/dashboard`,
+    Component: <WardenDashboard />,
+  },
 ];
 
 export const studentRoutes = [

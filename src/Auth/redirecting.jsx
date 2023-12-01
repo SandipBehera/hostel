@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useHistory, useNavigate, useParams } from "react-router-dom";
-import { WebApi, api } from "../api";
+import { LocalApi, WebApi, api } from "../api";
 
 const RedirectionPage = () => {
   const navigation = useNavigate();
@@ -12,20 +12,31 @@ const RedirectionPage = () => {
     const checkUserInDatabase = async () => {
       try {
         // Replace the following with your actual API call to check user existence
-        const response = await fetch(`${WebApi}/users/${userId}`, {
+        const response = await fetch(`${LocalApi}/users/${userId}`, {
           method: "GET",
         });
         const data = await response.json();
         console.log(data);
-        if (data) {
+        if (data.status === "success") {
           // User exists, redirect to the dashboard
-
           localStorage.setItem("login", JSON.stringify(true));
           localStorage.setItem("authenticated", JSON.stringify(true));
           localStorage.setItem("userId", data.data.user_id);
           localStorage.setItem("Name", data.data.name);
           localStorage.setItem("userType", data.data.user_type);
-          if (data.data.user_type !== null && data.data.user_id !== null) {
+          if (data.data.user_type === "admin" && data.data.user_id !== null) {
+            localStorage.setItem("roles", "no data");
+            const dashboardLink = `/${data.data.user_type}/${data.data.user_id}/dashboard`;
+            window.location.href = dashboardLink;
+          } else if (data.data.user_type === "employee") {
+            localStorage.setItem("roles", data.data.roles.data.role);
+            const dashboardLink = `/${data.data.user_type}/${data.data.user_id}/dashboard`;
+            window.location.href = dashboardLink;
+          } else if (
+            data.data.user_type === "student" &&
+            data.data.user_id !== null
+          ) {
+            localStorage.setItem("roles", "no data");
             const dashboardLink = `/${data.data.user_type}/${data.data.user_id}/dashboard`;
             window.location.href = dashboardLink;
           } else {
