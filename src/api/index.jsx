@@ -33,4 +33,4 @@ export const IcoDataApi = `${api}/icoData.json`;
 export const ThemifyDataApi = `${api}/themifyData.json`;
 export const LocalApi = `http://localhost:3001/api`;
 export const WebApi = `http://13.58.217.203:3001/api`;
-export const WebSocketAPI = `http://13.58.217.203`;
+export const WebSocketAPI = `http://13.58.217.203:3001`;
