@@ -448,6 +448,13 @@ export const routes = [
   { path: `/app/faq`, Component: <FAQContent /> },
 ];
 
+export const Wardenroutes = [
+  {
+    path: `/dashboard`,
+    Component: <WardenDashboard />,
+  },
+];
+
 export const studentRoutes = [
   { path: `/dashboard`, Component: <StudentDashboard /> },
 

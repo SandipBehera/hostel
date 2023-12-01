@@ -1,6 +1,6 @@
 import React, { Fragment, useState, useEffect, useContext } from "react";
 import CustomContext from "../../_helper/Customizer";
-import { EmployeeMenu, StudentMenu } from "./Menu";
+import { EmployeeMenu, StudentMenu, WardenMenu } from "./Menu";
 import SidebarIcon from "./SidebarIcon";
 import SidebarLogo from "./SidebarLogo";
 import SidebarMenu from "./SidebarMenu";
@@ -25,49 +25,52 @@ const Sidebar = (props) => {
       //   customizer.settings.sidebar.type.split(' ').pop() ===
       //   'advance-layout'
       // )
-      document.querySelector(".sidebar-main").className = "sidebar-main hovered";
+      document.querySelector(".sidebar-main").className =
+        "sidebar-main hovered";
     } else {
-      if (document.getElementById("sidebar-main")) document.querySelector(".sidebar-main").className = "sidebar-main";
+      if (document.getElementById("sidebar-main"))
+        document.querySelector(".sidebar-main").className = "sidebar-main";
     }
   };
 
-
   useEffect(() => {
-    const userType = localStorage.getItem('userType');
-    if(userType==="employee"){
+    const userType = localStorage.getItem("userType");
+    const userRoles = localStorage.getItem("roles");
+    if (userType === "admin") {
       setMainMenu(EmployeeMenu);
-    }
-    else{
+    } else if (userRoles === "warden" && userType === "employee") {
+      setMainMenu(WardenMenu);
+    } else {
       setMainMenu(StudentMenu);
     }
     document.querySelector(".left-arrow").classList.add("d-none");
     window.addEventListener("resize", handleResize);
     handleResize();
     const currentUrl = window.location.pathname;
-    if(mainmenu.length<0){
-    mainmenu.map((items) => {
-      items.Items.filter((Items) => {
-        if (Items.path === currentUrl) setNavActive(Items);
-        if (!Items.children) return false;
-        Items.children.filter((subItems) => {
-          if (subItems.path === currentUrl) setNavActive(subItems);
-          if (!subItems.children) return false;
-          subItems.children.filter((subSubItems) => {
-            if (subSubItems.path === currentUrl) {
-              setNavActive(subSubItems);
-              return true;
-            } else {
-              return false;
-            }
+    if (mainmenu.length < 0) {
+      mainmenu.map((items) => {
+        items.Items.filter((Items) => {
+          if (Items.path === currentUrl) setNavActive(Items);
+          if (!Items.children) return false;
+          Items.children.filter((subItems) => {
+            if (subItems.path === currentUrl) setNavActive(subItems);
+            if (!subItems.children) return false;
+            subItems.children.filter((subSubItems) => {
+              if (subSubItems.path === currentUrl) {
+                setNavActive(subSubItems);
+                return true;
+              } else {
+                return false;
+              }
+            });
+            return subItems;
           });
-          return subItems;
+          return Items;
         });
-        return Items;
+        return items;
       });
-      return items;
-    });
     }
-    
+
     window.addEventListener("scroll", handleScroll);
     handleScroll();
     return () => {
@@ -126,12 +129,22 @@ const Sidebar = (props) => {
         className="bg-overlay1"
         onClick={() => {
           closeOverlay();
-        }}></div>
-      <div className={`sidebar-wrapper ${toggleIcon ? "close_icon" : ""}`} sidebar-layout="stroke-svg">
+        }}
+      ></div>
+      <div
+        className={`sidebar-wrapper ${toggleIcon ? "close_icon" : ""}`}
+        sidebar-layout="stroke-svg"
+      >
         <SidebarIcon />
         <SidebarLogo />
         {/* sidebartoogle={sidebartoogle} */}
-        <SidebarMenu setMainMenu={setMainMenu} props={props} setNavActive={setNavActive} activeClass={activeClass} width={width} />
+        <SidebarMenu
+          setMainMenu={setMainMenu}
+          props={props}
+          setNavActive={setNavActive}
+          activeClass={activeClass}
+          width={width}
+        />
       </div>
     </Fragment>
   );
