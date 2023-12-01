@@ -195,7 +195,7 @@ import FoodCalendar from "../student_pages/foodcalendar/FoodCalendar";
 import StudentFoodBook from "../student_pages/foodbook/StudentFoodBook";
 import CreateComplain from "../pages/Complain/CreateComplain";
 import ViewComplain from "../pages/Complain/ViewComplain";
-import OutingForm from "../pages/OutingApproval/OutingForm";
+import OutingForm from "../student_pages/OutingApproval/OutingForm";
 import ComplaintStatus from "../pages/Complain/ComplaintStatus";
 import DayToDayOrder from "../pages/purchase-order/DayToDayOrder";
 import PurchaseReport from "../pages/purchase-order/PurchaseReport";
@@ -241,8 +241,7 @@ export const routes = [
     Component: <ComplaintStatus />,
   },
 
-  //outing approval
-  { path: `/outing`, Component: <OutingForm /> },
+
   //employee Management routes ends
 
   { path: `/ui-kits/typography`, Component: <Typography /> },
@@ -461,6 +460,10 @@ export const studentRoutes = [
 
   //   //Food Calender routes
   { path: `/food-calendar`, Component: <FoodCalendar /> },
+
+    //outing approval
+    { path: `/create-request`, Component: <OutingForm /> },
+    // { path: `/all-request`, Component: < /> },
 
   //
 ];

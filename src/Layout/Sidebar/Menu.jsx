@@ -809,6 +809,17 @@ export const StudentMenu = [
         ],
       },
       {
+        path: `/outing-management`,
+        icon: "widget",
+        title: "Outing Management",
+        type: "sub",
+        active: false,
+        children: [
+          { path: `/create-request`, title: "New Request", type: "link" },
+          { path: `/all-request`, title: "All Request", type: "link" },
+        ],
+      },
+      {
         path: `/student-foodbook`,
         icon: "widget",
         title: "Student FoodBook",
