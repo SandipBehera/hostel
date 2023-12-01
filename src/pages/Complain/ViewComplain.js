@@ -101,36 +101,44 @@ const ViewComplaint = () => {
           </tr>
         </thead>
         <tbody>
-          {data.map((complaint) => (
-            <tr key={complaint.id}>
-              <td>{complaint.id}</td>
-              <td>{complaint.issued_by}</td>
-              <td>{complaint.issue_type}</td>
-              <td>
-                <Button color="info" onClick={() => handleView(complaint.id)}>
-                  View
-                </Button>
-              </td>
-              <td>
-                <Button
-                  color={complaint.status ? "success" : "primary"}
-                  onClick={() => handleStartProcess(complaint)}
-                >
-                  {complaint.status !== "NEW" ? (
-                    <Link
-                      className="link-text"
-                      to={`complain-status/${complaint.id}`}
-                    >
-                      Assigned to:{complaint.assigned_to} and Status:
-                      {complaint.status}
-                    </Link>
-                  ) : (
-                    "Start Process"
-                  )}
-                </Button>
+          {data !== undefined && data.length > 0 ? (
+            data.map((complaint) => (
+              <tr key={complaint.id}>
+                <td>{complaint.id}</td>
+                <td>{complaint.issued_by}</td>
+                <td>{complaint.issue_type}</td>
+                <td>
+                  <Button color="info" onClick={() => handleView(complaint.id)}>
+                    View
+                  </Button>
+                </td>
+                <td>
+                  <Button
+                    color={complaint.status ? "success" : "primary"}
+                    onClick={() => handleStartProcess(complaint)}
+                  >
+                    {complaint.status !== "NEW" ? (
+                      <Link
+                        className="link-text"
+                        to={`complain-status/${complaint.id}`}
+                      >
+                        Assigned to:{complaint.assigned_to} and Status:
+                        {complaint.status}
+                      </Link>
+                    ) : (
+                      "Start Process"
+                    )}
+                  </Button>
+                </td>
+              </tr>
+            ))
+          ) : (
+            <tr>
+              <td colSpan="5" style={{ textAlign: "center" }}>
+                <p style={{ color: "red" }}>No Data Found</p>
               </td>
             </tr>
-          ))}
+          )}
         </tbody>
       </Table>
 

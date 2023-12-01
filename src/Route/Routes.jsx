@@ -195,10 +195,10 @@ import HealthManagement from "../student_pages/healthmanagement/HealthManagement
 import Complaints from "../student_pages/complaints/Complaints";
 import FoodCalendar from "../student_pages/foodcalendar/FoodCalendar";
 import StudentFoodBook from "../student_pages/foodbook/StudentFoodBook";
-import CreateComplain from "../pages/General/CreateComplain";
-import ViewComplain from "../pages/General/ViewComplain";
+import CreateComplain from "../pages/Complain/CreateComplain";
+import ViewComplain from "../pages/Complain/ViewComplain";
 import OutingForm from "../pages/OutingApproval/OutingForm";
-import ComplaintStatus from "../pages/General/ComplaintStatus";
+import ComplaintStatus from "../pages/Complain/ComplaintStatus";
 
 export const routes = [
   { path: `/dashboard`, Component: <Dashboard /> },
