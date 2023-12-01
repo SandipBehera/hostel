@@ -22,9 +22,9 @@ const Outing = () => {
   return (
    <Fragment>
    <Breadcrumbs
-   parent="Employee"
+   parent="Outing"
    mainTitle="Outing"
-   title="Outing"
+   title="Outing Request"
  />
    <Card>
    <Table className='text-center'>

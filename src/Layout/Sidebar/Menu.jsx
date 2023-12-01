@@ -73,6 +73,15 @@ export const EmployeeMenu = [
           { path: `/allpurchases`, title: "All Purchases", type: "link" },
         ],
       },
+      {
+        title: "Outing",
+        icon: "widget",
+        type: "sub",
+        active: false,
+        children: [
+          { path: `/outing`, title: "Outing", type: "link" },
+        ],
+      },
     ],
   },
 
