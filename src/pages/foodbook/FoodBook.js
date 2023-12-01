@@ -24,14 +24,14 @@ const FoodBook = () => {
     fetchData(); // Call the async function immediately
   }, []);
 
-  // const handleExport = () => {
-  //   const csv = Papa.unparse(data);
-  //   const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
-  //   const link = document.createElement("a");
-  //   link.href = window.URL.createObjectURL(blob);
-  //   link.download = "food_book.csv";
-  //   link.click();
-  // };
+  const handleExport = () => {
+    const csv = Papa.unparse(data);
+    const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+    const link = document.createElement("a");
+    link.href = window.URL.createObjectURL(blob);
+    link.download = "food_book.csv";
+    link.click();
+  };
 
   return (
     <Fragment>
@@ -43,7 +43,7 @@ const FoodBook = () => {
                 <H5 className="mb-0">Food Book</H5>
               </Col>
               <Col xs="auto">
-                {/* <Button onClick={handleExport}>Export</Button> */}
+                <Button onClick={handleExport}>Export</Button>
               </Col>
             </Row>
           </CardHeader>

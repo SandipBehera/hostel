@@ -38,10 +38,14 @@ export const EmployeeMenu = [
         active: false,
         children: [
           { path: `/take-attendence`, title: "Take Attendence", type: "link" },
-          { path: `/attendencereport`, title: "Attendence Report", type: "link" },
-        ]
+          {
+            path: `/attendencereport`,
+            title: "Attendence Report",
+            type: "link",
+          },
+        ],
       },
-    
+
       {
         title: "Food Book",
         icon: "widget",
@@ -49,26 +53,46 @@ export const EmployeeMenu = [
         active: false,
         path: "/food-book",
       },
-         {
-   title: "Tickets and Complain",
-   icon: "widget",
-   type: "sub",
-   active: false,
-   children: [
-     { path: `/create-complain`, title: "Create Compain", type: "link" },
-     { path: `/view-complain`, title: "View Complain", type: "link" },
-   ]
- },
- {
-  title: "Stock Management",
-  icon: "widget",
-  type: "sub",
-  active: false,
-  children: [
-    { path: `/purchases`, title: "Purchase", type: "link" },
-    { path: `/allpurchases`, title: "All Purchases", type: "link" },
-  ]
-},
+
+      {
+        title: "Outing",
+        icon: "widget",
+        type: "sub",
+        active: false,
+        children: [{ path: `/outing`, title: "Outing", type: "link" }],
+      },
+      {
+        title: "Purchase Order",
+        icon: "widget",
+        type: "sub",
+        active: false,
+        children: [
+          {
+            path: `/day-to-day-order`,
+            title: "Day to Day Order",
+            type: "link",
+          },
+          { path: `/purchase-report`, title: "Purchase Report", type: "link" },
+        ],
+      },
+
+      {
+        title: "Complains",
+        icon: "widget",
+        type: "sub",
+        active: false,
+        children: [
+          { path: `/create-complain`, title: "Create Compain", type: "link" },
+          { path: `/view-complain`, title: "View Complain", type: "link" },
+        ],
+      },
+      {
+        title: "Outing",
+        icon: "widget",
+        type: "sub",
+        active: false,
+        children: [{ path: `/outing`, title: "Outing", type: "link" }],
+      },
     ],
   },
 
@@ -86,7 +110,7 @@ export const EmployeeMenu = [
           { path: `/room-management`, title: "Create Room", type: "link" },
           { path: `/allroom`, title: "All Room", type: "link" },
           { path: `/create-aminity`, title: "Create Aminity", type: "link" },
-        ]
+        ],
       },
       {
         title: "Food Planner",
@@ -99,8 +123,8 @@ export const EmployeeMenu = [
         ],
       },
     ],
-    
   },
+
   {
     menutitle: "Components",
     menucontent: "Ready to use Apps",
@@ -789,7 +813,7 @@ export const StudentMenu = [
         badge: "badge badge-light-primary",
         active: false,
       },
-     
+
       {
         path: `/complaints`,
         icon: "widget",
@@ -806,7 +830,6 @@ export const StudentMenu = [
         badge: "badge badge-light-primary",
         active: false,
       },
-      
-    ]
-  }
-]
+    ],
+  },
+];
