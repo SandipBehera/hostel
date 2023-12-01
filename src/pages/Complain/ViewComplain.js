@@ -33,6 +33,7 @@ const ViewComplaint = () => {
         });
         const respData = await response.json();
         setData(respData.data);
+        console.log(respData.data);
       } catch (error) {
         console.error("Error fetching data:", error);
         // Handle the error, for example, set an error state
@@ -122,8 +123,8 @@ const ViewComplaint = () => {
                         className="link-text"
                         to={`complain-status/${complaint.id}`}
                       >
-                        Assigned to:{complaint.assigned_to} and Status:
-                        {complaint.status}
+                        Assigned to:{complaint.assigned_to} <br /> Status:
+                        {complaint.status === "" ? "NEW" : complaint.status}
                       </Link>
                     ) : (
                       "Start Process"

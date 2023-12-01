@@ -193,6 +193,9 @@ import MyProfile from "../student_pages/profile/MyProfile";
 import Complaints from "../student_pages/complaints/Complaints";
 import FoodCalendar from "../student_pages/foodcalendar/FoodCalendar";
 import StudentFoodBook from "../student_pages/foodbook/StudentFoodBook";
+
+import Purchases from "../pages/Stock-Management/Purchases";
+import AllPurchases from "../pages/Stock-Management/AllPurchases";
 import CreateComplain from "../pages/Complain/CreateComplain";
 import ViewComplain from "../pages/Complain/ViewComplain";
 import OutingForm from "../student_pages/OutingApproval/OutingForm";
@@ -201,6 +204,7 @@ import DayToDayOrder from "../pages/purchase-order/DayToDayOrder";
 import PurchaseReport from "../pages/purchase-order/PurchaseReport";
 import NewPatient from "../student_pages/healthmanagement/NewPatient";
 import AllPatient from "../student_pages/healthmanagement/AllPatient";
+import WardenDashboard from "../wardenPages/dashboard";
 
 export const routes = [
   { path: `/dashboard`, Component: <Dashboard /> },
@@ -241,6 +245,9 @@ export const routes = [
     Component: <ComplaintStatus />,
   },
 
+  //Stock Management
+  { path: `/purchases`, Component: <Purchases /> },
+  { path: `/allpurchases`, Component: <AllPurchases /> },
 
   //employee Management routes ends
 
@@ -442,6 +449,13 @@ export const routes = [
   { path: `/app/faq`, Component: <FAQContent /> },
 ];
 
+export const Wardenroutes = [
+  {
+    path: `/dashboard`,
+    Component: <WardenDashboard />,
+  },
+];
+
 export const studentRoutes = [
   { path: `/dashboard`, Component: <StudentDashboard /> },
 
@@ -461,9 +475,9 @@ export const studentRoutes = [
   //   //Food Calender routes
   { path: `/food-calendar`, Component: <FoodCalendar /> },
 
-    //outing approval
-    { path: `/create-request`, Component: <OutingForm /> },
-    // { path: `/all-request`, Component: < /> },
+  //outing approval
+  { path: `/create-request`, Component: <OutingForm /> },
+  // { path: `/all-request`, Component: < /> },
 
   //
 ];
