@@ -39,13 +39,7 @@ const RoomManagement = () => {
                   />
                 )}
 
-                {steps === 3 && (
-                  <RoomAmenities
-                    setSteps={setSteps}
-                    setFormdata={setFormdata}
-                    formdata={formdata}
-                  />
-                )}
+                
                 <div className="text-center">
                   <span
                     className={`step ${steps > 1 ? "finish" : ""} ${

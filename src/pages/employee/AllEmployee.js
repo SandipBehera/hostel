@@ -39,9 +39,9 @@ const AllEmployee = () => {
                   <th scope='col'>{'Id'}</th>
                   <th scope='col'>{'First Name'}</th>
                   <th scope='col'>{'Last Name'}</th>
-                  <th scope='col'>{'Username'}</th>
+                  <th scope='col'>{'Email'}</th>
                   <th scope='col'>{'Designation'}</th>
-                  <th scope='col'>{'Company'}</th>
+                  <th scope='col'>{'Contact No.'}</th>
                   <th scope='col'>{'Language'}</th>
                   <th scope='col'>{'Country'}</th>
                 </tr>

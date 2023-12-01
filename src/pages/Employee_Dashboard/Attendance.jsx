@@ -53,7 +53,7 @@ const mockData = [
   },
   // Add more objects as needed
 ];
-const AttendenceReport = ({ attendanceData }) => {
+const Attendence = ({ attendanceData }) => {
   const [data, setData] = useState([]);
   console.log(attendanceData);
   const [activeDropdown, setActiveDropdown] = useState(null);
@@ -110,9 +110,10 @@ const AttendenceReport = ({ attendanceData }) => {
   return (
     <Fragment>
       <Breadcrumbs
-        parent="Employee"
-        mainTitle="Attendance"
-        title="Attendance"
+        parent="Student"
+        mainTitle="Attendence Report"
+        subParent="Attandance Report"
+        title="Attendence Report"
       />
       <Container>
         <Col sm="12">
@@ -197,4 +198,4 @@ const AttendenceReport = ({ attendanceData }) => {
   );
 };
 
-export default AttendenceReport;
+export default Attendence;
