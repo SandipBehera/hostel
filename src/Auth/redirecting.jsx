@@ -12,7 +12,7 @@ const RedirectionPage = () => {
     const checkUserInDatabase = async () => {
       try {
         // Replace the following with your actual API call to check user existence
-        const response = await fetch(`${LocalApi}/users/${userId}`, {
+        const response = await fetch(`${WebApi}/users/${userId}`, {
           method: "GET",
         });
         const data = await response.json();
