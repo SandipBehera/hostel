@@ -10,7 +10,6 @@
 
 // export default FoodCalendar
 
-
 import React, { useState, useEffect, Fragment } from "react";
 import { Card, CardHeader, Table, Container, Row } from "reactstrap";
 import { Breadcrumbs, H5 } from "../../AbstractElements";
@@ -59,7 +58,7 @@ const FoodCalendar = () => {
                       <td>{index + 1}</td>
                       <td>{item.month}</td>
                       <td>
-                        <ViewModal data={data} id={item.id}  />
+                        <ViewModal data={data} id={item.id} />
                       </td>
                     </tr>
                   ))}

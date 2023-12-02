@@ -14,7 +14,8 @@ import {
 } from "reactstrap";
 import { Breadcrumbs } from "../../AbstractElements";
 import Select from "react-select";
-import { WebApi } from "../../api";
+import { LocalApi, WebApi } from "../../api";
+import { toast } from "react-toastify";
 
 const NewPatient = () => {
   const [formData, setFormData] = useState({
@@ -91,27 +92,64 @@ const NewPatient = () => {
   };
 
   const handleFileChange = (e) => {
+    const file = e.target.files[0];
     setFormData({
       ...formData,
-      file: e.target.files[0],
+      file: file,
     });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Perform submit logic here using formData state
-    console.log(formData);
-    // Reset form after submission
-    setFormData({
-      studentName: "",
-      hostelName: "",
-      floorNo: "",
-      roomNo: "",
-      date: "",
-      time: "",
-      reason: "",
-      file: null,
-    });
+
+    // Prepare form data for submission
+    const formDataForSubmission = new FormData();
+    formDataForSubmission.append("patientname", formData.studentName);
+    formDataForSubmission.append("patient_regdno", "110101csr025");
+    formDataForSubmission.append("hostelid", selectedHostel);
+    formDataForSubmission.append("floorid", selectedFloor);
+    formDataForSubmission.append("roomno", selectedRoom);
+    formDataForSubmission.append("date", formData.date);
+    formDataForSubmission.append("time", formData.time);
+    formDataForSubmission.append("reason", formData.reason);
+    formDataForSubmission.append("doctorname", formData.doctor);
+    formDataForSubmission.append("file", formData.file);
+    console.log([...formDataForSubmission.entries()]);
+    try {
+      // Make the API call
+      const response = await fetch(`${LocalApi}/add_patient`, {
+        method: "POST",
+        body: formDataForSubmission,
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to add patient");
+      }
+
+      const result = await response.json();
+      toast.success(result.message);
+      // Handle the result as needed
+      console.log(result);
+
+      // Reset form after successful submission
+      setFormData({
+        studentName: "",
+        date: "",
+        time: "",
+        reason: "",
+        doctor: "",
+        file: null,
+      });
+
+      setSelectedHostel(null);
+      setSelectedFloor(null);
+      setSelectedRoom(null);
+
+      // Optionally, you can redirect the user or show a success message
+    } catch (error) {
+      console.error(error);
+      // Handle errors (e.g., show an error message)
+    }
   };
 
   const [dropdownOpen, setDropdownOpen] = useState(false);
@@ -133,12 +171,16 @@ const NewPatient = () => {
         title="New Patient"
       />
       <Card>
-        <Form onSubmit={handleSubmit} className="p-5">
+        <Form
+          className="p-5"
+          onSubmit={handleSubmit}
+          encType="multipart/form-data"
+        >
           <FormGroup row>
             <Col sm={6} style={{ marginBottom: "20px" }}>
               <Label
                 for="studentName"
-                style={{ marginTop: "13px", marginBottom: "2px" }}
+                style={{ marginTop: "13px:marginBottom: ,px" }}
               >
                 <strong>Student Name</strong>
               </Label>
@@ -253,9 +295,7 @@ const NewPatient = () => {
               />
             </Col>
           </FormGroup>
-          <Button color="secondary" type="submit">
-            Submit
-          </Button>
+          <Button color="secondary">Submit</Button>
         </Form>
       </Card>
     </Fragment>
