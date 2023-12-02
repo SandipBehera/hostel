@@ -85,13 +85,6 @@ export const EmployeeMenu = [
           { path: `/view-complain`, title: "View Complain", type: "link" },
         ],
       },
-      {
-        title: "Outing",
-        icon: "widget",
-        type: "sub",
-        active: false,
-        children: [{ path: `/outing`, title: "Outing", type: "link" }],
-      },
     ],
   },
 
@@ -815,7 +808,7 @@ export const StudentMenu = [
         active: false,
         children: [
           { path: `/create-request`, title: "New Request", type: "link" },
-          { path: `/all-request`, title: "All Request", type: "link" },
+          { path: `/my-outings`, title: "My Outings", type: "link" },
         ],
       },
       {
@@ -859,6 +852,13 @@ export const WardenMenu = [
         type: "link",
         badge: "badge badge-light-primary",
         active: false,
+      },
+      {
+        title: "Outing",
+        icon: "widget",
+        type: "sub",
+        active: false,
+        children: [{ path: `/all-outing`, title: "All Outing", type: "link" }],
       },
       {
         title: "Foody ",
