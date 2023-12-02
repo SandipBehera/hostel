@@ -212,6 +212,7 @@ import PurchaseReport from "../pages/purchase-order/PurchaseReport";
 import NewPatient from "../student_pages/healthmanagement/NewPatient";
 import AllPatient from "../student_pages/healthmanagement/AllPatient";
 import WardenDashboard from "../wardenPages/dashboard";
+import FoodBookEntry from "../wardenPages/foodbook/entry";
 
 export const routes = [
   { path: `/dashboard`, Component: <Dashboard /> },
@@ -219,7 +220,8 @@ export const routes = [
   { path: `/widgets/chart`, Component: <Chart /> },
 
   //Food Book routes
-  { path: `/food-book`, Component: <FoodBook /> },
+  { path: `/food-book`, Component: <FoodBookEntry /> },
+  { path: `/today-Booking`, Component: <FoodBook /> },
 
   //Attendence management
   { path: `/take-attendence`, Component: <Take_Attendence /> },
@@ -467,6 +469,8 @@ export const Wardenroutes = [
     path: `/dashboard`,
     Component: <WardenDashboard />,
   },
+  { path: `/food-book`, Component: <FoodBookEntry /> },
+  { path: `/today-Booking`, Component: <FoodBook /> },
 ];
 
 export const studentRoutes = [

@@ -3,59 +3,66 @@ import { Button, Table, Card, CardHeader, Row, Col, Input } from "reactstrap";
 import { Breadcrumbs, H5 } from "../../AbstractElements";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { LocalApi } from "../../api";
+import { getMealTimings, getMealType } from "../../Hooks/getMealTimings";
 
 const StudentFoodBook = () => {
   const [mealData, setMealData] = useState([]);
-  const [selectedDay, setSelectedDay] = useState("Monday"); // Default day
+  const [selectedDay, setSelectedDay] = useState(""); // Default day
   const [generatedCode, setGeneratedCode] = useState("");
   const [isCodeValid, setIsCodeValid] = useState(false);
   const [gracePeriodExpired, setGracePeriodExpired] = useState(false);
   const [isButtonClicked, setIsButtonClicked] = useState(false);
 
-  useEffect(() => {
-    // Mocked meal data representing API response
-    const fetchedData = [
-      {
-        day: "Monday",
-        breakfast: {
-          description: "Toast",
-          from: "07:00",
-          to: "09:00",
-        },
-        lunch: {
-          description: "Salad",
-          from: "12:00",
-          to: "14:00",
-        },
-        dinner: {
-          description: "Pasta",
-          from: "18:00",
-          to: "20:00",
-        },
-      },
-      // Add data for other days similarly...
-    ];
+  //get this month name
+  const date = new Date();
+  const month = date.toLocaleString("default", { month: "long" });
+  const [monthName, setMonthName] = useState(month);
+  const now = new Date();
 
-    setMealData(fetchedData); // Set fetched data to state (Replace this with actual API fetch)
+  const fetchedData = async () => {
+    const response = await fetch(`${LocalApi}/get_all_menu`);
+    const respData = await response.json();
+    const fetched_data = respData.data.filter(
+      (item) => item.month === monthName
+    );
+    setMealData(fetched_data);
+  };
+
+  useEffect(() => {
+    fetchedData(); // Set fetched data to state (Replace this with actual API fetch)
+    setSelectedDay(now.toLocaleString("default", { weekday: "long" }));
   }, []);
 
-  const handleBookButtonClick = () => {
-    const now = new Date();
+  console.log(mealData);
 
-    const breakfastStart = new Date();
-    breakfastStart.setHours(7, 0, 0); // Set breakfast start time (7 am)
-    const breakfastEnd = new Date();
-    breakfastEnd.setHours(9, 0, 0); // Set breakfast end time (9 am)
+  const handleBookButtonClick = async () => {
+    // const breakfastStart = new Date();
+    // breakfastStart.setHours(7, 0, 0); // Set breakfast start time (7 am)
+    // const breakfastEnd = new Date();
+    // breakfastEnd.setHours(9, 0, 0); // Set breakfast end time (9 am)
 
-    const lunchStart = new Date();
-    lunchStart.setHours(12, 0, 0); // Set lunch start time (12 pm)
-    const lunchEnd = new Date();
-    lunchEnd.setHours(14, 0, 0); // Set lunch end time (1 pm)
+    // const lunchStart = new Date();
+    // lunchStart.setHours(12, 0, 0); // Set lunch start time (12 pm)
+    // const lunchEnd = new Date();
+    // lunchEnd.setHours(14, 0, 0); // Set lunch end time (1 pm)
 
-    const dinnerStart = new Date();
-    dinnerStart.setHours(18, 0, 0); // Set dinner start time (6 pm)
-    const dinnerEnd = new Date();
-    dinnerEnd.setHours(20, 0, 0); // Set dinner end time (8 pm)
+    // const dinnerStart = new Date();
+    // dinnerStart.setHours(18, 0, 0); // Set dinner start time (6 pm)
+    // const dinnerEnd = new Date();
+    // dinnerEnd.setHours(20, 0, 0); // Set dinner end time (8 pm)
+
+    const day = now.toLocaleString("default", { weekday: "long" });
+    console.log(day);
+    const mealTimings = getMealTimings(mealData[0].menu_data, day);
+    const breakfastStart = mealTimings.breakfastStart;
+    const breakfastEnd = mealTimings.breakfastEnd;
+
+    const lunchStart = mealTimings.lunchStart;
+    const lunchEnd = mealTimings.lunchEnd;
+
+    const dinnerStart = mealTimings.dinnerStart;
+    const dinnerEnd = mealTimings.dinnerEnd;
 
     if (
       (now >= breakfastStart && now <= breakfastEnd) ||
@@ -74,6 +81,20 @@ const StudentFoodBook = () => {
         setIsCodeValid(false);
         setGracePeriodExpired(true);
       }, expirationTime - now);
+      const currentMeal = getMealType(now);
+      const response = await fetch(`${LocalApi}/bookFood`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          auth_code: generatedCode,
+          regd_no: localStorage.getItem("userId"),
+          meal_type: currentMeal,
+        }),
+      });
+      const respData = await response.json();
+      console.log(respData);
     } else {
       setGeneratedCode("");
       setIsCodeValid(false);
@@ -93,29 +114,13 @@ const StudentFoodBook = () => {
     }
   }, [gracePeriodExpired]);
 
-  useEffect(() => {
-    // Function to fetch data from the backend API for the Month's table
-    const fetchMonthData = async () => {
-      try {
-        // Replace 'YOUR_API_ENDPOINT' with the actual endpoint to fetch month data
-        const response = await fetch('YOUR_API_ENDPOINT');
-        const data = await response.json();
-        setMealData(data); // Set fetched data to state
-      } catch (error) {
-        console.error('Error fetching month data:', error);
-      }
-    };
-
-    fetchMonthData(); // Fetch data when the component mounts
-  }, []);
-
   return (
     <Fragment>
       <Breadcrumbs
-           parent="Student FoodBook"
-           mainTitle="Book Food"
-           title="Book Food"
-           />
+        parent="Student FoodBook"
+        mainTitle="Book Food"
+        title="Book Food"
+      />
       <Card>
         <Row>
           <Col sm="3" className="mx-auto">
@@ -155,29 +160,39 @@ const StudentFoodBook = () => {
             {/* Render meal data fetched from the backend */}
             {mealData.map((meal, index) => (
               <tr key={index}>
+                {/* Replace 'selectedDay' with the actual selected day */}
                 <td>{selectedDay}</td>
                 <td>
-                  {meal.breakfast.description}
+                  {meal.menu_data[selectedDay].Breakfast.Description}
                   <br />
-                  {meal.breakfast.from} - {meal.breakfast.to}
+                  {meal.menu_data[selectedDay].Breakfast.From} -{" "}
+                  {meal.menu_data[selectedDay].Breakfast.To}
                 </td>
                 <td>
-                  {meal.lunch.description}
+                  {meal.menu_data[selectedDay].Lunch.Description}
                   <br />
-                  {meal.lunch.from} - {meal.lunch.to}
+                  {meal.menu_data[selectedDay].Lunch.From} -{" "}
+                  {meal.menu_data[selectedDay].Lunch.To}
                 </td>
                 <td>
-                  {meal.dinner.description}
+                  {meal.menu_data[selectedDay].Dinner.Description}
                   <br />
-                  {meal.dinner.from} - {meal.dinner.to}
+                  {meal.menu_data[selectedDay].Dinner.From} -{" "}
+                  {meal.menu_data[selectedDay].Dinner.To}
                 </td>
               </tr>
             ))}
           </tbody>
         </Table>
-                {/* New Table */}
-                <div style={{textAlign:'center',marginTop: '30px', marginBottom: '20px'}} >
-          <H5 >Month</H5>
+        {/* New Table */}
+        <div
+          style={{
+            textAlign: "center",
+            marginTop: "30px",
+            marginBottom: "20px",
+          }}
+        >
+          <H5>Month</H5>
           <Table>
             <thead>
               <tr>
@@ -188,18 +203,17 @@ const StudentFoodBook = () => {
             </thead>
             <tbody>
               {/* Render month's data fetched from the backend */}
-              {mealData.map((dataItem, index) => (
+              {/* {mealData.map((dataItem, index) => (
                 <tr key={index}>
                   <td>{dataItem.date}</td>
                   <td>{dataItem.type}</td>
                   <td>{dataItem.checkIn}</td>
                 </tr>
-              ))}
+              ))} */}
               {/* Add more rows as needed */}
             </tbody>
           </Table>
         </div>
-
       </Card>
     </Fragment>
   );
