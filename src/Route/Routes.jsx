@@ -201,7 +201,7 @@ import Warden from "../pages/Employee_Dashboard/Complaint";
 import HouseKeeping from "../pages/Employee_Dashboard/Attendance";
 import Attendence from "../pages/Employee_Dashboard/Attendance";
 import Complaint from "../pages/Employee_Dashboard/Complaint";
-import Outing from "../pages/Employee_Dashboard/Outing";
+import    AllOuting from "../pages/Employee_Dashboard/AllOuting";
 import ComplainAction from "../pages/Employee_Dashboard/ComplainAction";
 import CreateComplain from "../pages/Complain/CreateComplain";
 import ViewComplain from "../pages/Complain/ViewComplain";
@@ -212,6 +212,7 @@ import PurchaseReport from "../pages/purchase-order/PurchaseReport";
 import NewPatient from "../student_pages/healthmanagement/NewPatient";
 import AllPatient from "../student_pages/healthmanagement/AllPatient";
 import WardenDashboard from "../wardenPages/dashboard";
+import MyOutings from "../student_pages/OutingApproval/MyOutings";
 
 export const routes = [
   { path: `/dashboard`, Component: <Dashboard /> },
@@ -261,7 +262,6 @@ export const routes = [
   { path: `/complaint`, Component: <Complaint /> },
   { path: `/attendence`, Component: <Attendence /> },
   { path: "/house_keeping", Component: <HouseKeeping /> },
-  { path: "/outing", Component: <Outing /> },
 
   //employee Management routes ends
   { path: `/ui-kits/typography`, Component: <Typography /> },
@@ -463,10 +463,13 @@ export const routes = [
 ];
 
 export const Wardenroutes = [
+
   {
     path: `/dashboard`,
     Component: <WardenDashboard />,
   },
+  { path: "/all-outing", Component: <AllOuting /> },
+
 ];
 
 export const studentRoutes = [
@@ -490,6 +493,7 @@ export const studentRoutes = [
 
   //outing approval
   { path: `/create-request`, Component: <OutingForm /> },
+  {path: `/my-outings`, Component: <MyOutings />},
   // { path: `/all-request`, Component: < /> },
 
   //
