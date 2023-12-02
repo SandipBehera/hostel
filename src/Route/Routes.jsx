@@ -191,9 +191,9 @@ import Dashboard from "../pages/Dashboard";
 import StudentDashboard from "../student_pages/dashboard/StudentDashboard";
 import MyProfile from "../student_pages/profile/MyProfile";
 import Complaints from "../student_pages/complaints/Complaints";
+import ComplaintsReport from "../student_pages/complaints/ComplaintsReport";
 import FoodCalendar from "../student_pages/foodcalendar/FoodCalendar";
 import StudentFoodBook from "../student_pages/foodbook/StudentFoodBook";
-
 import Purchases from "../pages/Stock-Management/Purchases";
 import AllPurchases from "../pages/Stock-Management/AllPurchases";
 import { Component } from "react-image-crop";
@@ -212,6 +212,7 @@ import PurchaseReport from "../pages/purchase-order/PurchaseReport";
 import NewPatient from "../student_pages/healthmanagement/NewPatient";
 import AllPatient from "../student_pages/healthmanagement/AllPatient";
 import WardenDashboard from "../wardenPages/dashboard";
+
 
 export const routes = [
   { path: `/dashboard`, Component: <Dashboard /> },
@@ -484,6 +485,7 @@ export const studentRoutes = [
 
   //  //Complaints routes
   { path: `/complaints`, Component: <Complaints /> },
+  { path: `/complaints-report`, Component: <ComplaintsReport /> },
 
   //   //Food Calender routes
   { path: `/food-calendar`, Component: <FoodCalendar /> },

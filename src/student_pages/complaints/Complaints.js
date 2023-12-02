@@ -1,83 +1,176 @@
-import React, { Fragment, useState, useEffect } from 'react';
-import { Form, FormGroup, Label, Input, Button, Card, CardBody, CardTitle, CardText } from 'reactstrap';
-import { Breadcrumbs, H5 } from '../../AbstractElements';
+import React, { Fragment, useState } from 'react';
+import { Card, Col, Row, Button, Form, FormGroup, Label, Input } from 'reactstrap';
+import { Breadcrumbs } from '../../AbstractElements';
+import { WebApi } from '../../api';
 
 const Complaints = () => {
-  const [complaint, setComplaint] = useState('');
-  const [userComplaints, setUserComplaints] = useState([]);
+  const [formData, setFormData] = useState({
+    issueType: '',
+    issuedBy: '',
+    hostelId: '',
+    roomNo: '',
+    assignedTo: '',
+    status: '',
+    details: ''
+  });
 
-  // Simulated user ID (replace this with actual user ID if available)
-  const userId = 123;
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData({
+      ...formData,
+      [name]: value
+    });
+  };
 
-  // Fetch user's complaints (simulated data fetching)
-  useEffect(() => {
-    // Simulated data for demonstration
-    const dummyData = [
-      { id: 1, issue: 'Room cleanliness issue', status: 'Pending' },
-      { id: 2, issue: 'AC not working', status: 'In Progress' },
-      // Add more complaints here
-    ];
-
-    setUserComplaints(dummyData);
-  }, []);
-
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Simulated API call to add a new complaint
-    const newComplaint = {
-      id: userComplaints.length + 1,
-      issue: complaint,
-      status: 'Pending',
-    };
-    setUserComplaints([...userComplaints, newComplaint]);
-    // Clear form after submission
-    setComplaint('');
+    const fdata = {
+      issue_type: formData.issueType,
+      issue_by : formData.issuedBy,
+      room_no : formData.roomNo,
+      assigned_to : formData.assignedTo,
+      status : formData.status,
+      details : formData.details,
+    }
+    try {
+      const response = await fetch(`${WebApi}/create_complaint`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(fdata)
+      });
+
+      
+
+      if (!response.ok) {
+        throw new Error('Network response was not ok.');
+      }
+
+      // const data = await response.json();
+      console.log('Response from API:', fdata);
+
+      // Reset form after successful submission if needed
+      setFormData({
+        issueType: '',
+        issuedBy: '',
+        hostelId: '',
+        roomNo: '',
+        assignedTo: '',
+        status: '',
+        details: ''
+      });
+
+      // You can add further logic after a successful submission
+    } catch (error) {
+      console.error('Error submitting data:', error);
+      // Handle errors here
+    }
   };
 
   return (
     <Fragment>
       <Breadcrumbs
-           parent="Complaints"
-           mainTitle="Student Complaints"
-           title="Student Complaints"
-           />
-      
-      <Form onSubmit={handleSubmit}>
-        <FormGroup>
-          <Label for="complaintText">Enter Your Complaint:</Label>
-          <Input
-            type="textarea"
-            name="complaintText"
-            id="complaintText"
-            placeholder="Describe your issue..."
-            value={complaint}
-            onChange={(e) => setComplaint(e.target.value)}
-          />
-        </FormGroup>
-        <Button type="submit" color="secondary">Submit</Button>
-      </Form>
-      <div className="d-flex justify-content-center align-items-center mt-4">
-        <Card style={{ minWidth: '300px', maxWidth: '600px', marginTop: '-30px' }}>
-          <CardBody>
-            <CardTitle tag="h5">My Complaints</CardTitle>
-            {userComplaints.length > 0 ? (
-              userComplaints.map((complaint) => (
-                <CardText key={complaint.id}>
-                  <strong>Issue:</strong> {complaint.issue}
-                  <br />
-                  <strong>Status:</strong> {complaint.status}
-                </CardText>
-              ))
-            ) : (
-              <CardText>No complaints found.</CardText>
-            )}
-          </CardBody>
-        </Card>
-      </div>
+        parent="Complaints"
+        mainTitle="My Complaints"
+        title="My Complaints"
+      />
+      <Card className='p-5'>
+        <Form onSubmit={handleSubmit}>
+          <Row form>
+            <Col md={6}>
+              <FormGroup row>
+                <Label for="issueType" >Issue Type :</Label>
+                <Col sm={10}>
+                  <Input
+                    type="text"
+                    name="issueType"
+                    id="issueType"
+                    placeholder="Enter Issue Type"
+                    value={formData.issueType}
+                    onChange={handleChange}
+                  />
+                </Col>
+              </FormGroup>
+              <FormGroup row>
+                <Label for="status" >Status :</Label>
+                <Col sm={10}>
+                  <Input
+                    type="text"
+                    name="status"
+                    id="status"
+                    placeholder="Enter Status"
+                    value={formData.status}
+                    onChange={handleChange}
+                  />
+                </Col>
+              </FormGroup>
+              <FormGroup row>
+                <Label for="assignedTo" >Assigned To :</Label>
+                <Col sm={10}>
+                  <Input
+                    type="text"
+                    name="assignedTo"
+                    id="assignedTo"
+                    placeholder="Enter Assigned To"
+                    value={formData.assignedTo}
+                    onChange={handleChange}
+                  />
+                </Col>
+              </FormGroup>
+            </Col>
+            <Col md={6}>
+              <FormGroup row>
+                <Label for="issuedBy" >Issued By :</Label>
+                <Col sm={10}>
+                  <Input
+                    type="text"
+                    name="issuedBy"
+                    id="issuedBy"
+                    placeholder="Enter Issued By"
+                    value={formData.issuedBy}
+                    onChange={handleChange}
+                  />
+                </Col>
+              </FormGroup>
+              <FormGroup row>
+                <Label for="roomNo" >Room No. :</Label>
+                <Col sm={10}>
+                  <Input
+                    type="text"
+                    name="roomNo"
+                    id="roomNo"
+                    placeholder="Enter Room No."
+                    value={formData.roomNo}
+                    onChange={handleChange}
+                  />
+                </Col>
+              </FormGroup>
+             
+            </Col>
+          </Row>
+          <FormGroup row>
+            <Label for="details" >Details :</Label>
+            <Col sm={11}>
+              <Input
+                type="textarea"
+                name="details"
+                id="details"
+                placeholder="Enter Details"
+                value={formData.details}
+                onChange={handleChange}
+              />
+            </Col>
+          </FormGroup>
+          <FormGroup row>
+            <Col sm={{ size: 6, offset: 2 }}>
+              <Button type="submit">Submit</Button>
+            </Col>
+          </FormGroup>
+        </Form>
+      </Card>
     </Fragment>
   );
 };
 
 export default Complaints;
-
-

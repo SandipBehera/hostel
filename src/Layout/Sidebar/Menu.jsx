@@ -824,9 +824,13 @@ export const StudentMenu = [
         path: `/complaints`,
         icon: "widget",
         title: "Complaints",
-        type: "link",
-        badge: "badge badge-light-primary",
+        type: "sub",
         active: false,
+        children: [
+          { path: `/complaints`, title: "My Complaints", type: "link" },
+          { path: `/complaints-report`, title: "Complaints Report", type: "link" },
+          
+        ],
       },
       {
         path: `/food-calendar`,
