@@ -201,7 +201,7 @@ import Warden from "../pages/Employee_Dashboard/Complaint";
 import HouseKeeping from "../pages/Employee_Dashboard/Attendance";
 import Attendence from "../pages/Employee_Dashboard/Attendance";
 import Complaint from "../pages/Employee_Dashboard/Complaint";
-import    AllOuting from "../pages/Employee_Dashboard/AllOuting";
+import AllOuting from "../pages/Employee_Dashboard/AllOuting";
 import ComplainAction from "../pages/Employee_Dashboard/ComplainAction";
 import CreateComplain from "../pages/Complain/CreateComplain";
 import ViewComplain from "../pages/Complain/ViewComplain";
@@ -213,6 +213,7 @@ import NewPatient from "../student_pages/healthmanagement/NewPatient";
 import AllPatient from "../student_pages/healthmanagement/AllPatient";
 import WardenDashboard from "../wardenPages/dashboard";
 import MyOutings from "../student_pages/OutingApproval/MyOutings";
+import FoodBookEntry from "../wardenPages/foodbook/entry";
 
 export const routes = [
   { path: `/dashboard`, Component: <Dashboard /> },
@@ -220,7 +221,8 @@ export const routes = [
   { path: `/widgets/chart`, Component: <Chart /> },
 
   //Food Book routes
-  { path: `/food-book`, Component: <FoodBook /> },
+  { path: `/food-book`, Component: <FoodBookEntry /> },
+  { path: `/today-Booking`, Component: <FoodBook /> },
 
   //Attendence management
   { path: `/take-attendence`, Component: <Take_Attendence /> },
@@ -463,13 +465,14 @@ export const routes = [
 ];
 
 export const Wardenroutes = [
-
   {
     path: `/dashboard`,
     Component: <WardenDashboard />,
   },
   { path: "/all-outing", Component: <AllOuting /> },
 
+  { path: `/food-book`, Component: <FoodBookEntry /> },
+  { path: `/today-Booking`, Component: <FoodBook /> },
 ];
 
 export const studentRoutes = [
@@ -493,7 +496,7 @@ export const studentRoutes = [
 
   //outing approval
   { path: `/create-request`, Component: <OutingForm /> },
-  {path: `/my-outings`, Component: <MyOutings />},
+  { path: `/my-outings`, Component: <MyOutings /> },
   // { path: `/all-request`, Component: < /> },
 
   //
