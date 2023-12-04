@@ -1,10 +1,11 @@
 import React, { Fragment, useState } from "react";
 import { Button, Form, FormGroup, Label, Input } from "reactstrap";
 import { Breadcrumbs } from "../../AbstractElements";
+import { WebApi } from "../../api";
 
 const OutingForm = () => {
   const [formData, setFormData] = useState({
-    name: "",
+    regd: "",
     date: "",
     destination: "",
     reason: "",
@@ -18,12 +19,41 @@ const OutingForm = () => {
     }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+
+    const data = {
+      studentid: formData.regd,
+      date: formData.date,
+      destination: formData.destination,
+      reason: formData.reason,
+    };
+
     console.log("Form submitted:", formData);
 
+    try {
+      const response = await fetch(`${WebApi}/add_outing`, {
+        method: "POST",
+        body: JSON.stringify(data),
+        headers: {
+          "Content-Type": "application/json",
+          "Access-Control-Allow-Origin": "*",
+        },
+      });
+
+      console.log("response", response);
+
+      if (response.status === 200) {
+        console.log("Outing entry success");
+      } else {
+        console.log("Unsuccessful");
+      }
+    } catch (e) {
+      console.log("Error", e);
+    }
+
     setFormData({
-      name: "",
+      regd: "",
       date: "",
       destination: "",
       reason: "",
@@ -39,12 +69,12 @@ const OutingForm = () => {
       />
       <Form onSubmit={handleSubmit}>
         <FormGroup>
-          <Label for="name">Name</Label>
+          <Label for="regd">Regd. No.</Label>
           <Input
-            type="text"
-            name="name"
-            id="name"
-            placeholder="Your name"
+            type="number"
+            name="regd"
+            id="regd"
+            placeholder="Your Register Id"
             value={formData.name}
             onChange={handleChange}
           />

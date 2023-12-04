@@ -46,7 +46,7 @@ const FoodCalendar = () => {
                       <td>{index + 1}</td>
                       <td>{item.month}</td>
                       <td>
-                        <ViewModal data={data} id={item.id}  />
+                        <ViewModal data={data} id={item.id} />
                       </td>
                     </tr>
                   ))}
