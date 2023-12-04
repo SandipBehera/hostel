@@ -1,15 +1,3 @@
-// import React,{Fragment} from 'react';
-
-// const FoodCalendar = () => {
-//   return (
-//  <Fragment>
-
-//  </Fragment>
-//   )
-// }
-
-// export default FoodCalendar
-
 import React, { useState, useEffect, Fragment } from "react";
 import { Card, CardHeader, Table, Container, Row } from "reactstrap";
 import { Breadcrumbs, H5 } from "../../AbstractElements";

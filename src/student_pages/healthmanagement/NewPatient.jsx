@@ -155,14 +155,6 @@ const NewPatient = () => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const toggleDropdown = () => setDropdownOpen((prevState) => !prevState);
 
-  //   const handleHostelSelect = (hostel) => {
-  //     setFormData({
-  //       ...formData,
-  //       hostelName: hostel.name,
-  //     });
-  //     setDropdownOpen(false);
-  //   };
-
   return (
     <Fragment>
       <Breadcrumbs
@@ -182,7 +174,7 @@ const NewPatient = () => {
                 for="studentName"
                 style={{ marginTop: "13px:marginBottom: ,px" }}
               >
-                <strong>Student Name</strong>
+                Student Name
               </Label>
               <Input
                 type="text"
@@ -195,7 +187,7 @@ const NewPatient = () => {
             <Col sm={6} style={{ marginBottom: "15px" }}>
               <div className="mb-2" style={{ width: "100%" }}>
                 <Label className="col-form-label">
-                  <strong>Select Hostel name</strong>
+                  Select Hostel name
                 </Label>
                 <Select
                   options={hostel_name}
@@ -209,7 +201,7 @@ const NewPatient = () => {
             <Col sm={6} style={{ marginBottom: "15px" }}>
               <div className="mb-2" style={{ width: "100%" }}>
                 <Label className="col-form-label">
-                  <strong>Select Floor Name</strong>
+                  Select Floor No.
                 </Label>
                 <Select
                   options={floorData}
@@ -223,7 +215,7 @@ const NewPatient = () => {
             <Col sm={6} style={{ marginBottom: "15px" }}>
               <div className="mb-2" style={{ width: "100%" }}>
                 <Label className="col-form-label">
-                  <strong>Select Room No</strong>
+                  Select Room No.
                 </Label>
                 <Select
                   options={roomData}
@@ -235,7 +227,7 @@ const NewPatient = () => {
             </Col>
             <Col sm={6} style={{ marginBottom: "15px" }}>
               <Label for="date">
-                <strong>Date</strong>
+                Date
               </Label>
               <Input
                 type="date"
@@ -247,7 +239,7 @@ const NewPatient = () => {
             </Col>
             <Col sm={6} style={{ marginBottom: "15px" }}>
               <Label for="time">
-                <strong>Time</strong>
+                Time
               </Label>
               <Input
                 type="time"
@@ -260,7 +252,7 @@ const NewPatient = () => {
 
             <Col sm={12} style={{ marginBottom: "15px" }}>
               <Label for="reason">
-                <strong>Reason for Consultation</strong>
+                Reason for Consultation
               </Label>
               <Input
                 type="textarea"
@@ -273,7 +265,7 @@ const NewPatient = () => {
 
             <Col sm={6} style={{ marginBottom: "15px" }}>
               <Label for="doctor-name">
-                <strong>Doctor's Name</strong>
+                Doctor's Name
               </Label>
               <Input
                 type="text"
@@ -285,7 +277,7 @@ const NewPatient = () => {
             </Col>
             <Col sm={6} style={{ marginBottom: "15px" }}>
               <Label for="file">
-                <strong>Upload File</strong>
+                Upload File
               </Label>
               <Input
                 type="file"
