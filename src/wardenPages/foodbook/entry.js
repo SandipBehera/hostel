@@ -3,7 +3,7 @@ import { Button, Table, Card, CardHeader, Row, Col, Input } from "reactstrap";
 import { Breadcrumbs, H5 } from "../../AbstractElements";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { LocalApi } from "../../api";
+import { LocalApi, WebApi } from "../../api";
 import { getMealTimings, getMealType } from "../../Hooks/getMealTimings";
 
 const FoodBookEntry = () => {
@@ -23,7 +23,7 @@ const FoodBookEntry = () => {
   const [authCode, setAuthCode] = useState("");
 
   const checkCode = async () => {
-    const response = await fetch(`${LocalApi}/checkcode`, {
+    const response = await fetch(`${WebApi}/checkcode`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -36,7 +36,7 @@ const FoodBookEntry = () => {
     setStudentData(respData.data.result[0]);
   };
   const FoodStatus = async (status) => {
-    const response = await fetch(`${LocalApi}/foodstatus`, {
+    const response = await fetch(`${WebApi}/foodstatus`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

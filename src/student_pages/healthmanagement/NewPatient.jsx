@@ -117,7 +117,7 @@ const NewPatient = () => {
     console.log([...formDataForSubmission.entries()]);
     try {
       // Make the API call
-      const response = await fetch(`${LocalApi}/add_patient`, {
+      const response = await fetch(`${WebApi}/add_patient`, {
         method: "POST",
         body: formDataForSubmission,
       });

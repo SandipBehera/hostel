@@ -10,7 +10,7 @@ import {
 } from "reactstrap";
 import { Breadcrumbs } from "../../AbstractElements";
 import Papa from "papaparse";
-import { LocalApi } from "../../api";
+import { LocalApi, WebApi } from "../../api";
 
 const AllPatient = () => {
   // Sample data (you can replace this with your own data)
@@ -45,7 +45,7 @@ const AllPatient = () => {
   useEffect(() => {
     // Fetch data from API
     const fetchData = async () => {
-      const response = await fetch(`${LocalApi}/getAllPatient`);
+      const response = await fetch(`${WebApi}/getAllPatient`);
       const respData = await response.json();
       setData(respData.data);
     };

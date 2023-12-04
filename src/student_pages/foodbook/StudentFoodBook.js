@@ -3,7 +3,7 @@ import { Button, Table, Card, CardHeader, Row, Col, Input } from "reactstrap";
 import { Breadcrumbs, H5 } from "../../AbstractElements";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { LocalApi } from "../../api";
+import { LocalApi, WebApi } from "../../api";
 import { getMealTimings, getMealType } from "../../Hooks/getMealTimings";
 
 const StudentFoodBook = () => {
@@ -21,7 +21,7 @@ const StudentFoodBook = () => {
   const now = new Date();
 
   const fetchedData = async () => {
-    const response = await fetch(`${LocalApi}/get_all_menu`);
+    const response = await fetch(`${WebApi}/get_all_menu`);
     const respData = await response.json();
     const fetched_data = respData.data.filter(
       (item) => item.month === monthName
@@ -82,7 +82,7 @@ const StudentFoodBook = () => {
         setGracePeriodExpired(true);
       }, expirationTime - now);
       const currentMeal = getMealType(now);
-      const response = await fetch(`${LocalApi}/bookFood`, {
+      const response = await fetch(`${WebApi}/bookFood`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
