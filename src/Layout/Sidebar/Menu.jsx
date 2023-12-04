@@ -114,6 +114,16 @@ export const EmployeeMenu = [
           { path: `/allplanner`, title: "All Planner", type: "link" },
         ],
       },
+      {
+        title: "Item Management",
+        icon: "widget",
+        type: "sub",
+        active: false,
+        children: [
+          { path: `/item-purchases`, title: "Create New Item", type: "link" },
+          { path: `/all-item-purchases`, title: "All Item List", type: "link" },
+        ],
+      },
     ],
   },
 

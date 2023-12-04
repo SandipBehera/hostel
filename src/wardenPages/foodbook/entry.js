@@ -84,48 +84,48 @@ const FoodBookEntry = () => {
           }}
         >
           <H5>Student Info</H5>
-          {studentData.length > 0 && (
-            <Table>
-              <thead>
-                <tr>
-                  <th>Image</th>
-                  <th>Student Name</th>
-                  <th>Regd No</th>
-                  <th>User Type</th>
-                  <th>Action</th>
-                </tr>
-              </thead>
-              <tbody>
-                {/* Render month's data fetched from the backend */}
+          {/* {studentData.length > 0 && ( */}
+          <Table>
+            <thead>
+              <tr>
+                <th>Image</th>
+                <th>Student Name</th>
+                <th>Regd No</th>
+                <th>User Type</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              {/* Render month's data fetched from the backend */}
 
-                <tr>
-                  <td>
-                    <img src="" />
-                  </td>
-                  <td>{studentData?.name}</td>
-                  <td>{studentData?.username}</td>
-                  <td>{studentData?.user_from}</td>
-                  <td>
-                    <Button
-                      className="btn-block btn-success"
-                      onClick={FoodStatus("approved")}
-                    >
-                      Approve
-                    </Button>
+              <tr>
+                <td>
+                  <img src="" />
+                </td>
+                <td>{studentData?.name}</td>
+                <td>{studentData?.username}</td>
+                <td>{studentData?.user_from}</td>
+                <td>
+                  <Button
+                    className="btn-block btn-success"
+                    onClick={FoodStatus("approved")}
+                  >
+                    Approve
+                  </Button>
 
-                    <Button
-                      className="btn-block btn-danger m-l-5"
-                      onClick={FoodStatus("rejected")}
-                    >
-                      Reject
-                    </Button>
-                  </td>
-                </tr>
+                  <Button
+                    className="btn-block btn-danger m-l-5"
+                    onClick={FoodStatus("rejected")}
+                  >
+                    Reject
+                  </Button>
+                </td>
+              </tr>
 
-                {/* Add more rows as needed */}
-              </tbody>
-            </Table>
-          )}
+              {/* Add more rows as needed */}
+            </tbody>
+          </Table>
+          {/* )} */}
         </div>
       </Card>
     </Fragment>

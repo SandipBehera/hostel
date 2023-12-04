@@ -256,9 +256,9 @@ export const routes = [
     Component: <ComplaintStatus />,
   },
 
-  //Stock Management
-  { path: `/purchases`, Component: <Purchases /> },
-  { path: `/allpurchases`, Component: <AllPurchases /> },
+  // Stock Item Management
+  { path: `/item-purchases`, Component: <Purchases /> },
+  { path: `/all-item-purchases`, Component: <AllPurchases /> },
 
   //Employee Dashboard
   { path: `/complaint`, Component: <Complaint /> },
