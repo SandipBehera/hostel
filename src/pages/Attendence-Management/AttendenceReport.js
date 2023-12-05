@@ -18,23 +18,32 @@ import {
   FormGroup,
   Input,
   ModalFooter,
+  CardBody,
+  Nav,
+  NavItem,
+  NavLink,
+  TabContent,
+  TabPane,
 } from "reactstrap";
-import { Breadcrumbs, H5 } from "../../AbstractElements";
+import { Breadcrumbs, H5, P } from "../../AbstractElements";
 import Papa from "papaparse";
-import { Action } from "../../Constant";
+import { Action, Hometxt, PillTabs } from "../../Constant";
 import Select from "react-select";
 import { WebApi } from "../../api";
 import { toast } from "react-toastify";
+import HeaderCard from "../../Components/Common/Component/HeaderCard";
+import MonthlyAttendanceReport from "./MonthlyAttendenceReport";
+import { Link } from "react-router-dom";
 
 const AttendenceReport = ({ attendanceData }) => {
   const [data, setData] = useState([]);
   const [modalOpen, setModalOpen] = useState(false);
-  const [activeDropdown, setActiveDropdown] = useState(null);
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [hostelData, setHostelData] = useState([]);
   const [msg, setMsg] = useState("");
   const [ID, setID] = useState("");
   const [status, setStatus] = useState("");
+  const [pillTab, setPillTab] = useState('1');
 
   const handleExport = () => {
     const csv = Papa.unparse(data);
@@ -44,9 +53,11 @@ const AttendenceReport = ({ attendanceData }) => {
     link.download = "food_book.csv";
     link.click();
   };
+
   const toggleDropdown = (id) => {
-    setActiveDropdown(activeDropdown === id ? null : id);
     setDropdownOpen(!dropdownOpen);
+    setID(id);
+    setModalOpen(!modalOpen);
   };
 
   useEffect(() => {
@@ -59,6 +70,7 @@ const AttendenceReport = ({ attendanceData }) => {
     };
     roomHostel();
   }, []);
+
   const hostel_name = hostelData?.map((key) => {
     return { value: key.id, label: key.hostel_name };
   });
@@ -70,13 +82,12 @@ const AttendenceReport = ({ attendanceData }) => {
       body: JSON.stringify({ hostel_id: hostelId }),
     });
     const resproom = await response.json();
-    console.log(resproom);
     setData(resproom.data);
   };
 
-  const handleActionSelect = async (action, index, comment) => {
+  const handleActionSelect = async (action, comment) => {
     const datas = {
-      id: index,
+      id: ID,
       status: action,
       comments: comment,
     };
@@ -90,170 +101,175 @@ const AttendenceReport = ({ attendanceData }) => {
       const respData = await response.json();
       if (respData.status === "success") {
         setModalOpen(!modalOpen);
-        setActiveDropdown(null);
-        toast.success("Attendence Updated Successfully");
+        setDropdownOpen(!dropdownOpen);
+        toast.success("Attendance Updated Successfully");
       } else {
         toast.error("Something went wrong");
         setModalOpen(!modalOpen);
-        setActiveDropdown(null);
+        setDropdownOpen(!dropdownOpen);
       }
     } catch (error) {
       console.error("Error fetching:", error);
-      // Handle the error, for example, set an error state
     }
-
-    // Create a copy of the data array
-    // const newData = [...data];
-    // Update the 'available' property of the selected row
-    // newData[index].available = action;
-    // Update the state with the modified data
-    // setData(newData);
-    // Close the dropdown
-    // setActiveDropdown(null);
   };
 
   return (
     <Fragment>
-      <Breadcrumbs
-        parent="Employee"
-        mainTitle="Attendance"
-        title="Attendance"
-      />
-      <Container>
-        <Col sm="12">
-          <Card>
-            <CardHeader>
-              <Row className="align-items-center justify-content-between">
-                <Col xs="auto">
-                  <div className="mb-2" style={{ width: "100%" }}>
-                    <Label className="col-form-label">Select Hostel name</Label>
-                    <Select
-                      options={hostel_name}
-                      className="js-example-basic-single col-sm-12"
-                      onChange={(selectedOption) =>
-                        handleHostelSelect(selectedOption.value)
-                      }
-                    />
-                  </div>
-                </Col>
-                <Col xs="auto">
-                  <Button onClick={handleExport}>Export</Button>
-                </Col>
-              </Row>
-            </CardHeader>
-            <div>
-              <Table>
-                <thead>
-                  <tr>
-                    <th>S.No.</th>
-                    <th>St. Reg. No.</th>
-                    <th>St. Name</th>
-                    <th>H-Name</th>
-                    <th>Room No</th>
-                    <th>Present/Absent</th>
-                    <th>Action</th>
-                  </tr>
-                </thead>
-
-                <tbody>
-                  {data.length > 0 ? (
-                    data.map((item) => (
-                      <>
-                        <tr key={item.id}>
-                          <td>{item.id}</td>
-                          <td>{item.username}</td>
-                          <td>{item.name}</td>
-                          <td>{item.hostel_name}</td>
-                          <td>{item.room_id}</td>
-                          <td>{item.status === 1 ? "present" : "absent"}</td>
-                          <td>
-                            <Dropdown
-                              isOpen={activeDropdown === item.id}
-                              toggle={() => toggleDropdown(item.id)}
-                            >
-                              <DropdownToggle caret>{Action}</DropdownToggle>
-                              <DropdownMenu>
-                                {item.status === 1 ? (
-                                  <DropdownItem
-                                    onClick={() => {
-                                      setID(item.id);
-                                      setStatus(item.status);
-                                      setModalOpen(!modalOpen);
-                                    }}
-                                  >
-                                    Make Absent
-                                  </DropdownItem>
-                                ) : (
-                                  <DropdownItem
-                                    onClick={() => {
-                                      setID(item.id);
-                                      setStatus(item.status);
-                                      setModalOpen(!modalOpen);
-                                    }}
-                                  >
-                                    Make Present
-                                  </DropdownItem>
-                                )}
-                              </DropdownMenu>
-                            </Dropdown>
-                          </td>
-                          <div>
-                            <Modal
-                              isOpen={modalOpen}
-                              toggle={() => setModalOpen(!modalOpen)}
-                            >
-                              <ModalHeader
-                                toggle={() => setModalOpen(!modalOpen)}
-                              >
-                                where are you ....
-                              </ModalHeader>
-                              <ModalBody>
-                                <FormGroup>
-                                  <Label for="exampleText">write here</Label>
-                                  <Input
-                                    type="textarea"
-                                    name="text"
-                                    id="exampleText"
-                                    rows="5"
-                                    value={msg}
-                                    onChange={(e) => setMsg(e.target.value)}
-                                  />
-                                </FormGroup>
-                              </ModalBody>
-                              <ModalFooter>
-                                <Button
-                                  color="secondary"
-                                  onClick={() => {
-                                    handleActionSelect(
-                                      status === 1 ? "0" : "1",
-                                      ID,
-                                      msg
-                                    );
-                                  }}
-                                >
-                                  send
-                                </Button>
-                              </ModalFooter>
-                            </Modal>
-                          </div>
-                        </tr>
-                      </>
-                    ))
-                  ) : (
-                    <tr>
-                      <td colSpan="8" style={{ textAlign: "center" }}>
-                        <p style={{ color: "red" }}>
-                          Please Select the hostel Name
-                        </p>
-                      </td>
-                    </tr>
-                  )}
-                </tbody>
-              </Table>
-            </div>
-          </Card>
-        </Col>
-      </Container>
+      <Breadcrumbs parent="Employee" mainTitle="Attendance" title="Attendance" />
+      <Col  className='xl-100 box-col-12'>
+        <Card>
+          
+          <CardBody>
+            <Nav className='nav-pills'>
+              <NavItem>
+                <NavLink href='#' className={pillTab === '1' ? 'active' : ''} onClick={() => setPillTab('1')}>
+                  Daily Report
+                </NavLink>
+              </NavItem>
+              <NavItem>
+              
+                <NavLink href="#" className={pillTab === '2' ? 'active' : ''} onClick={() => setPillTab('2')}>
+                
+                  Monthly Report
+                 
+                </NavLink>
+                
+              </NavItem>
+            </Nav>
+            <TabContent activeTab={pillTab}>
+              <TabPane className='fade show' tabId='1'>
+                <P attrPara={{ className: 'mb-0 m-t-30' }}>
+                  <Container>
+                    <Col >
+                      <Card>
+                      <H5 className="text-center">Daily Attendance Report </H5>
+                        <CardHeader>
+                          <Row className="align-items-center justify-content-between">
+                            <Col xs="auto">
+                              <div className="mb-2" style={{ width: "100%" }}>
+                                <Label className="col-form-label">Select Hostel name</Label>
+                                <Select
+                                  options={hostel_name}
+                                  className="js-example-basic-single col-sm-12"
+                                  onChange={(selectedOption) =>
+                                    handleHostelSelect(selectedOption.value)
+                                  }
+                                />
+                              </div>
+                            </Col>
+                            <Col xs="auto">
+                              <Button onClick={handleExport}>Export</Button>
+                            </Col>
+                          </Row>
+                        </CardHeader>
+                        <div>
+                          <Table>
+                          <thead>
+                            <tr>
+                              <th>S.No.</th>
+                              <th>St. Reg. No.</th>
+                              <th>St. Name</th>
+                              <th>H-Name</th>
+                              <th>Room No</th>
+                              <th>Present/Absent</th>
+                              <th>Action</th>
+                            </tr>
+                          </thead>
+                            
+                            <tbody>
+                              {data.length > 0 ? (
+                                data.map((item) => (
+                                  <tr key={item.id}>
+                                    <td>{item.id}</td>
+                                    <td>{item.username}</td>
+                                    <td>{item.name}</td>
+                                    <td>{item.hostel_name}</td>
+                                    <td>{item.room_id}</td>
+                                    <td>{item.status === 1 ? "present" : "absent"}</td>
+                                    <td>
+                                      <Dropdown
+                                        isOpen={dropdownOpen && ID === item.id}
+                                        toggle={() => toggleDropdown(item.id)}
+                                      >
+                                        <DropdownToggle caret>{Action}</DropdownToggle>
+                                        <DropdownMenu>
+                                          {item.status === 1 ? (
+                                            <DropdownItem
+                                              onClick={() => {
+                                                setStatus(item.status);
+                                              }}
+                                            >
+                                              Make Absent
+                                            </DropdownItem>
+                                          ) : (
+                                            <DropdownItem
+                                              onClick={() => {
+                                                setStatus(item.status);
+                                              }}
+                                            >
+                                              Make Present
+                                            </DropdownItem>
+                                          )}
+                                        </DropdownMenu>
+                                      </Dropdown>
+                                    </td>
+                                  </tr>
+                                ))
+                              ) : (
+                                <tr>
+                                  <td colSpan="8" style={{ textAlign: "center" }}>
+                                    <p style={{ color: "red" }}>
+                                      Please Select the hostel Name
+                                    </p>
+                                  </td>
+                                </tr>
+                              )}
+                            </tbody>
+                          </Table>
+                        </div>
+                      </Card>
+                    </Col>
+                  </Container>
+                </P>
+              </TabPane>
+              <TabPane tabId='2'>
+                <P attrPara={{ className: 'mb-0 m-t-30' }}>
+                  <MonthlyAttendanceReport />
+                </P>
+              </TabPane>
+            </TabContent>
+            {/* Modal outside the loop */}
+            <Modal isOpen={modalOpen} toggle={() => setModalOpen(!modalOpen)}>
+              <ModalHeader toggle={() => setModalOpen(!modalOpen)}>
+                Where are you....
+              </ModalHeader>
+              <ModalBody>
+                <FormGroup>
+                  <Label for="exampleText">Write here</Label>
+                  <Input
+                    type="textarea"
+                    name="text"
+                    id="exampleText"
+                    rows="5"
+                    value={msg}
+                    onChange={(e) => setMsg(e.target.value)}
+                  />
+                </FormGroup>
+              </ModalBody>
+              <ModalFooter>
+                <Button
+                  color="secondary"
+                  onClick={() => {
+                    handleActionSelect(status === 1 ? "0" : "1", msg);
+                  }}
+                >
+                  Send
+                </Button>
+              </ModalFooter>
+            </Modal>
+          </CardBody>
+        </Card>
+      </Col>
     </Fragment>
   );
 };

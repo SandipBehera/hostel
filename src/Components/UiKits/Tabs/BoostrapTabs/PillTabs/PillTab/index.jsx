@@ -6,7 +6,7 @@ import HeaderCard from '../../../../../Common/Component/HeaderCard';
 
 const PillTab = () => {
   const [pillTab, setpillTab] = useState('1');
-
+ 
   return (
     <Col sm='12' xl='6' className='xl-100 box-col-12'>
       <Card>
