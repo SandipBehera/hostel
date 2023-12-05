@@ -1130,7 +1130,7 @@ export const DefaultSelect = "Default select";
 export const DefaultInput = "Default input";
 
 export const CustomControls = "Custom controls";
-export const UploadFile = "Upload File";
+export const UploadFile = "Upload Pic";
 export const CustomSelect = "Custom select";
 export const LargeInput = "Large Input";
 export const SmallInput = "Small Input";
@@ -1203,7 +1203,7 @@ export const HorizontalFormLayout = "Horizontal Form Layout";
 export const MegaForm = "Mega form";
 export const AccountInformation = "Account Information";
 export const CompanyInformation = "Employee Information";
-export const BillingInformation = "Billing Information";
+export const BillingInformation = "A/C Details";
 export const InlineForm = "Inline Form";
 export const InlineFormWithLabel = "Inline Form with Label";
 export const InlineFormWithoutLabel = "Inline Form without Label";

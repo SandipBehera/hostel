@@ -21,6 +21,7 @@ export const EmployeeMenu = [
           { path: `/allemployee`, title: "All Employee", type: "link" },
         ],
       },
+     
 
       {
         title: "Student Management",
@@ -85,6 +86,7 @@ export const EmployeeMenu = [
           { path: `/view-complain`, title: "View Complain", type: "link" },
         ],
       },
+    
     ],
   },
 
