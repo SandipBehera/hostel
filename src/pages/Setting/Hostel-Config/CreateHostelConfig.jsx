@@ -1,4 +1,4 @@
-import React, { Fragment, useState } from 'react';
+import React, { Fragment, useState } from "react";
 import {
   Card,
   Container,
@@ -9,11 +9,13 @@ import {
   Col,
   Row,
   CardHeader,
-} from 'reactstrap';
-import { H5 } from '../../../AbstractElements';
+} from "reactstrap";
+import { H5, H6 } from "../../../AbstractElements";
+import { LocalApi } from "../../../api";
+import { toast } from "react-toastify";
 
-const CreateRoomType = () => {
-  const [inputFields, setInputFields] = useState(['']);
+const CreateHostelConfig = (props) => {
+  const [inputFields, setInputFields] = useState([""]);
 
   const handleInputChange = (index, event) => {
     const values = [...inputFields];
@@ -23,7 +25,7 @@ const CreateRoomType = () => {
 
   const handleAddFields = () => {
     const values = [...inputFields];
-    values.push('');
+    values.push("");
     setInputFields(values);
   };
 
@@ -33,28 +35,45 @@ const CreateRoomType = () => {
     setInputFields(values);
   };
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
     // Do something with inputFields data, for example:
     console.log(inputFields);
+    const data = {
+      config_type: props.config_type,
+      config_type_name: inputFields,
+    };
+    data.config_type_name = JSON.stringify({ data: data.config_type_name });
+    const response = await fetch(`${LocalApi}/addConfig`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(data),
+    });
+    const res = await response.json();
+    if (res.status === "success") {
+      toast.success(res.message);
+      setInputFields([""]);
+    } else {
+      toast.success(res.message);
+    }
   };
 
   const handleCancel = () => {
     // Handle cancel action if needed
-    setInputFields(['']); // Reset input fields
+    setInputFields([""]); // Reset input fields
   };
 
   return (
     <Fragment>
-      <Container >
+      <Container>
         <Row className="justify-content-center">
           <Col sm="12">
             <Card>
               <CardHeader>
-                <H5>Amenities</H5>
+                <H5>{props.title}</H5>
               </CardHeader>
               <span className="text-danger p-2 m-2 text-center">
-                To create multiple Room type, you need to click + icon
+                To create multiple {props.title} you need to click + icon
               </span>
               <Form onSubmit={handleSubmit}>
                 {inputFields.map((inputField, index) => (
@@ -70,11 +89,9 @@ const CreateRoomType = () => {
                         <div className="input-group-append">
                           {index === inputFields.length - 1 ? (
                             <>
-                              {inputField.trim() !== '' && (
-                                <Button color="primary" onClick={handleAddFields}>
-                                  +
-                                </Button>
-                              )}
+                              <Button color="primary" onClick={handleAddFields}>
+                                +
+                              </Button>
                               {index > 0 && (
                                 <Button
                                   color="danger"
@@ -94,7 +111,8 @@ const CreateRoomType = () => {
                   <Col sm={{ size: 8, offset: 2 }}>
                     <Button type="submit" color="primary">
                       Create
-                    </Button>{' '}
+                    </Button>
+                    &nbsp;
                     <Button color="secondary" onClick={handleCancel}>
                       Cancel
                     </Button>
@@ -109,4 +127,4 @@ const CreateRoomType = () => {
   );
 };
 
-export default CreateRoomType;
+export default CreateHostelConfig;

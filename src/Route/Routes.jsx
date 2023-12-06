@@ -183,7 +183,6 @@ import FoodPlanner from "../pages/Setting/FoodPlanner";
 import FoodBook from "../pages/foodbook/FoodBook";
 import Take_Attendence from "../pages/Attendence-Management/Take_Attendence";
 
-import CreateAmenities from "../pages/Setting/Hostel-Config/CreateAmenities";
 import AllPlanner from "../pages/Setting/AllPlanner";
 import AllRoom from "../pages/Setting/AllRoom";
 import AttendenceReport from "../pages/Attendence-Management/AttendenceReport";
@@ -230,9 +229,6 @@ export const routes = [
   { path: `/take-attendence`, Component: <Take_Attendence /> },
   { path: `/attendencereport`, Component: <AttendenceReport /> },
   { path: `/monthlyattendencereport`, Component: <MonthlyAttendanceReport /> },
-
-  //Amenities routes
-  { path: `/create-amenities`, Component: <CreateAmenities /> },
 
   //Food planner routes
   { path: `/food-planner`, Component: <FoodPlanner /> },
