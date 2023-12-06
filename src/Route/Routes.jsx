@@ -217,7 +217,6 @@ import FoodBookEntry from "../wardenPages/foodbook/entry";
 import MonthlyAttendanceReport from "../pages/Attendence-Management/MonthlyAttendenceReport";
 import HostelConfig from "../pages/Setting/HostelConfig";
 
-
 export const routes = [
   { path: `/dashboard`, Component: <Dashboard /> },
   { path: `/widgets/general`, Component: <General /> },
@@ -231,7 +230,6 @@ export const routes = [
   { path: `/take-attendence`, Component: <Take_Attendence /> },
   { path: `/attendencereport`, Component: <AttendenceReport /> },
   { path: `/monthlyattendencereport`, Component: <MonthlyAttendanceReport /> },
-
 
   //Amenities routes
   { path: `/create-amenities`, Component: <CreateAmenities /> },
@@ -261,10 +259,8 @@ export const routes = [
     Component: <ComplaintStatus />,
   },
 
-
   //Hostel Config
-  { path: `/hostel-config`, Component: <HostelConfig/> },
-
+  { path: `/hostel-config`, Component: <HostelConfig /> },
 
   // Stock Item Management
   { path: `/item-purchases`, Component: <Purchases /> },
@@ -274,9 +270,6 @@ export const routes = [
   { path: `/complaint`, Component: <Complaint /> },
   { path: `/attendence`, Component: <Attendence /> },
   { path: "/house_keeping", Component: <HouseKeeping /> },
-
- 
-
 
   //employee Management routes ends
   { path: `/ui-kits/typography`, Component: <Typography /> },
@@ -486,6 +479,11 @@ export const Wardenroutes = [
 
   { path: `/food-book`, Component: <FoodBookEntry /> },
   { path: `/today-Booking`, Component: <FoodBook /> },
+
+  //Attendence management
+  { path: `/take-attendence`, Component: <Take_Attendence /> },
+  { path: `/attendencereport`, Component: <AttendenceReport /> },
+  { path: `/monthlyattendencereport`, Component: <MonthlyAttendanceReport /> },
 ];
 
 export const studentRoutes = [

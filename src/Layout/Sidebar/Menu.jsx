@@ -21,7 +21,6 @@ export const EmployeeMenu = [
           { path: `/allemployee`, title: "All Employee", type: "link" },
         ],
       },
-     
 
       {
         title: "Student Management",
@@ -86,7 +85,6 @@ export const EmployeeMenu = [
           { path: `/view-complain`, title: "View Complain", type: "link" },
         ],
       },
-    
     ],
   },
 
@@ -133,8 +131,6 @@ export const EmployeeMenu = [
         type: "link",
         badge: "badge badge-light-primary",
         active: false,
-
-       
       },
     ],
   },
@@ -850,8 +846,11 @@ export const StudentMenu = [
         active: false,
         children: [
           { path: `/complaints`, title: "My Complaints", type: "link" },
-          { path: `/complaints-report`, title: "Complaints Report", type: "link" },
-          
+          {
+            path: `/complaints-report`,
+            title: "Complaints Report",
+            type: "link",
+          },
         ],
       },
       {
@@ -878,6 +877,20 @@ export const WardenMenu = [
         type: "link",
         badge: "badge badge-light-primary",
         active: false,
+      },
+      {
+        title: "AttendenceManagement",
+        icon: "widget",
+        type: "sub",
+        active: false,
+        children: [
+          { path: `/take-attendence`, title: "Take Attendence", type: "link" },
+          {
+            path: `/attendencereport`,
+            title: "Attendence Report",
+            type: "link",
+          },
+        ],
       },
       {
         title: "Outing",
