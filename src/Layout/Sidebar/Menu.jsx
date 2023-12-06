@@ -103,7 +103,6 @@ export const EmployeeMenu = [
         children: [
           { path: `/room-management`, title: "Create Room", type: "link" },
           { path: `/allroom`, title: "All Room", type: "link" },
-          { path: `/create-aminity`, title: "Create Aminity", type: "link" },
         ],
       },
       {
@@ -125,6 +124,17 @@ export const EmployeeMenu = [
           { path: `/item-purchases`, title: "Create New Item", type: "link" },
           { path: `/all-item-purchases`, title: "All Item List", type: "link" },
         ],
+      },
+
+      {
+        path: "/hostel-config",
+        title: "Hostel Config",
+        icon: "widget",
+        type: "link",
+        badge: "badge badge-light-primary",
+        active: false,
+
+       
       },
     ],
   },

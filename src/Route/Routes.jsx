@@ -183,7 +183,7 @@ import FoodPlanner from "../pages/Setting/FoodPlanner";
 import FoodBook from "../pages/foodbook/FoodBook";
 import Take_Attendence from "../pages/Attendence-Management/Take_Attendence";
 
-import CreateAmenities from "../pages/Setting/CreateAmenities";
+import CreateAmenities from "../pages/Setting/Hostel-Config/CreateAmenities";
 import AllPlanner from "../pages/Setting/AllPlanner";
 import AllRoom from "../pages/Setting/AllRoom";
 import AttendenceReport from "../pages/Attendence-Management/AttendenceReport";
@@ -214,6 +214,8 @@ import AllPatient from "../student_pages/healthmanagement/AllPatient";
 import WardenDashboard from "../wardenPages/dashboard";
 import MyOutings from "../student_pages/OutingApproval/MyOutings";
 import FoodBookEntry from "../wardenPages/foodbook/entry";
+import MonthlyAttendanceReport from "../pages/Attendence-Management/MonthlyAttendenceReport";
+import HostelConfig from "../pages/Setting/HostelConfig";
 
 
 export const routes = [
@@ -228,6 +230,9 @@ export const routes = [
   //Attendence management
   { path: `/take-attendence`, Component: <Take_Attendence /> },
   { path: `/attendencereport`, Component: <AttendenceReport /> },
+  { path: `/monthlyattendencereport`, Component: <MonthlyAttendanceReport /> },
+
+
   //Amenities routes
   { path: `/create-amenities`, Component: <CreateAmenities /> },
 
@@ -248,7 +253,6 @@ export const routes = [
   //ROOM MANAGEMENT
   { path: `/room-management`, Component: <RoomManagement /> },
   { path: `/allroom`, Component: <AllRoom /> },
-  { path: `/create-aminity`, Component: <CreateAmenities /> },
   //Compain Management
   { path: `/create-complain`, Component: <CreateComplain /> },
   { path: `/view-complain`, Component: <ViewComplain /> },
@@ -256,6 +260,11 @@ export const routes = [
     path: `/view-complain/complain-status/:id`,
     Component: <ComplaintStatus />,
   },
+
+
+  //Hostel Config
+  { path: `/hostel-config`, Component: <HostelConfig/> },
+
 
   // Stock Item Management
   { path: `/item-purchases`, Component: <Purchases /> },
