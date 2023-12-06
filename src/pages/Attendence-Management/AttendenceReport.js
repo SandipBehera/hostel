@@ -44,6 +44,7 @@ const AttendenceReport = ({ attendanceData }) => {
   const [ID, setID] = useState("");
   const [status, setStatus] = useState("");
   const [pillTab, setPillTab] = useState('1');
+  const [hostelId, setHostelId] = useState("");
 
   const handleExport = () => {
     const csv = Papa.unparse(data);
@@ -55,7 +56,7 @@ const AttendenceReport = ({ attendanceData }) => {
   };
 
   const toggleDropdown = (id) => {
-    setDropdownOpen(!dropdownOpen);
+    // setDropdownOpen(!dropdownOpen);
     setID(id);
     setModalOpen(!modalOpen);
   };
@@ -92,17 +93,21 @@ const AttendenceReport = ({ attendanceData }) => {
       comments: comment,
     };
     datas.comments = JSON.stringify({ comments: datas.comments });
+    console.log(datas);
     try {
       const response = await fetch(`${WebApi}/update_attendence`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(datas),
       });
+
       const respData = await response.json();
       if (respData.status === "success") {
         setModalOpen(!modalOpen);
         setDropdownOpen(!dropdownOpen);
+        handleHostelSelect(hostelId);
         toast.success("Attendance Updated Successfully");
+
       } else {
         toast.error("Something went wrong");
         setModalOpen(!modalOpen);
@@ -157,7 +162,9 @@ const AttendenceReport = ({ attendanceData }) => {
                                   options={hostel_name}
                                   className="js-example-basic-single col-sm-12"
                                   onChange={(selectedOption) =>
-                                    handleHostelSelect(selectedOption.value)
+                                    {handleHostelSelect(selectedOption.value),
+                                    setHostelId(selectedOption.value)}
+                                    
                                   }
                                 />
                               </div>
@@ -192,31 +199,13 @@ const AttendenceReport = ({ attendanceData }) => {
                                     <td>{item.room_id}</td>
                                     <td>{item.status === 1 ? "present" : "absent"}</td>
                                     <td>
-                                      <Dropdown
-                                        isOpen={dropdownOpen && ID === item.id}
-                                        toggle={() => toggleDropdown(item.id)}
-                                      >
-                                        <DropdownToggle caret>{Action}</DropdownToggle>
-                                        <DropdownMenu>
-                                          {item.status === 1 ? (
-                                            <DropdownItem
-                                              onClick={() => {
-                                                setStatus(item.status);
-                                              }}
-                                            >
-                                              Make Absent
-                                            </DropdownItem>
-                                          ) : (
-                                            <DropdownItem
-                                              onClick={() => {
-                                                setStatus(item.status);
-                                              }}
-                                            >
-                                              Make Present
-                                            </DropdownItem>
-                                          )}
-                                        </DropdownMenu>
-                                      </Dropdown>
+                                      {<Input type="select"  className="w-75 bg-primary" onChange={(e) => e.target.value!== "" && toggleDropdown(item.id)} >
+                                      <option value="">Action</option>
+                                      {
+                                        item.status==1 ? <option value={0} >Absent</option> :
+                                        <option value={1} >Present</option>
+                                      }
+                                      </Input>}
                                     </td>
                                   </tr>
                                 ))
@@ -245,55 +234,59 @@ const AttendenceReport = ({ attendanceData }) => {
             </TabContent>
             {/* Modal outside the loop */}
             <Modal isOpen={modalOpen} toggle={() => setModalOpen(!modalOpen)}>
-            <ModalHeader toggle={() => setModalOpen(!modalOpen)}>
-              Where are you....
-            </ModalHeader>
-            <ModalBody>
-              <FormGroup>
-                <Label for="exampleText">Write here</Label>
-                <Input
-                  type="textarea"
-                  name="text"
-                  id="exampleText"
-                  rows="5"
-                  value={msg}
-                  onChange={(e) => setMsg(e.target.value)}
-                />
-              </FormGroup>
-          
-              <FormGroup>
-                <legend>Status</legend>
-                <FormGroup check>
-                  <Label check>
-                    <Input
-                      type="checkbox"
-                      name="status1"
-                      checked={status === 1}
-                      onChange={() => setStatus(status === 1 ? 0 : 1)}
-                    />{' '}
-                    Option 1
-                  </Label>
-                </FormGroup>
-                <FormGroup check>
-                  <Label check>
-                    <Input
-                      type="checkbox"
-                      name="status0"
-                      checked={status === 0}
-                      onChange={() => setStatus(status === 0 ? 1 : 0)}
-                    />{' '}
-                    Option 0
-                  </Label>
-                </FormGroup>
-              </FormGroup>
-            </ModalBody>
-            <ModalFooter>
-              <Button color="secondary" onClick={() => handleActionSelect(status, msg)}>
-                Send
-              </Button>
-            </ModalFooter>
-          </Modal>
-          
+      <ModalHeader toggle={() => setModalOpen(!modalOpen)}>
+        Where are you....
+      </ModalHeader>
+      <ModalBody>
+        <FormGroup>
+          <Label for="exampleText">Write here</Label>
+          <Input
+            type="textarea"
+            name="text"
+            id="exampleText"
+            rows="5"
+            value={msg}
+            onChange={(e) => setMsg(e.target.value)}
+          />
+        </FormGroup>
+
+        <FormGroup tag="fieldset">
+          <legend>Status</legend>
+          <FormGroup check>
+            <Label check>
+              <Input
+                type="radio"
+                name="status"
+                value="1"
+                checked={status === 1}
+                onChange={() => setStatus(1)}
+              />{' '}
+              Mark Present
+            </Label>
+          </FormGroup>
+          <FormGroup check>
+            <Label check>
+              <Input
+                type="radio"
+                name="status"
+                value="0"
+                checked={status === 0}
+                onChange={() => setStatus(0)}
+              />{' '}
+              Mark Absent
+            </Label>
+          </FormGroup>
+        </FormGroup>
+      </ModalBody>
+      <ModalFooter>
+        <Button
+          color="secondary"
+          onClick={() => handleActionSelect(status, msg)}
+        >
+          Send
+        </Button>
+      </ModalFooter>
+    </Modal>
           </CardBody>
         </Card>
       </Col>
@@ -302,3 +295,33 @@ const AttendenceReport = ({ attendanceData }) => {
 };
 
 export default AttendenceReport;
+
+
+
+
+
+// <Dropdown
+                                      //   isOpen={dropdownOpen && ID === item.id}
+                                      //   toggle={() => toggleDropdown(item.id)}
+                                      // >
+                                      //   <DropdownToggle caret>{Action}</DropdownToggle>
+                                      //   <DropdownMenu>
+                                      //     {item.status === 1 ? (
+                                      //       <DropdownItem
+                                      //         onClick={() => {
+                                      //           setStatus(item.status);
+                                      //         }}
+                                      //       >
+                                      //         Make Absent
+                                      //       </DropdownItem>
+                                      //     ) : (
+                                      //       <DropdownItem
+                                      //         onClick={() => {
+                                      //           setStatus(item.status);
+                                      //         }}
+                                      //       >
+                                      //         Make Present
+                                      //       </DropdownItem>
+                                      //     )}
+                                      //   </DropdownMenu>
+                                      // </Dropdown>

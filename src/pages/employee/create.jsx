@@ -1,4 +1,4 @@
-import React, { Fragment } from "react";
+import React, { Fragment, useEffect } from "react";
 
 import FooterCard from "../../Components/Forms/FormControl/Common/FooterCard";
 import {
@@ -31,6 +31,24 @@ export default function CreateEmployee() {
     doj: "",
     file: "",
   });
+  const [designation, setDesignation] = React.useState([]);
+  const fetchDesignation = async (type) => {
+    try {
+      const response = await fetch(`${WebApi}/get_config_by_type/${type}`);
+      const respData = await response.json();
+      console.log(respData.data);
+      return respData.data;
+    } catch (error) {
+      console.error("Error fetching room config:", error);
+      throw error; // Re-throw the error to handle it outside this function if needed
+    }
+  };
+
+  useEffect(() => {
+    fetchDesignation("designation").then((data) => {
+      setDesignation(data[0].config_type_name.data);
+    });
+  }, []);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -151,8 +169,11 @@ export default function CreateEmployee() {
                     }
                   >
                     <option value="">Select Designation</option>
-                    <option value="Warden">Warden</option>
-                    <option value="House Keeping">House Keeping</option>
+                    {designation.map((item) => (
+                      <option key={item} value={item}>
+                        {item}
+                      </option>
+                    ))}
                   </Input>
                 </FormGroup>
                 <FormGroup>
