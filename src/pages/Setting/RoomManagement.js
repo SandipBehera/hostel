@@ -4,7 +4,6 @@ import { FormWizardWithIcon } from "../../Constant";
 import { Breadcrumbs } from "../../AbstractElements";
 import CreateRoom from "./Component/RoomComponent/CreateRoom";
 import FloorConfig from "./Component/RoomComponent/FloorConfig";
-import RoomAmenities from "./Component/RoomComponent/Ammenities";
 
 const RoomManagement = () => {
   const [steps, setSteps] = useState(1);
@@ -39,7 +38,6 @@ const RoomManagement = () => {
                   />
                 )}
 
-                
                 <div className="text-center">
                   <span
                     className={`step ${steps > 1 ? "finish" : ""} ${
@@ -49,11 +47,6 @@ const RoomManagement = () => {
                   <span
                     className={`step ${steps > 2 ? "finish" : ""} ${
                       steps === 2 ? "active" : ""
-                    }`}
-                  />
-                  <span
-                    className={`step ${steps > 3 ? "finish" : ""} ${
-                      steps === 3 ? "active" : ""
                     }`}
                   />
                 </div>
