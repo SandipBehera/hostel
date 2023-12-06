@@ -1,7 +1,7 @@
 import React, { Fragment, useContext, useEffect, useState } from 'react';
 import { Col, Card, CardHeader, Row, Button } from 'reactstrap';
 import DataTable from 'react-data-table-component';
-import { H5 } from '../../AbstractElements';
+import { Breadcrumbs, H5 } from '../../AbstractElements';
 import { useNavigate } from 'react-router-dom';
 import { WebApi } from '../../api';
 import TableContext from '../../_helper/Table';
@@ -89,12 +89,15 @@ const AllEmployee = () => {
    
   ];
 
-  const handleCreateEmployee = () => {
-    navigate('/create-employee');
-  };
+ 
 
   return (
     <Fragment>
+    <Breadcrumbs
+    parent="Employee"
+    mainTitle="All Employee"
+    title="All Employee"
+  />
       <div className="page-wrapper" id="pageWrapper">
         <Col sm="12">
           <Card>
@@ -104,9 +107,7 @@ const AllEmployee = () => {
                   <H5 className="mb-0">All Employee</H5>
                 </Col>
                 <Col xs="auto" className="px-4">
-                  <Button onClick={handleCreateEmployee} className="py-2">
-                    Create Employee
-                  </Button>
+                 
                 </Col>
               </Row>
             </CardHeader>
