@@ -183,7 +183,6 @@ import FoodPlanner from "../pages/Setting/FoodPlanner";
 import FoodBook from "../pages/foodbook/FoodBook";
 import Take_Attendence from "../pages/Attendence-Management/Take_Attendence";
 
-import CreateAmenities from "../pages/Setting/Hostel-Config/CreateAmenities";
 import AllPlanner from "../pages/Setting/AllPlanner";
 import AllRoom from "../pages/Setting/AllRoom";
 import AttendenceReport from "../pages/Attendence-Management/AttendenceReport";
