@@ -32,6 +32,17 @@ export const EmployeeMenu = [
         ],
       },
       {
+        path: `/health-management`,
+        icon: "widget",
+        title: "Health Management",
+        type: "sub",
+        active: false,
+        children: [
+          { path: `/new-patient`, title: "New Patient", type: "link" },
+          { path: `/all-patient`, title: "All Patient", type: "link" },
+        ],
+      },
+      {
         title: "AttendenceManagement",
         icon: "widget",
         type: "sub",
@@ -890,6 +901,17 @@ export const WardenMenu = [
             title: "Attendence Report",
             type: "link",
           },
+        ],
+      },
+      {
+        path: `/health-management`,
+        icon: "widget",
+        title: "Health Management",
+        type: "sub",
+        active: false,
+        children: [
+          { path: `/new-patient`, title: "New Patient", type: "link" },
+          { path: `/all-patient`, title: "All Patient", type: "link" },
         ],
       },
       {

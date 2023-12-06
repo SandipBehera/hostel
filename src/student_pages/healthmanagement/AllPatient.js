@@ -10,7 +10,7 @@ import {
 } from "reactstrap";
 import { Breadcrumbs } from "../../AbstractElements";
 import Papa from "papaparse";
-import { LocalApi, WebApi } from "../../api";
+import { LocalApi, LocalStore, WebApi, WebStore } from "../../api";
 
 const AllPatient = () => {
   // Sample data (you can replace this with your own data)
@@ -77,8 +77,13 @@ const AllPatient = () => {
       }
     }
   };
-  console.log(data);
-  console.log(selectedData);
+  const dataByUType =
+    localStorage.getItem("userType") === "admin" ||
+    localStorage.getItem("userType") === "employee"
+      ? data
+      : data.filter(
+          (key) => key.patient_regdno === localStorage.getItem("userId")
+        );
   return (
     <Fragment>
       <Breadcrumbs
@@ -102,26 +107,22 @@ const AllPatient = () => {
               </tr>
             </thead>
             <tbody>
-              {data
-                .filter(
-                  (key) => key.patient_regdno === localStorage.getItem("userId")
-                )
-                .map((item) => (
-                  <tr key={item.id}>
-                    <td>{item.patientname}</td>
-                    <td>{item.doctorname}</td>
-                    <td>{item.hostelid}</td>
-                    <td>{item.floorid}</td>
-                    <td>{item.roomno}</td>
-                    <td>{item.date}</td>
-                    <td>{item.time}</td>
-                    <td>
-                      <Button color="primary" onClick={() => toggleModal(item)}>
-                        View
-                      </Button>
-                    </td>
-                  </tr>
-                ))}
+              {dataByUType.map((item) => (
+                <tr key={item.id}>
+                  <td>{item.patientname}</td>
+                  <td>{item.doctorname}</td>
+                  <td>{item.hostelid}</td>
+                  <td>{item.floorid}</td>
+                  <td>{item.roomno}</td>
+                  <td>{item.date}</td>
+                  <td>{item.time}</td>
+                  <td>
+                    <Button color="primary" onClick={() => toggleModal(item)}>
+                      View
+                    </Button>
+                  </td>
+                </tr>
+              ))}
             </tbody>
           </Table>
 
@@ -138,6 +139,12 @@ const AllPatient = () => {
                   <p>Room No.: {selectedData.roomno}</p>
                   <p>Date: {selectedData.date}</p>
                   <p>Time: {selectedData.time}</p>
+                  <p>Preception Copy</p>
+                  <img
+                    src={`${WebStore}${selectedData.upload_preception}`}
+                    alt="prescription"
+                    style={{ width: "-webkit-fill-available" }}
+                  />
                 </div>
               )}
             </ModalBody>

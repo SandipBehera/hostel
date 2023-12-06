@@ -255,6 +255,10 @@ export const routes = [
     Component: <ComplaintStatus />,
   },
 
+  //Health Management routes
+  { path: `/new-patient`, Component: <NewPatient /> },
+  { path: `/all-patient`, Component: <AllPatient /> },
+
   //Hostel Config
   { path: `/hostel-config`, Component: <HostelConfig /> },
 
@@ -475,6 +479,10 @@ export const Wardenroutes = [
 
   { path: `/food-book`, Component: <FoodBookEntry /> },
   { path: `/today-Booking`, Component: <FoodBook /> },
+
+  //Health Management routes
+  { path: `/new-patient`, Component: <NewPatient /> },
+  { path: `/all-patient`, Component: <AllPatient /> },
 
   //Attendence management
   { path: `/take-attendence`, Component: <Take_Attendence /> },
