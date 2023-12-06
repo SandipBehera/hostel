@@ -57,7 +57,7 @@ const UserHeader = () => {
         <div className="media-body">
           <span>{authenticated ? name : ""}</span>
           <P attrPara={{ className: "mb-0 font-roboto" }}>
-            {Admin} <i className="middle fa fa-angle-down"></i>
+            {name} <i className="middle fa fa-angle-down"></i>
           </P>
         </div>
       </div>

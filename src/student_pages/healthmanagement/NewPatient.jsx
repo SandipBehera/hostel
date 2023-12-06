@@ -186,9 +186,7 @@ const NewPatient = () => {
             </Col>
             <Col sm={6} style={{ marginBottom: "15px" }}>
               <div className="mb-2" style={{ width: "100%" }}>
-                <Label className="col-form-label">
-                  Select Hostel name
-                </Label>
+                <Label className="col-form-label">Select Hostel name</Label>
                 <Select
                   options={hostel_name}
                   className="js-example-basic-single col-sm-12"
@@ -200,9 +198,7 @@ const NewPatient = () => {
             </Col>
             <Col sm={6} style={{ marginBottom: "15px" }}>
               <div className="mb-2" style={{ width: "100%" }}>
-                <Label className="col-form-label">
-                  Select Floor No.
-                </Label>
+                <Label className="col-form-label">Select Floor No.</Label>
                 <Select
                   options={floorData}
                   className="js-example-basic-single col-sm-12"
@@ -214,9 +210,7 @@ const NewPatient = () => {
             </Col>
             <Col sm={6} style={{ marginBottom: "15px" }}>
               <div className="mb-2" style={{ width: "100%" }}>
-                <Label className="col-form-label">
-                  Select Room No.
-                </Label>
+                <Label className="col-form-label">Select Room No.</Label>
                 <Select
                   options={roomData}
                   onChange={(selectedOption) =>
@@ -226,9 +220,7 @@ const NewPatient = () => {
               </div>
             </Col>
             <Col sm={6} style={{ marginBottom: "15px" }}>
-              <Label for="date">
-                Date
-              </Label>
+              <Label for="date">Date</Label>
               <Input
                 type="date"
                 name="date"
@@ -238,9 +230,7 @@ const NewPatient = () => {
               />
             </Col>
             <Col sm={6} style={{ marginBottom: "15px" }}>
-              <Label for="time">
-                Time
-              </Label>
+              <Label for="time">Time</Label>
               <Input
                 type="time"
                 name="time"
@@ -251,9 +241,7 @@ const NewPatient = () => {
             </Col>
 
             <Col sm={12} style={{ marginBottom: "15px" }}>
-              <Label for="reason">
-                Reason for Consultation
-              </Label>
+              <Label for="reason">Reason for Consultation</Label>
               <Input
                 type="textarea"
                 name="reason"
@@ -264,9 +252,7 @@ const NewPatient = () => {
             </Col>
 
             <Col sm={6} style={{ marginBottom: "15px" }}>
-              <Label for="doctor-name">
-                Doctor's Name
-              </Label>
+              <Label for="doctor-name">Doctor's Name</Label>
               <Input
                 type="text"
                 name="doctor"
@@ -276,9 +262,7 @@ const NewPatient = () => {
               />
             </Col>
             <Col sm={6} style={{ marginBottom: "15px" }}>
-              <Label for="file">
-                Upload File
-              </Label>
+              <Label for="file">Upload Preception</Label>
               <Input
                 type="file"
                 name="file"
