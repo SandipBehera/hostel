@@ -132,11 +132,8 @@ export default function Purchases() {
 
   return (
     <Fragment>
-      <Breadcrumbs
-        parent="Stock Management"
-        mainTitle="Stock Entry"
-        title="Stock Entry"
-      />
+    <Breadcrumbs parent="Setings"   subParent="Item Management" mainTitle="Stock Entry" title="Stock Entry" />
+
       <Card className="p-5">
         <div>
           <div className="total-price">

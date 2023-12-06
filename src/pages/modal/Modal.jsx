@@ -1,147 +1,62 @@
 import React, { useState } from 'react';
 import { Modal, ModalHeader, ModalBody, Input, Label, FormGroup, Button } from 'reactstrap';
 
-const StrapModal = ({ isOpen, toggleModal }) => {
-    const [modalOpen, setModalOpen] = useState(false);
-    const [msg, setMsg] = useState("");
+const CustomModal = ({ isOpen, toggleModal }) => {
+  const [inputValue, setInputValue] = useState('');
+  const [selectedOption, setSelectedOption] = useState('');
 
-    const openModal = () => {
-        setModalOpen(!modalOpen);
-        resetButtonStates();
-      };
+  const handleInputChange = (e) => {
+    setInputValue(e.target.value);
+  };
 
- 
+  const handleDropdownChange = (e) => {
+    setSelectedOption(e.target.value);
+  };
 
   const handleSave = () => {
+    // Perform any actions needed on save
     console.log('Input Value:', inputValue);
     console.log('Selected Option:', selectedOption);
 
- 
+    // Close the modal
     toggleModal();
   };
 
   return (
-    <Modal
-                  isOpen={modalOpen}
-                  toggle={openModal}
-                  onClose={resetButtonStates}
-                >
-                  <ModalHeader toggle={openModal}>Reason</ModalHeader>
-                  <ModalBody>
-                  <FormGroup>
-                  
-            
-                  <FormGroup check>
-                    <Label check>
-                      <Input
-                        type="radio"
-                        name="reason"
-                        value="Reason 1"
-                        checked={msg === 'Reason 1'}
-                        onChange={(e) => setMsg(e.target.value)}
-                      />
-                      {' '}
-                      Reason 1
-                    </Label>
-                  </FormGroup>
-            
-                  <FormGroup check>
-                    <Label check>
-                      <Input
-                        type="radio"
-                        name="reason"
-                        value="Reason 2"
-                        checked={msg === 'Reason 2'}
-                        onChange={(e) => setMsg(e.target.value)}
-                      />
-                      {' '}
-                      Reason 2
-                    </Label>
-                  </FormGroup>
-            
-                  <FormGroup check>
-                    <Label check>
-                      <Input
-                        type="radio"
-                        name="reason"
-                        value="Reason 3"
-                        checked={msg === 'Reason 3'}
-                        onChange={(e) => setMsg(e.target.value)}
-                      />
-                      {' '}
-                      Reason 3
-                    </Label>
-                  </FormGroup>
-            
-                  <FormGroup check>
-                    <Label check>
-                      <Input
-                        type="radio"
-                        name="reason"
-                        value="Reason 4"
-                        checked={msg === 'Reason 4'}
-                        onChange={(e) => setMsg(e.target.value)}
-                      />
-                      {' '}
-                      Reason 4
-                    </Label>
-                  </FormGroup>
-            
-                  <FormGroup check>
-                    <Label check>
-                      <Input
-                        type="radio"
-                        name="reason"
-                        value="Reason 5"
-                        checked={msg === 'Reason 5'}
-                        onChange={(e) => setMsg(e.target.value)}
-                      />
-                      {' '}
-                      Reason 5
-                    </Label>
-                  </FormGroup>
-            
-                  <FormGroup check>
-                    <Label check>
-                      <Input
-                        type="radio"
-                        name="reason"
-                        value="Others"
-                        checked={msg === 'Others'}
-                        onChange={(e) => setMsg(e.target.value)}
-                      />
-                      {' '}
-                      Others
-                    </Label>
-                  </FormGroup>
-            
-                  {msg === 'Others' && (
-                    <Input
-                      value={otherMessage}
-                      onChange={(e) => setOtherMessage(e.target.value)}
-                      type="text"
-                      className="mt-3"
-                      placeholder="Write a reason"
-                    />
-                  )}
-                </FormGroup>
-                  </ModalBody>
-                  <ModalFooter>
-                    <Button
-                      color="secondary"
-                      onClick={() => {
-                        makeAttandance(stud.username, 0, msg),
-                          openModal();
-                          setAbsentButtonDisabled(true);
-                      }}
-                    >
-                      Submit
-                    </Button>
-                    {/* Additional buttons or actions can be added here */}
-                  </ModalFooter>
-                </Modal>
+    <Modal isOpen={isOpen} toggle={toggleModal}>
+      <ModalHeader toggle={toggleModal}>Modal Header</ModalHeader>
+      <ModalBody>
+        <FormGroup>
+          <Label for="exampleInput">Input:</Label>
+          <Input
+            type="text"
+            id="exampleInput"
+            placeholder="Enter text here"
+            value={inputValue}
+            onChange={handleInputChange}
+          />
+        </FormGroup>
+        <FormGroup>
+          <Label for="exampleSelect">Dropdown:</Label>
+          <Input
+            type="select"
+            id="exampleSelect"
+            value={selectedOption}
+            onChange={handleDropdownChange}
+          >
+            <option value="">Select an option</option>
+            <option value="Option 1">Option 1</option>
+            <option value="Option 2">Option 2</option>
+            <option value="Option 3">Option 3</option>
+          </Input>
+        </FormGroup>
+        <Button color="primary" onClick={handleSave}>
+          Save
+        </Button>
+      </ModalBody>
+    </Modal>
   );
 };
 
-export default StrapModal;
+export default CustomModal;
 

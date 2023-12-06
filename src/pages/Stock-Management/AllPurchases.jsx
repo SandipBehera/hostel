@@ -46,7 +46,7 @@ export default function AllPurchases() {
 
   return (
     <Fragment>
-      <Breadcrumbs parent="Stock Management" mainTitle="All Purchase" title="All Purchase" />
+      <Breadcrumbs parent="Setings"   subParent="Item Management" mainTitle="All Purchase" title="All Purchase" />
 
       <div>
         <Table className='text-center'>

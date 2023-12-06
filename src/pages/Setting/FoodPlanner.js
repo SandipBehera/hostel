@@ -10,7 +10,7 @@ import {
   DropdownMenu,
   DropdownItem,
 } from "reactstrap";
-import { H5 } from "../../AbstractElements";
+import { Breadcrumbs, H5 } from "../../AbstractElements";
 import { LocalApi, WebApi } from "../../api";
 
 const FoodPlanner = () => {
@@ -157,6 +157,12 @@ const FoodPlanner = () => {
 
   return (
     <Fragment>
+    <Breadcrumbs
+    parent="Settings"
+    mainTitle="Create Food Planner "
+    subParent="Food Planner"
+    title="Create Food Planner"
+  />
       <Card>
         <CardHeader>
           <H5>Create Food Planner</H5>

@@ -114,9 +114,14 @@ const AttendenceReport = ({ attendanceData }) => {
   };
 
   return (
+   
     <Fragment>
-      <Breadcrumbs parent="Employee" mainTitle="Attendance" title="Attendance" />
-      <Col  className='xl-100 box-col-12'>
+    <Breadcrumbs
+      parent="Student"
+      mainTitle="Attendance"
+      subParent="Attendance Report"
+      title="Attendance Report"
+    />      <Col  className='xl-100 box-col-12'>
         <Card>
           
           <CardBody>
@@ -240,33 +245,55 @@ const AttendenceReport = ({ attendanceData }) => {
             </TabContent>
             {/* Modal outside the loop */}
             <Modal isOpen={modalOpen} toggle={() => setModalOpen(!modalOpen)}>
-              <ModalHeader toggle={() => setModalOpen(!modalOpen)}>
-                Where are you....
-              </ModalHeader>
-              <ModalBody>
-                <FormGroup>
-                  <Label for="exampleText">Write here</Label>
-                  <Input
-                    type="textarea"
-                    name="text"
-                    id="exampleText"
-                    rows="5"
-                    value={msg}
-                    onChange={(e) => setMsg(e.target.value)}
-                  />
+            <ModalHeader toggle={() => setModalOpen(!modalOpen)}>
+              Where are you....
+            </ModalHeader>
+            <ModalBody>
+              <FormGroup>
+                <Label for="exampleText">Write here</Label>
+                <Input
+                  type="textarea"
+                  name="text"
+                  id="exampleText"
+                  rows="5"
+                  value={msg}
+                  onChange={(e) => setMsg(e.target.value)}
+                />
+              </FormGroup>
+          
+              <FormGroup>
+                <legend>Status</legend>
+                <FormGroup check>
+                  <Label check>
+                    <Input
+                      type="checkbox"
+                      name="status1"
+                      checked={status === 1}
+                      onChange={() => setStatus(status === 1 ? 0 : 1)}
+                    />{' '}
+                    Option 1
+                  </Label>
                 </FormGroup>
-              </ModalBody>
-              <ModalFooter>
-                <Button
-                  color="secondary"
-                  onClick={() => {
-                    handleActionSelect(status === 1 ? "0" : "1", msg);
-                  }}
-                >
-                  Send
-                </Button>
-              </ModalFooter>
-            </Modal>
+                <FormGroup check>
+                  <Label check>
+                    <Input
+                      type="checkbox"
+                      name="status0"
+                      checked={status === 0}
+                      onChange={() => setStatus(status === 0 ? 1 : 0)}
+                    />{' '}
+                    Option 0
+                  </Label>
+                </FormGroup>
+              </FormGroup>
+            </ModalBody>
+            <ModalFooter>
+              <Button color="secondary" onClick={() => handleActionSelect(status, msg)}>
+                Send
+              </Button>
+            </ModalFooter>
+          </Modal>
+          
           </CardBody>
         </Card>
       </Col>

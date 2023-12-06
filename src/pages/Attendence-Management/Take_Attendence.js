@@ -26,19 +26,20 @@ import Select from "react-select";
 import { Breadcrumbs, H5 } from "../../AbstractElements";
 import "../styles/take_attendence.css";
 import { data } from "./data";
+import AttendenceReport from "./AttendenceReport";
 import { WebApi } from "../../api";
 import { toast } from "react-toastify";
-import DataTable from "react-data-table-component";
 
 const Take_Attendence = () => {
   const [modalOpen, setModalOpen] = useState(false);
-  // const [student, setStudent] = useState(data);
-  // const [absentDetails, setAbsentDetails] = useState(null);
-  // const [presentDetails, setPresentDetails] = useState(null);
+  const [student, setStudent] = useState(data);
+  const [absentDetails, setAbsentDetails] = useState(null);
+  const [presentDetails, setPresentDetails] = useState(null);
   const [msg, setMsg] = useState("");
   const [attendanceData, setAttendanceData] = useState([]);
 
   const [hostelData, sethostelData] = useState([]);
+  const [tableData, setTableData] = useState([]);
   const [floorData, setFloorData] = useState([]);
   const [roomData, setRoomData] = useState([]);
 
@@ -56,8 +57,6 @@ const Take_Attendence = () => {
 
   const reasons = ["Reason 1", "Reason 2", "Reason 3", "Other"];
 
-  console.log(msg);
-
   const resetButtonStates = () => {
     setPresentButtonDisabled(false);
     setAbsentButtonDisabled(false);
@@ -70,8 +69,6 @@ const Take_Attendence = () => {
       });
       const resproom = await response.json();
       sethostelData(resproom.data);
-      console.log(resproom.data);
-      
     };
     roomHostel();
   }, []);
@@ -114,75 +111,13 @@ const Take_Attendence = () => {
   const currentDate = new Date();
   const time = currentDate.toTimeString();
 
-  console.log(selectedId)
-
-  let colData=[
-    {
-        name: 'Id',
-        selector: row =>`${row.id}`,
-        sortable: true,
-        center: false,
-    },
-    {
-        name: 'Name',
-        selector: row => `${row.name}`,
-        sortable: true,
-        center: true,
-    },
-    {
-        name: 'Regd No',
-        selector: row => `${row.regd_no}`,
-        sortable: true,
-        center: true,
-    },
-    {
-        name: 'Room No',
-        selector: row => `${row.Room_no}`,
-        sortable: true,
-        center: true,
-    },
-    {
-      name: "Actions",
-      button: true,
-      cell: (row) => (
-          <>
-          {(absentButtonDisabled && selectedId === row.regd_no) ? "" : <button
-              className="btn btn-outline btn-xs  bg-success"
-              onClick={() => {
-                makeAttandance(row.regd_no, 1, null),
-                  setSelectedId(row.regd_no);
-                  console.log(row.regd_no)
-              }}
-              disabled={
-                selectedId === row.regd_no
-                  ? presentButtonDisabled
-                  : ""
-              }
-          >
-             Present
-          </button>}
-          {(presentButtonDisabled && selectedId === row.regd_no) ? "" :<button
-              className="btn btn-outline btn-xs bg-danger"
-              onClick={() => {
-                openModal();
-                setMsg("");
-                setSelectedId(row.regd_no);
-
-              }}
-              disabled={selectedId === row.regd_no
-                ? absentButtonDisabled
-                : ""}
-          >
-             Absent
-          </button>}
-          </>
-      ),
-  }
- 
-];
-console.log(colData);
-console.log(studentData);
-
+  // const toggleZoom = (id) => {
+  //   setZoomedInIds((prevIds) =>
+  //     prevIds.includes(id)
+  //       ? prevIds.filter((prevId) => prevId !== id)
+  //       : [...prevIds, id]
+  //   );
+  // };
 
   const openModal = () => {
     setModalOpen(!modalOpen);
@@ -207,14 +142,8 @@ console.log(studentData);
       toast.error("Room is not assigned to any person");
     } else {
       toast.success("Room is data fetched Successfully");
-      setStudentData(result.data.map((item)=>{
-        return({"id":item.id, "name":item.name, "regd_no":item.username, "Room_no" : selectedRoom,
-         "button":<div><Button color="success">Present</Button> <br></br><Button >Absent</Button></div>
-        })
-      }));
-      console.log(result.data.map((item)=>{
-        return({"id":item.id, "name":item.name, "regd no":item.username, "Room no" : selectedRoom, })
-      }));
+      setStudentData(result.data);
+      console.log(result.data);
     }
   };
 
@@ -282,12 +211,7 @@ console.log(studentData);
     // Call the async function
     await processAttendance();
   };
-
-
-  const handleRowClick = ()=> {
-    // Handle click action here, for example:
-    console.log('Row clicked:');
-  };
+  console.log(absentButtonDisabled)
 
   return (
     <Fragment>
@@ -354,111 +278,66 @@ console.log(studentData);
                 Room is not assigned to any person
               </p>
             ) : (
-              <>
-              <DataTable 
-              data={studentData}
-                columns={colData}
-                striped={true}
-                center={true}
-                onRowClick={handleRowClick}
-                pagination
-               >
-              </DataTable>
+              <table className="table text-center">
+                <thead>
+                  <tr>
+                  <th>ID</th>
+                    <th>Name</th>
+                    <th>Regd No</th>
+                    <th>Room No</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {studentData.map((stud, index) => (
+                    <tr key={index}>
+                    <td>{stud.id}</td>
+                      <td>{stud.name}</td>
+                      <td>{stud.username}</td>
+                      <td>{selectedRoom}</td>
+                      <td>
                         <div>
-                          <Modal
-                            isOpen={modalOpen}
-                            toggle={openModal}
-                            onClose={resetButtonStates}
-                          >
-                            <ModalHeader toggle={openModal}>Reason</ModalHeader>
-                            <ModalBody>
-                            <FormGroup>
-                            
-                      
-                            <FormGroup check>
+                        <Modal isOpen={modalOpen} toggle={openModal} onClose={resetButtonStates}>
+                        <ModalHeader toggle={openModal}>Reason</ModalHeader>
+                        <ModalBody>
+                          <FormGroup>
+                            <div>
                               <Label check>
                                 <Input
                                   type="radio"
                                   name="reason"
                                   value="Reason 1"
                                   checked={msg === 'Reason 1'}
-                                  onChange={(e) => setMsg(e.target.value)}
+                                  onChange={() => setMsg('Reason 1')}
                                 />
-                                {' '}
-                                Reason 1
+                                {' Reason 1'}
                               </Label>
-                            </FormGroup>
-                      
-                            <FormGroup check>
+                            </div>
+                            <div>
                               <Label check>
                                 <Input
                                   type="radio"
                                   name="reason"
                                   value="Reason 2"
                                   checked={msg === 'Reason 2'}
-                                  onChange={(e) => setMsg(e.target.value)}
+                                  onChange={() => setMsg('Reason 2')}
                                 />
-                                {' '}
-                                Reason 2
+                                {' Reason 2'}
                               </Label>
-                            </FormGroup>
-                      
-                            <FormGroup check>
-                              <Label check>
-                                <Input
-                                  type="radio"
-                                  name="reason"
-                                  value="Reason 3"
-                                  checked={msg === 'Reason 3'}
-                                  onChange={(e) => setMsg(e.target.value)}
-                                />
-                                {' '}
-                                Reason 3
-                              </Label>
-                            </FormGroup>
-                      
-                            <FormGroup check>
-                              <Label check>
-                                <Input
-                                  type="radio"
-                                  name="reason"
-                                  value="Reason 4"
-                                  checked={msg === 'Reason 4'}
-                                  onChange={(e) => setMsg(e.target.value)}
-                                />
-                                {' '}
-                                Reason 4
-                              </Label>
-                            </FormGroup>
-                      
-                            <FormGroup check>
-                              <Label check>
-                                <Input
-                                  type="radio"
-                                  name="reason"
-                                  value="Reason 5"
-                                  checked={msg === 'Reason 5'}
-                                  onChange={(e) => setMsg(e.target.value)}
-                                />
-                                {' '}
-                                Reason 5
-                              </Label>
-                            </FormGroup>
-                      
-                            <FormGroup check>
+                            </div>
+                            {/* Add more radio button options as needed */}
+                            <div>
                               <Label check>
                                 <Input
                                   type="radio"
                                   name="reason"
                                   value="Others"
                                   checked={msg === 'Others'}
-                                  onChange={(e) => setMsg(e.target.value)}
+                                  onChange={() => setMsg('Others')}
                                 />
-                                {' '}
-                                Others
+                                {' Others'}
                               </Label>
-                            </FormGroup>
-                      
+                            </div>
                             {msg === 'Others' && (
                               <Input
                                 value={otherMessage}
@@ -469,23 +348,64 @@ console.log(studentData);
                               />
                             )}
                           </FormGroup>
-                            </ModalBody>
-                            <ModalFooter>
-                              <Button
-                                color="secondary"
-                                onClick={() => {
-                                  makeAttandance(selectedId, 0, msg),
-                                    openModal();
-                                    setAbsentButtonDisabled(true);
-                                }}
-                              >
-                                Submit
-                              </Button>
-                              {/* Additional buttons or actions can be added here */}
-                            </ModalFooter>
-                          </Modal>
+                        </ModalBody>
+                        <ModalFooter>
+                          <Button
+                            color="secondary"
+                            onClick={() => {
+                              makeAttandance(stud.username, 0, msg);
+                              openModal();
+                              setAbsentButtonDisabled(true);
+                            }}
+                          >
+                            Submit
+                          </Button>
+                          {/* Additional buttons or actions can be added here */}
+                        </ModalFooter>
+                      </Modal>
                         </div>
-                        </>
+                        {(absentButtonDisabled && selectedId===stud.username) ? (
+                          ""
+                        ) : (
+                          <Button
+                            color="success"
+                            onClick={() => {
+                              makeAttandance(stud.username, 1, null),
+                                setSelectedId(stud.username);
+                            }}
+                            disabled={
+                              selectedId === stud.username
+                                ? presentButtonDisabled
+                                : ""
+                            }
+                          >
+                            Present
+                          </Button>
+                        )}{" "}
+                        {presentButtonDisabled &&
+                        selectedId === stud.username ? (
+                          ""
+                        ) : (
+                          <Button
+                            color="danger"
+                            onClick={() => {
+                              openModal();
+                              setMsg("");
+                              setSelectedId(stud.username);
+
+                            }}
+                            disabled={selectedId === stud.username
+                              ? absentButtonDisabled
+                              : ""}
+                          >
+                            Absent
+                          </Button>
+                        )}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
             )}
           </Row>
         </Container>
