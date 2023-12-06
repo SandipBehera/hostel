@@ -15,8 +15,6 @@ import {
 import "./stock.css";
 import { LocalApi, WebApi } from "../../api";
 import { toast } from "react-toastify";
-import duplicate from "../../Hooks/checkForDuplicate";
-import { set } from "date-fns";
 
 export default function Purchases() {
   const [selectedItems, setSelectedItems] = useState([]);
