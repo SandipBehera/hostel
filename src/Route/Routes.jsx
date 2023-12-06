@@ -230,9 +230,6 @@ export const routes = [
   { path: `/attendencereport`, Component: <AttendenceReport /> },
   { path: `/monthlyattendencereport`, Component: <MonthlyAttendanceReport /> },
 
-  //Amenities routes
-  { path: `/create-amenities`, Component: <CreateAmenities /> },
-
   //Food planner routes
   { path: `/food-planner`, Component: <FoodPlanner /> },
   { path: `/allplanner`, Component: <AllPlanner /> },
