@@ -25,8 +25,12 @@ export default function Purchases() {
   const [itemFor, setItemFor] = useState("");
   const [quantity, setQuantity] = useState();
   const [newItem, setNewItem] = useState("");
+  const [itemPrice, setItemPrice] = useState(0); // New state to store price per item
 
-  const toggleModal = () => setModal(!modal);
+  const toggleModal = () => {
+    setModal(!modal);
+    setItemPrice(0); // Reset the price per item when the modal is toggled
+  };
 
   const items = [
     { id: 1, name: "Item 1", price: 10 },
@@ -40,9 +44,13 @@ export default function Purchases() {
     if (type === "dropdown") {
       value = parseInt(e.target.value, 10);
       setSelectedItemId(value);
+      setItemPrice(0); // Reset the price per item when a new item is selected
     } else if (type === "quantity") {
       value = parseInt(e.target.value, 10);
       setSelectedQuantity(value);
+    } else if (type === "price") {
+      value = parseFloat(e.target.value);
+      setItemPrice(value);
     } else {
       value = e.target.value;
     }
@@ -52,40 +60,46 @@ export default function Purchases() {
     if (selectedItemId !== null) {
       const selectedItem = items.find((item) => item.id === selectedItemId);
 
-      // Check if the item is already in the list
       const existingItem = selectedItems.find(
         (item) => item.id === selectedItemId
       );
 
       if (existingItem) {
-        // Item already exists, update the quantity
         const updatedItems = selectedItems.map((item) =>
           item.id === selectedItemId
-            ? { ...item, quantity: item.quantity + selectedQuantity }
+            ? {
+                ...item,
+                quantity: item.quantity + selectedQuantity,
+                price: itemPrice,
+              }
             : item
         );
 
         const updatedTotalPrice =
-          totalPrice + selectedItem.price * selectedQuantity;
+          totalPrice + itemPrice * selectedQuantity;
 
         setSelectedItems(updatedItems);
         setTotalPrice(updatedTotalPrice);
       } else {
-        // Item doesn't exist, add it to the list
         const updatedItems = [
           ...selectedItems,
-          { ...selectedItem, quantity: selectedQuantity },
+          {
+            ...selectedItem,
+            quantity: selectedQuantity,
+            price: itemPrice,
+          },
         ];
 
         const updatedTotalPrice =
-          totalPrice + selectedItem.price * selectedQuantity;
+          totalPrice + itemPrice * selectedQuantity;
 
         setSelectedItems(updatedItems);
         setTotalPrice(updatedTotalPrice);
       }
 
-      setSelectedItemId(null); // Reset selected item after adding to the list
-      setSelectedQuantity(1); // Reset quantity to 1
+      setSelectedItemId(null);
+      setSelectedQuantity(1);
+      setItemPrice(0); // Reset the price per item after adding to the list
     }
   };
 
@@ -187,7 +201,7 @@ export default function Purchases() {
                   <option value="">Select an item</option>
                   {items.map((item) => (
                     <option key={item.id} value={item.id}>
-                      {item.name} - ₹{item.price}
+                      {item.name} 
                     </option>
                   ))}
                 </Input>
@@ -197,13 +211,29 @@ export default function Purchases() {
                   <Label className="col-form-label font-weight-bold mb-2">
                     Quantity:
                   </Label>
-                  {/* Replace quantity dropdown with input field */}
                   <Input
                     className="form-control form-control-secondary-fill btn-square"
                     type="number"
                     min="1"
                     value={selectedQuantity}
                     onChange={(e) => handleInputChange(e, "quantity")}
+                  />
+                </div>
+              ) : (
+                ""
+              )}
+              {selectedItemId !== null ? (
+                <div className="mr-3" style={{ width: "100px" }}>
+                  <Label className="col-form-label font-weight-bold mb-2">
+                    Price per Item:
+                  </Label>
+                  <Input
+                    className="form-control form-control-secondary-fill btn-square"
+                    type="number"
+                    min="0"
+                    step="0.01"
+                    value={itemPrice}
+                    onChange={(e) => handleInputChange(e, "price")}
                   />
                 </div>
               ) : (

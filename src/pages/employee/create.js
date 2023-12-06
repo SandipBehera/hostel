@@ -4,10 +4,12 @@ import HeaderCard from "../../Components/Common/Component/HeaderCard";
 import FooterCard from "../../Components/Forms/FormControl/Common/FooterCard";
 import { Col, Card, CardBody, Form, FormGroup, Label, Input, CardHeader } from 'reactstrap';
 import { H6 } from '../../AbstractElements';
-import { EmailAddress, Website, BillingInformation, CompanyInformation, MegaForm, AccountInformation, UploadFile, ContactNumber, CompanyName, YourName } from '../../Constant';
+import { EmailAddress, Website, BillingInformation, CompanyInformation, MegaForm, AccountInformation, ContactNumber, CompanyName, YourName, UploadFile } from '../../Constant';
+import { Upload } from "react-feather";
 
 
 export default function CreateEmployee() {
+    console.log(UploadFile)
   return (
     <Fragment>
         <Card>
@@ -42,7 +44,12 @@ export default function CreateEmployee() {
                             </FormGroup>
                             <FormGroup>
                                 <Label className="col-form-label">Employee Designation</Label>
-                                <Input className="form-control" type="text" placeholder="Designation" />
+                                <Input className="form-control" type="select" placeholder="Designation">
+                                <option value="">Select Designation</option>
+                                <option value="Warden">Warden</option>
+                                <option value="House Keeping">House Keeping</option>
+                                
+                                </Input>
                             </FormGroup>
                             <FormGroup>
                                 <Label className="col-form-label">Aadhar Number</Label>
@@ -79,13 +86,16 @@ export default function CreateEmployee() {
                         <H6 attrH6={{ className: 'pb-2' }}>{BillingInformation}</H6>
                         
                             <FormGroup className="col-auto">
-                                <Input className="form-control" type="text" placeholder="Name On Card" />
+                                <Input className="form-control" type="text" placeholder="Name as per bank" />
                             </FormGroup>
                             <FormGroup className="col-auto">
-                                <Input className="form-control" type="text" name="inputPassword" placeholder="Card Number" />
+                                <Input className="form-control" type="text" name="inputPassword" placeholder="A/C Number" />
                             </FormGroup>
                             <FormGroup className="col-auto">
-                                <Input className="form-control" type="text" name="inputPassword" placeholder="Zip Code" />
+                                <Input className="form-control" type="text" name="inputPassword" placeholder="IFSC Code" />
+                            </FormGroup>
+                            <FormGroup className="col-auto">
+                                <Input className="form-control" type="text" name="inputPassword" placeholder="Bank/Branch" />
                             </FormGroup>
                          </Form>
                     </CardBody>

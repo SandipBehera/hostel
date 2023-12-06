@@ -266,6 +266,9 @@ export const routes = [
   { path: `/attendence`, Component: <Attendence /> },
   { path: "/house_keeping", Component: <HouseKeeping /> },
 
+ 
+
+
   //employee Management routes ends
   { path: `/ui-kits/typography`, Component: <Typography /> },
   { path: `/ui-kits/avatar`, Component: <Avatars /> },
