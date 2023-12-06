@@ -1,4 +1,4 @@
-import React, { Fragment, useState } from "react";
+import React, { Fragment, useEffect, useState } from "react";
 import { Breadcrumbs } from "../../AbstractElements";
 import {
   Button,
@@ -13,7 +13,10 @@ import {
   Table,
 } from "reactstrap";
 import "./stock.css";
-import { WebApi } from "../../api";
+import { LocalApi, WebApi } from "../../api";
+import { toast } from "react-toastify";
+import duplicate from "../../Hooks/checkForDuplicate";
+import { set } from "date-fns";
 
 export default function Purchases() {
   const [selectedItems, setSelectedItems] = useState([]);
@@ -26,17 +29,20 @@ export default function Purchases() {
   const [quantity, setQuantity] = useState();
   const [newItem, setNewItem] = useState("");
   const [itemPrice, setItemPrice] = useState(0); // New state to store price per item
+  const [itemList, setItemList] = useState([]);
 
   const toggleModal = () => {
     setModal(!modal);
     setItemPrice(0); // Reset the price per item when the modal is toggled
   };
-
-  const items = [
-    { id: 1, name: "Item 1", price: 10 },
-    { id: 2, name: "Item 2", price: 15 },
-    { id: 3, name: "Item 3", price: 20 },
-  ];
+  useEffect(() => {
+    const fetchItems = async () => {
+      const response = await fetch(WebApi + "/get_items", { method: "GET" });
+      const data = await response.json();
+      setItemList(data.data);
+    };
+    fetchItems();
+  }, []);
 
   const handleInputChange = (e, type) => {
     let value;
@@ -58,7 +64,7 @@ export default function Purchases() {
 
   const handleItemClick = () => {
     if (selectedItemId !== null) {
-      const selectedItem = items.find((item) => item.id === selectedItemId);
+      const selectedItem = itemList.find((item) => item.id === selectedItemId);
 
       const existingItem = selectedItems.find(
         (item) => item.id === selectedItemId
@@ -75,8 +81,7 @@ export default function Purchases() {
             : item
         );
 
-        const updatedTotalPrice =
-          totalPrice + itemPrice * selectedQuantity;
+        const updatedTotalPrice = totalPrice + itemPrice * selectedQuantity;
 
         setSelectedItems(updatedItems);
         setTotalPrice(updatedTotalPrice);
@@ -90,8 +95,7 @@ export default function Purchases() {
           },
         ];
 
-        const updatedTotalPrice =
-          totalPrice + itemPrice * selectedQuantity;
+        const updatedTotalPrice = totalPrice + itemPrice * selectedQuantity;
 
         setSelectedItems(updatedItems);
         setTotalPrice(updatedTotalPrice);
@@ -103,36 +107,37 @@ export default function Purchases() {
     }
   };
 
-  const handleSubmit = async () => {
-    // ... (existing handleSubmit logic)
+  const handleCreateItem = async () => {
+    const response = await fetch(WebApi + "/create_item", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        item_name: newItem,
+        item_for: itemFor,
+      }),
+    });
 
-    // Example code for sending data to a server (uncomment and modify as needed)
-    // try {
-    //   const data = {
-    //     // ... (your data structure)
-    //   };
-
-    //   const response = await fetch("http://example.com/api/submit", {
-    //     method: "POST",
-    //     headers: {
-    //       "Content-Type": "application/json",
-    //     },
-    //     body: JSON.stringify(data),
-    //   });
-
-    //   if (response.ok) {
-    //     // Handle success
-    //   } else {
-    //     // Handle error
-    //   }
-    // } catch (error) {
-    //   console.error("An error occurred:", error);
-    // }
+    const data = await response.json();
+    console.log(data);
+    if (data.status === "success") {
+      toast.success("Item added successfully");
+      setItemList([...itemList, { id: data.data, item_name: newItem }]);
+      setModal(!modal);
+    } else {
+      toast.error("Item not added");
+    }
   };
-
+  console.log("selectedItems", selectedItems);
   return (
     <Fragment>
-    <Breadcrumbs parent="Setings"   subParent="Item Management" mainTitle="Stock Entry" title="Stock Entry" />
+      <Breadcrumbs
+        parent="Setings"
+        subParent="Item Management"
+        mainTitle="Stock Entry"
+        title="Stock Entry"
+      />
 
       <Card className="p-5">
         <div>
@@ -173,7 +178,7 @@ export default function Purchases() {
               </div>
             </ModalBody>
             <ModalFooter>
-              <Button color="primary" onClick={handleItemClick}>
+              <Button color="primary" onClick={handleCreateItem}>
                 Add Item
               </Button>
               <Button color="secondary" onClick={toggleModal}>
@@ -196,11 +201,12 @@ export default function Purchases() {
                   value={selectedItemId !== null ? selectedItemId : ""}
                 >
                   <option value="">Select an item</option>
-                  {items.map((item) => (
-                    <option key={item.id} value={item.id}>
-                      {item.name} 
-                    </option>
-                  ))}
+                  {itemList &&
+                    itemList.map((item) => (
+                      <option key={item.id} value={item.item_name}>
+                        {item.item_name}
+                      </option>
+                    ))}
                 </Input>
               </div>
               {selectedItemId !== null ? (
@@ -253,14 +259,15 @@ export default function Purchases() {
                   </tr>
                 </thead>
                 <tbody>
-                  {selectedItems.map((item) => (
-                    <tr key={item.id}>
-                      <td>{item.name}</td>
-                      <td>{item.quantity}</td>
-                      <td>₹{item.price}</td>
-                      <td>₹{item.price * item.quantity}</td>{" "}
-                    </tr>
-                  ))}
+                  {selectedItems !== undefined &&
+                    selectedItems.map((item) => (
+                      <tr key={item.id}>
+                        <td>{item.item_name}</td>
+                        <td>{item.quantity}</td>
+                        <td>₹{item.price}</td>
+                        <td>₹{item.price * item.quantity}</td>{" "}
+                      </tr>
+                    ))}
                 </tbody>
               </Table>
             ) : (
@@ -295,7 +302,7 @@ export default function Purchases() {
           </div>
 
           <div>
-            <Button color="primary" className="mt-2" onClick={handleSubmit}>
+            <Button color="primary" className="mt-2">
               Submit
             </Button>
           </div>
