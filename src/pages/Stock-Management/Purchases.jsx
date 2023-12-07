@@ -15,6 +15,7 @@ import {
 import "./stock.css";
 import { LocalApi, WebApi } from "../../api";
 import { toast } from "react-toastify";
+// import { C } from "@fullcalendar/core/internal-common";
 
 export default function Purchases() {
   const [selectedItems, setSelectedItems] = useState([]);
@@ -29,8 +30,9 @@ export default function Purchases() {
   const [itemPrice, setItemPrice] = useState(0); // New state to store price per item
   const [itemList, setItemList] = useState([]);
   const [isMarketPlace, setIsMarketPlace] = useState();
+  const [file, setFile]= useState("");
 
-  console.log(isMarketPlace);
+
 
   const toggleModal = () => {
     setModal(!modal);
@@ -131,6 +133,37 @@ export default function Purchases() {
     }
   };
   console.log("selectedItems", selectedItems);
+
+  const handleSubmit = async() =>{
+    console.log(selectedItems);
+  //   console.log(file, isMarketPlace)
+  //   {
+  //     const data={
+  //       item_name: selectedItems[0].item_name,
+  //       item_for:selectedItems[0].item_for,
+  //       quantity:selectedItems[0].quantity,
+  //       price_per:selectedItems[0].price,
+  //       total_price: totalPrice,
+  //       purchased_from: buyerName,
+  //       purchase_date: selectedItems[0].created_at,
+
+  //     }  
+      
+  //     await fetch(`${WebApi}/add_stock`, {
+  //       method: "POST",
+  //       body: JSON.stringify(data),
+  //       headers: {
+  //         "Content-type" : "Application/json"
+  //       }
+  //     })
+  //     .then((response)=> response.json())
+  //     .then((data)=>{console.log(data)
+  //     toast.success("Stock Added Successfuly")}
+  //     )
+  //     .catch((e)=>{console.log(e),
+  //     toast.error("Faild to add stocks")})
+  // }
+}
   return (
     <Fragment>
       <Breadcrumbs
@@ -307,7 +340,7 @@ export default function Purchases() {
                 <Label for="exampleFile" className="mt-3">
                   Upload Bill
                 </Label>
-                <Input id="exampleFile" name="file" type="file" />
+                <Input id="exampleFile" name="file" type="file" onChange={(e)=>setFile(e.target.files[0])}/>
               </FormGroup>
             </div>
             <p className="font-weight-bold total-price">
@@ -316,7 +349,7 @@ export default function Purchases() {
           </div>
 
           <div>
-            <Button color="primary" className="mt-2">
+            <Button color="primary" className="mt-2" onClick={handleSubmit} >
               Submit
             </Button>
           </div>
