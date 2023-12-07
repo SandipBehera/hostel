@@ -21,6 +21,7 @@ export default function CreateEmployee() {
     name: "",
     email: "",
     contact: "",
+    employeeId:"",
     address: "",
     designation: "",
     aadhar: "",
@@ -56,6 +57,7 @@ export default function CreateEmployee() {
     data.append("name", formData.name);
     data.append("email", formData.email);
     data.append("contact", formData.contact);
+    data.append("employeeId",formData.employeeId);
     data.append("address", formData.address);
     data.append("designation", formData.designation);
     data.append("aadhar", formData.aadhar);
@@ -73,6 +75,7 @@ export default function CreateEmployee() {
       .then((data) => {
         if (data.status === "success") {
           toast.success(data.message);
+          console.log(data)
         } else {
           toast.error(data.message);
         }
@@ -141,6 +144,23 @@ export default function CreateEmployee() {
                 </FormGroup>
                 <hr className="mt-4 mb-4" />
                 <H6>Employee Information</H6>
+                    
+                <FormGroup>
+                  <Label className="col-form-label">Employee Id</Label>
+                  <Input
+                    className="form-control"
+                    type="text"
+                    placeholder="Address"
+                    onChange={(e) =>
+                      setFormData((prevData) => ({
+                        ...prevData,
+                        employeeId: e.target.value,
+                      }))
+                    }
+                  />
+                </FormGroup>
+
+
                 <FormGroup>
                   <Label className="col-form-label">Employee Address</Label>
                   <Input

@@ -17,6 +17,9 @@ const UserHeader = () => {
   const userId = localStorage.getItem("userId");
   // const auth0_profile = JSON.parse(localStorage.getItem("auth0_profile"));
 
+  const userType = localStorage.getItem("userType");
+  
+
   useEffect(() => {
     setProfile(localStorage.getItem("profileURL") || man);
     setName(localStorage.getItem("Name") ? localStorage.getItem("Name") : name);
@@ -66,28 +69,13 @@ const UserHeader = () => {
       >
         <LI
           attrLI={{
-            onClick: () => UserMenuRedirect(`/app/users/profile/${layoutURL}`),
+            onClick: () => UserMenuRedirect(`/${userType}/${userId}/my-profile`),
           }}
         >
           <User />
           <span>{Account} </span>
         </LI>
-        <LI
-          attrLI={{
-            onClick: () => UserMenuRedirect(`/app/email-app/${layoutURL}`),
-          }}
-        >
-          <Mail />
-          <span>{Inbox}</span>
-        </LI>
-        <LI
-          attrLI={{
-            onClick: () => UserMenuRedirect(`/app/todo-app/todo/${layoutURL}`),
-          }}
-        >
-          <FileText />
-          <span>{Taskboard}</span>
-        </LI>
+  
         <LI attrLI={{ onClick: Logout }}>
           <LogIn />
           <span>{LogOut}</span>
