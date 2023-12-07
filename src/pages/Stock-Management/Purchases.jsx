@@ -15,6 +15,7 @@ import {
 import "./stock.css";
 import { LocalApi, WebApi } from "../../api";
 import { toast } from "react-toastify";
+// import { C } from "@fullcalendar/core/internal-common";
 
 export default function Purchases() {
   const [selectedItems, setSelectedItems] = useState([]);
@@ -28,6 +29,10 @@ export default function Purchases() {
   const [newItem, setNewItem] = useState("");
   const [itemPrice, setItemPrice] = useState(0); // New state to store price per item
   const [itemList, setItemList] = useState([]);
+  const [isMarketPlace, setIsMarketPlace] = useState();
+  const [file, setFile]= useState("");
+
+
 
   const toggleModal = () => {
     setModal(!modal);
@@ -128,6 +133,37 @@ export default function Purchases() {
     }
   };
   console.log("selectedItems", selectedItems);
+
+  const handleSubmit = async() =>{
+    console.log(selectedItems);
+  //   console.log(file, isMarketPlace)
+  //   {
+  //     const data={
+  //       item_name: selectedItems[0].item_name,
+  //       item_for:selectedItems[0].item_for,
+  //       quantity:selectedItems[0].quantity,
+  //       price_per:selectedItems[0].price,
+  //       total_price: totalPrice,
+  //       purchased_from: buyerName,
+  //       purchase_date: selectedItems[0].created_at,
+
+  //     }  
+      
+  //     await fetch(`${WebApi}/add_stock`, {
+  //       method: "POST",
+  //       body: JSON.stringify(data),
+  //       headers: {
+  //         "Content-type" : "Application/json"
+  //       }
+  //     })
+  //     .then((response)=> response.json())
+  //     .then((data)=>{console.log(data)
+  //     toast.success("Stock Added Successfuly")}
+  //     )
+  //     .catch((e)=>{console.log(e),
+  //     toast.error("Faild to add stocks")})
+  // }
+}
   return (
     <Fragment>
       <Breadcrumbs
@@ -192,20 +228,21 @@ export default function Purchases() {
                   Available Items:
                 </Label>
                 <Input
-                  className="form-control form-control-secondary-fill btn-square"
-                  name="select"
-                  type="select"
-                  onChange={(e) => handleInputChange(e, "dropdown")}
-                  value={selectedItemId !== null ? selectedItemId : ""}
-                >
-                  <option value="">Select an item</option>
-                  {itemList &&
-                    itemList.map((item) => (
-                      <option key={item.id} value={item.item_name}>
-                        {item.item_name}
-                      </option>
-                    ))}
-                </Input>
+  className="form-control form-control-secondary-fill btn-square"
+  name="select"
+  type="select"
+  onChange={(e) => handleInputChange(e, "dropdown")}
+>
+  <option value="">Select an item</option>
+  {itemList &&
+    itemList.map((item) => (
+      <option key={item.id} value={item.id} selected={selectedItemId === item.id}>
+        {item.item_name}
+      </option>
+    ))}
+</Input>
+
+              
               </div>
               {selectedItemId !== null ? (
                 <div className="mr-3" style={{ width: "100px" }}>
@@ -274,6 +311,18 @@ export default function Purchases() {
           </div>
 
           <div>
+          <Label className="col-form-label font-weight-bold mb-2">
+              Available for market place
+          </Label>
+          <Input type="select" className="form-control form-control-secondary-fill btn-square"
+          onChange={(e)=>{setIsMarketPlace(e.target.value)}}>
+          <option value="">Select</option>
+          <option value={1}>Yes</option>
+          <option value={0}>No</option>
+          </Input>
+          </div>
+
+          <div>
             <Label className="font-weight-bold mt-3" htmlFor="buyerName">
               Purchased From:
             </Label>
@@ -291,7 +340,7 @@ export default function Purchases() {
                 <Label for="exampleFile" className="mt-3">
                   Upload Bill
                 </Label>
-                <Input id="exampleFile" name="file" type="file" />
+                <Input id="exampleFile" name="file" type="file" onChange={(e)=>setFile(e.target.files[0])}/>
               </FormGroup>
             </div>
             <p className="font-weight-bold total-price">
@@ -300,7 +349,7 @@ export default function Purchases() {
           </div>
 
           <div>
-            <Button color="primary" className="mt-2">
+            <Button color="primary" className="mt-2" onClick={handleSubmit} >
               Submit
             </Button>
           </div>
