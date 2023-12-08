@@ -108,7 +108,7 @@ const UserHeader = () => {
 
         <LI attrLI={{ onClick: Logout }}>
           <LogIn />
-          <span>{LogOut}</span>
+          <span>GO TO MAIN DAHSBOARD</span>
         </LI>
       </UL>
     </li>
