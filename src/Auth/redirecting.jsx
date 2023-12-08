@@ -47,7 +47,7 @@ const RedirectionPage = () => {
       } catch (error) {
         console.error("Error checking user in database:", error);
         // Handle error, for example, redirect to an error page
-        alert("Error checking user in database");
+        alert("user not found in database");
         window.location.href = "http://13.58.144.48/admin/dashboard";
       } finally {
         // Set loading to false once the check is complete
