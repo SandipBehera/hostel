@@ -56,7 +56,7 @@ const UserHeader = () => {
       localStorage.setItem("authenticated", false);
       localStorage.setItem("login", false);
       localStorage.removeItem("roles");
-      history(`/login`);
+      window.location.href = "http://13.58.144.48/admin/dashboard";
     }
   };
 
