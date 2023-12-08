@@ -117,12 +117,11 @@ export default function AllPurchases() {
           <ModalBody>
           <div className='d-flex justify-content-between' >
           <div>
-          <p> Purchase From: {data[0]?.purchasedBy}</p> <p>Dated: {`${new Date(data[0]?.date )}`.slice(4,15)}</p>
+          <p> Purchased From: {data[0]?.purchasedBy}</p> <p>Dated: {`${new Date(data[0]?.date )}`.slice(4,15)}</p>
 
           </div>
             <Link to="#" target='_blank' className='btn btn-primary' style={{height: "2.5em"}}>View Bill</Link>
-          </div>
-            
+          </div> 
             <Table>
               <thead>
                 <tr>
