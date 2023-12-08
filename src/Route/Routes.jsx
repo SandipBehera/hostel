@@ -255,6 +255,9 @@ export const routes = [
     Component: <ComplaintStatus />,
   },
 
+  //My Profile routes
+  { path: `/my-profile`, Component: <MyProfile /> },
+
   //Health Management routes
   { path: `/new-patient`, Component: <NewPatient /> },
   { path: `/all-patient`, Component: <AllPatient /> },
@@ -479,6 +482,9 @@ export const Wardenroutes = [
 
   { path: `/food-book`, Component: <FoodBookEntry /> },
   { path: `/today-Booking`, Component: <FoodBook /> },
+
+  //My Profile routes
+  { path: `/my-profile`, Component: <MyProfile /> },
 
   //Health Management routes
   { path: `/new-patient`, Component: <NewPatient /> },
