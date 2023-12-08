@@ -29,7 +29,7 @@ const SidebarMenuItems = ({
     console.log(userRoles);
     if (userType === "admin") {
       setMenuitem(EmployeeMenu);
-    } else if (userRoles === "warden" && userType === "employee") {
+    } else if (userType === "employee") {
       setMenuitem(WardenMenu);
     } else {
       setMenuitem(StudentMenu);

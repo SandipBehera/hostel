@@ -22,8 +22,12 @@ const Dashboard = () => {
         <Row className="widget-grid">
           <GreetingCard name={localStorage.getItem("Name")} />
           <WidgetsWrapper />
-          <OverallBalance />
-          <RecentOrders />
+
+          {/* <*/}
+          <OverallBalance
+            title={"Mess Bookings"}
+            student_type={["Hostler", "DayScholars"]}
+          />
           <ActivityCard
             ActivityData={ActivityData}
             columnHeadder={"activity"}

@@ -621,7 +621,6 @@
         .profile-dropdown {
           width: 160px;
           top: 57px;
-          left: -12px;
           padding: 0 10px;
 
           li {
@@ -2273,7 +2272,8 @@
                       left: 20px;
                       top: 48%;
                       width: 8px;
-                      border-top: 2px solid rgba($theme-body-sub-title-color, 0.4);
+                      border-top: 2px solid
+                        rgba($theme-body-sub-title-color, 0.4);
                     }
                   }
                 }

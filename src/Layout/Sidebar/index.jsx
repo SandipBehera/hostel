@@ -38,7 +38,7 @@ const Sidebar = (props) => {
     const userRoles = localStorage.getItem("roles");
     if (userType === "admin") {
       setMainMenu(EmployeeMenu);
-    } else if (userRoles === "warden" && userType === "employee") {
+    } else if (userType === "employee") {
       setMainMenu(WardenMenu);
     } else {
       setMainMenu(StudentMenu);

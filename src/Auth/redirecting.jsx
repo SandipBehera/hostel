@@ -12,7 +12,7 @@ const RedirectionPage = () => {
     const checkUserInDatabase = async () => {
       try {
         // Replace the following with your actual API call to check user existence
-        const response = await fetch(`${WebApi}/users/${userId}`, {
+        const response = await fetch(`${LocalApi}/users/${userId}`, {
           method: "GET",
         });
         const data = await response.json();
@@ -25,18 +25,15 @@ const RedirectionPage = () => {
           localStorage.setItem("Name", data.data.name);
           localStorage.setItem("userType", data.data.user_type);
           if (data.data.user_type === "admin" && data.data.user_id !== null) {
-            localStorage.setItem("roles", "no data");
             const dashboardLink = `/${data.data.user_type}/${data.data.user_id}/dashboard`;
             window.location.href = dashboardLink;
           } else if (data.data.user_type === "employee") {
-            localStorage.setItem("roles", data.data.roles.data.role);
             const dashboardLink = `/${data.data.user_type}/${data.data.user_id}/dashboard`;
             window.location.href = dashboardLink;
           } else if (
             data.data.user_type === "student" &&
             data.data.user_id !== null
           ) {
-            localStorage.setItem("roles", "no data");
             const dashboardLink = `/${data.data.user_type}/${data.data.user_id}/dashboard`;
             window.location.href = dashboardLink;
           } else {

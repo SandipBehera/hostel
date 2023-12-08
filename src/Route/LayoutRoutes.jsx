@@ -25,7 +25,7 @@ const LayoutRoutes = () => {
                 </Route>
               </Fragment>
             ))
-          : userRoles === "warden" && userType === "employee"
+          : userType === "employee"
           ? Wardenroutes.map(({ path, Component }, i) => (
               <Fragment key={i}>
                 <Route element={<AppLayout />} key={i}>
