@@ -99,7 +99,7 @@ const AllStudents = () => {
     socket.on("newUserOnBoard", getData());
     // Cleanup the socket listener when the component unmounts
     return () => {
-      socket.off("newUserOnBoard", handleNewUser);
+      socket.off("newUserOnBoard", getData());
     };
   }, []);
 
