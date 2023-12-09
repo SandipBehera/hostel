@@ -1,17 +1,56 @@
-import React, { Fragment, useState } from 'react';
-import { Card, Col, Row, Button, Form, FormGroup, Label, Input } from 'reactstrap';
-import { Breadcrumbs } from '../../AbstractElements';
-import { WebApi } from '../../api';
+import React, { Fragment, useEffect, useState } from "react";
+import {
+  Card,
+  Col,
+  Row,
+  Button,
+  Form,
+  FormGroup,
+  Label,
+  Input,
+} from "reactstrap";
+import { Breadcrumbs } from "../../AbstractElements";
+import { LocalApi, WebApi } from "../../api";
+import StudentComplaint from "./component/complaint";
+import StudentLeave from "./component/leave";
+import OutingComponent from "./component/outing";
+import { toast } from "react-toastify";
 
 const Complaints = () => {
+  const studentId = localStorage.getItem("userId");
+  const userType = localStorage.getItem("userType");
+  const [hostel, setHostel] = React.useState("");
+  const [room, setRoom] = React.useState("");
+  const [complaint, setComplaint] = React.useState("");
+  const [leaveReason, setLeaveReason] = React.useState("");
+  const [leaveFrom, setLeaveFrom] = React.useState("");
+  const [leaveTo, setLeaveTo] = React.useState("");
+  console.log(complaint);
+  useEffect(() => {
+    const student_info = async () => {
+      const response = await fetch(`${WebApi}/profile_info`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ user_id: studentId, userType: userType }),
+      });
+      const res = await response.json();
+      if (res.status === "success") {
+        setHostel(res.data.hostel);
+        setRoom(res.data.room);
+      }
+    };
+    student_info();
+  }, []);
+
   const [formData, setFormData] = useState({
-    issueType: '',
-    issuedBy: '',
-    hostelId: '',
-    roomNo: '',
-    assignedTo: '',
-    status: '',
-    details: ''
+    issueType: "",
+    issuedBy: studentId,
+    hostelId: hostel,
+    roomNo: room,
+    assignedTo: "",
+    status: "New",
   });
   const branchId = localStorage.getItem("branchId");
 
@@ -19,53 +58,77 @@ const Complaints = () => {
     const { name, value } = e.target;
     setFormData({
       ...formData,
-      [name]: value
+      [name]: value,
     });
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    if (formData.issueType === "Complaint") {
+      formData.details = JSON.stringify(complaint);
+    } else if (
+      formData.issueType === "Night Out Request" ||
+      formData.issueType === "Leave Request"
+    ) {
+      const leaveData = {
+        leave_from: leaveFrom,
+        leave_to: leaveTo,
+        reason: leaveReason,
+      };
+      formData.details = leaveData;
+      formData.details = JSON.stringify(formData.details);
+    } else {
+      const outingData = {
+        leave_from: leaveFrom,
+        leave_to: leaveTo,
+        reason: leaveReason,
+      };
+      formData.details = outingData;
+      formData.details = JSON.stringify(formData.details);
+    }
     const fdata = {
       issue_type: formData.issueType,
-      issue_by : formData.issuedBy,
-      room_no : formData.roomNo,
-      assigned_to : formData.assignedTo,
-      status : formData.status,
-      details : formData.details,
-      branch_id : branchId
-    }
+      issued_by: studentId,
+      hostel_id: hostel,
+      floor_no: room,
+      assigned_to: formData.assignedTo,
+      status: formData.status,
+      details: formData.details,
+      branch_id: branchId,
+    };
+    console.log(fdata);
     try {
-      const response = await fetch(`${WebApi}/create_complaint`, {
-        method: 'POST',
+      const response = await fetch(`${LocalApi}/create_complaint`, {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json'
+          "Content-Type": "application/json",
         },
-        body: JSON.stringify(fdata)
+        body: JSON.stringify(fdata),
       });
 
-      
+      const res = await response.json();
 
-      if (!response.ok) {
-        throw new Error('Network response was not ok.');
+      if (res.status === "error") {
+        toast.error(res.message);
+      } else {
+        // const data = await response.json();
+        console.log("Response from API:", fdata);
+        toast.success(res.message);
+        // Reset form a fter successful submission if needed
+        setFormData({
+          issueType: "",
+          issuedBy: "",
+          hostelId: "",
+          roomNo: "",
+          assignedTo: "",
+          status: "",
+          details: "",
+        });
       }
-
-      // const data = await response.json();
-      console.log('Response from API:', fdata);
-
-      // Reset form after successful submission if needed
-      setFormData({
-        issueType: '',
-        issuedBy: '',
-        hostelId: '',
-        roomNo: '',
-        assignedTo: '',
-        status: '',
-        details: ''
-      });
-
       // You can add further logic after a successful submission
     } catch (error) {
-      console.error('Error submitting data:', error);
+      console.error("Error submitting data:", error);
       // Handle errors here
     }
   };
@@ -77,93 +140,59 @@ const Complaints = () => {
         mainTitle="My Complaints"
         title="My Complaints"
       />
-      <Card className='p-5'>
+      <Card className="p-5">
         <Form onSubmit={handleSubmit}>
           <Row form>
-            <Col md={6}>
+            <Col md={12}>
               <FormGroup row>
-                <Label for="issueType" >Issue Type :</Label>
-                <Col sm={10}>
-                  <Input
+                <Label for="issueType">Request Type :</Label>
+                <Col sm={12}>
+                  {/* <Input
                     type="text"
                     name="issueType"
                     id="issueType"
                     placeholder="Enter Issue Type"
                     value={formData.issueType}
                     onChange={handleChange}
-                  />
-                </Col>
-              </FormGroup>
-              <FormGroup row>
-                <Label for="status" >Status :</Label>
-                <Col sm={10}>
+                  /> */}
                   <Input
-                    type="text"
-                    name="status"
-                    id="status"
-                    placeholder="Enter Status"
-                    value={formData.status}
+                    type="select"
+                    name="issueType"
+                    id="issueType"
+                    value={formData.issueType}
                     onChange={handleChange}
-                  />
+                  >
+                    <option>Select Request Type</option>
+                    <option>Night Out Request</option>
+                    <option>Outing Request</option>
+                    <option>Leave Request</option>
+                    <option>Complaint</option>
+                  </Input>
                 </Col>
               </FormGroup>
-              <FormGroup row>
-                <Label for="assignedTo" >Assigned To :</Label>
-                <Col sm={10}>
-                  <Input
-                    type="text"
-                    name="assignedTo"
-                    id="assignedTo"
-                    placeholder="Enter Assigned To"
-                    value={formData.assignedTo}
-                    onChange={handleChange}
-                  />
-                </Col>
-              </FormGroup>
-            </Col>
-            <Col md={6}>
-              <FormGroup row>
-                <Label for="issuedBy" >Issued By :</Label>
-                <Col sm={10}>
-                  <Input
-                    type="text"
-                    name="issuedBy"
-                    id="issuedBy"
-                    placeholder="Enter Issued By"
-                    value={formData.issuedBy}
-                    onChange={handleChange}
-                  />
-                </Col>
-              </FormGroup>
-              <FormGroup row>
-                <Label for="roomNo" >Room No. :</Label>
-                <Col sm={10}>
-                  <Input
-                    type="text"
-                    name="roomNo"
-                    id="roomNo"
-                    placeholder="Enter Room No."
-                    value={formData.roomNo}
-                    onChange={handleChange}
-                  />
-                </Col>
-              </FormGroup>
-             
+
+              {formData.issueType === "Complaint" && (
+                <StudentComplaint setComplaint={(e) => setComplaint(e)} />
+              )}
+              {(formData.issueType === "Night Out Request" ||
+                formData.issueType === "Leave Request") && (
+                <StudentLeave
+                  title={formData.issueType}
+                  setLeave={(e) => setLeaveReason(e.target.value)}
+                  setLeaveFrom={(e) => setLeaveFrom(e.target.value)}
+                  setLeaveTo={(e) => setLeaveTo(e.target.value)}
+                />
+              )}
+              {formData.issueType === "Outing Request" && (
+                <OutingComponent
+                  title={formData.issueType}
+                  setLeave={(e) => setLeaveReason(e.target.value)}
+                  setLeaveFrom={(e) => setLeaveFrom(e.target.value)}
+                  setLeaveTo={(e) => setLeaveTo(e.target.value)}
+                />
+              )}
             </Col>
           </Row>
-          <FormGroup row>
-            <Label for="details" >Details :</Label>
-            <Col sm={11}>
-              <Input
-                type="textarea"
-                name="details"
-                id="details"
-                placeholder="Enter Details"
-                value={formData.details}
-                onChange={handleChange}
-              />
-            </Col>
-          </FormGroup>
           <FormGroup row>
             <Col sm={{ size: 6, offset: 2 }}>
               <Button type="submit">Submit</Button>
