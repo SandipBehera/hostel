@@ -1,38 +1,112 @@
-import React, { Fragment, useState } from "react";
+import React, { Fragment, useEffect, useState } from "react";
 import {
   Button,
   Card,
   CardBody,
   CardFooter,
+  CardHeader,
   CardText,
   CardTitle,
   Col,
   Container,
+  Form,
   FormGroup,
   Input,
   Label,
   Row,
 } from "reactstrap";
 
-import CKEditors from "react-ckeditor-component";
-import { Breadcrumbs, H5 } from "../../AbstractElements";
+import { Breadcrumbs, H5, H6, LI, P, UL } from "../../AbstractElements";
+import { useNavigate, useParams } from "react-router";
+import { LocalApi, WebApi } from "../../api";
+import SimpleMDE from "react-simplemde-editor";
+import { toast } from "react-toastify";
+import ActivityCard from "../Dashboard/ActivityCard";
+import ComplaintActivity from "../../Components/complaints/complaintActivity";
+
 export default function ComplaintStatus() {
-  const [content, setContent] = useState("content");
-  const onChange = (evt) => {
-    const newContent = evt.editor.getData();
-    setContent(newContent);
+  const { id } = useParams();
+  const date = new Date();
+  const formattedDate = date.toLocaleString("en-US", {
+    weekday: "short",
+    month: "short",
+    day: "2-digit",
+    year: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+    second: "2-digit",
+    timeZoneName: "short",
+  });
+  const [content, setContent] = useState("");
+  const [data, setData] = useState([]);
+  const [empData, setEmpData] = useState([]);
+  const branch_id = parseInt(localStorage.getItem("branchId"));
+  const [assignedEmployee, setAssignedEmployee] = useState("");
+  const [newStatus, setNewStatus] = useState("");
+  const navigate = useNavigate();
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await fetch(`${WebApi}/get_complaints_by_id/${id}`, {
+          method: "GET",
+        });
+        const respData = await response.json();
+        setData(respData.data);
+        setAssignedEmployee(respData.data[0].assignedEmployee);
+        console.log(respData.data);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+        // Handle the error, for example, set an error state
+      }
+    };
+    const fetchEmployee = async () => {
+      try {
+        const response = await fetch(`${WebApi}/getEmployee`, {
+          method: "GET",
+        });
+        const respData = await response.json();
+        setEmpData(respData.data.filter((emp) => emp.branch_id === branch_id));
+        console.log(respData.data);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+        // Handle the error, for example, set an error state
+      }
+    };
+    fetchData();
+    fetchEmployee();
+  }, []);
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    const prevContent = data[0].details;
+    const newContent = [
+      ...prevContent,
+      { status: newStatus, content: content, date: formattedDate },
+    ];
+    console.log(newContent);
+    const updatedata = {
+      complaint_id: id,
+      status: newStatus,
+      content: newContent,
+      assignedEmployee: assignedEmployee,
+    };
+    console.log(updatedata);
+    updatedata.content = JSON.stringify(updatedata.content);
+    const response = await fetch(`${WebApi}/update_complaint`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(updatedata),
+    });
+    const respData = await response.json();
+    if (respData.status === "success") {
+      toast.success(respData.message);
+      setContent("");
+      setAssignedEmployee("");
+      setNewStatus("");
+      navigate(-1);
+    } else {
+      toast.error(respData.message);
+    }
   };
-  const [data, setData] = useState([
-    {
-      id: 4,
-      text: "Rahul",
-      room: 104,
-      hostel: "Hostel-4",
-      assignedEmployee: "Abhishek Gupta",
-      complaintDetails:
-        "There have been instances where the quality of ingredients used in the preparation of meals has been questionable. Freshness and hygiene are crucial aspects of a healthy diet, and I believe ensuring the procurement of high-quality ingredients is essential.",
-    },
-  ]);
   return (
     <Fragment>
       <Breadcrumbs
@@ -50,26 +124,75 @@ export default function ComplaintStatus() {
               {data.map((complaint) => (
                 <>
                   <div key={complaint.id} className="">
-                    <p>Name: {complaint.text}</p>
-                    <p>Room: {complaint.room}</p>
-                    <p>Hostel: {complaint.hostel}</p>
-                    <p>Assigned Employee: {complaint.assignedEmployee}</p>
-                    <h6>Complaint Description</h6>
-                    <p>{complaint.complaintDetails}</p>
+                    <p>
+                      Name: <b>{complaint.name}</b>
+                    </p>
+                    {complaint.floor_no != null ||
+                      (complaint.floor_no != "" && (
+                        <p>Room: {complaint.floor_no}</p>
+                      ))}
+                    {complaint.hostel_name != null && (
+                      <p>Hostel: {complaint.hostel_name}</p>
+                    )}
+                    {complaint.assignedEmployee !== null ? (
+                      <p>Assigned Employee: {complaint.emp_name}</p>
+                    ) : (
+                      <Col sm="12" md="6">
+                        <FormGroup>
+                          <Label for="exampleSelect">Select Employee</Label>
+                          <Input
+                            type="select"
+                            name="assignedEmployee"
+                            id="exampleSelect"
+                            onChange={(e) =>
+                              setAssignedEmployee(e.target.value)
+                            }
+                          >
+                            <option>Select Employee</option>
+                            {empData?.map((emp) => (
+                              <option value={emp.emp_id}>{emp.emp_name}</option>
+                            ))}
+                          </Input>
+                        </FormGroup>
+                      </Col>
+                    )}
+                    <ComplaintActivity complaint={complaint} />
 
                     <div>
                       <Container fluid={true}>
                         <Row>
                           <Col sm="12">
                             <Card>
-                              <H5>Status</H5>
+                              <H5>Update Status</H5>
 
                               <CardBody>
-                                <CKEditors
-                                  activeclassName="p10"
-                                  content={content}
-                                  events={{
-                                    change: onChange,
+                                <FormGroup>
+                                  <Label for="exampleSelect">
+                                    Select Status
+                                  </Label>
+                                  <Input
+                                    type="select"
+                                    name="update_status"
+                                    id="exampleSelect"
+                                    onChange={(e) =>
+                                      setNewStatus(e.target.value)
+                                    }
+                                  >
+                                    <option>New</option>
+                                    <option>Inprocess</option>
+                                    <option>Resolved</option>
+                                    <option>Rejected</option>
+                                    <option>Cancelled</option>
+                                    <option>Completed</option>
+                                  </Input>
+                                </FormGroup>
+                                <SimpleMDE
+                                  id="editor_container"
+                                  onChange={(e) => setContent(e)}
+                                  value={content}
+                                  options={{
+                                    autofocus: true,
+                                    spellChecker: false,
                                   }}
                                 />
                               </CardBody>
@@ -87,7 +210,7 @@ export default function ComplaintStatus() {
             <CardText></CardText>
           </CardBody>
           <CardFooter className="complaint-status-footer">
-            <Button>Submit</Button>
+            <Button onClick={handleSubmit}>Submit</Button>
           </CardFooter>
         </Card>
       </div>

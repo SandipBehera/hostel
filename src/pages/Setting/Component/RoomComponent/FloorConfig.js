@@ -19,7 +19,9 @@ const FloorConfig = ({ setSteps, setFormdata, formdata }) => {
       const response = await fetch(`${WebApi}/get_config_by_type/${type}`);
       const respData = await response.json();
       console.log(respData.data);
-      return respData.data;
+      return respData.data.filter(
+        (item) => item.branch_id === parseInt(branchId)
+      );
     } catch (error) {
       console.error("Error fetching room config:", error);
       throw error; // Re-throw the error to handle it outside this function if needed
@@ -29,7 +31,7 @@ const FloorConfig = ({ setSteps, setFormdata, formdata }) => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const amenities = await fetchRoomConfig("amenities");
+        const amenities = await fetchRoomConfig("ammenities");
         const roomType = await fetchRoomConfig("room_type");
         setAmmenities(amenities[0].config_type_name.data);
         setRoomType(roomType[0].config_type_name.data);
@@ -60,7 +62,7 @@ const FloorConfig = ({ setSteps, setFormdata, formdata }) => {
             amenities: getValues(amenitiesControl) || [],
             room_type: getValues(roomTypeControl) || "",
           },
-          branch_id: branchId
+          branch_id: branchId,
         };
 
         rooms.push(roomData);
@@ -74,6 +76,7 @@ const FloorConfig = ({ setSteps, setFormdata, formdata }) => {
       floor_count: parseInt(formdata.floor_count) || 0,
       room_count: parseInt(formdata.room_count) || 0,
       rooms: formdata.rooms,
+      branch_id: branchId,
     };
 
     sendData.rooms = JSON.stringify(sendData.rooms);

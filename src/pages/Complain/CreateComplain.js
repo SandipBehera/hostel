@@ -13,12 +13,10 @@ import {
   Toast,
 } from "reactstrap";
 import "./Complaints.css";
-import CKEditors from "react-ckeditor-component";
 import { LocalApi, WebApi, WebSocketAPI } from "../../api";
 import socketIOClient from "socket.io-client";
 import { toast } from "react-toastify";
 import SimpleMDE from "react-simplemde-editor";
-import { set } from "date-fns";
 
 export default function CreateComplain() {
   const [content, setContent] = useState("");

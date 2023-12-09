@@ -829,17 +829,17 @@ export const StudentMenu = [
           { path: `/all-patient`, title: "All Patient", type: "link" },
         ],
       },
-      {
-        path: `/outing-management`,
-        icon: "widget",
-        title: "Outing Management",
-        type: "sub",
-        active: false,
-        children: [
-          { path: `/create-request`, title: "New Request", type: "link" },
-          { path: `/my-outings`, title: "My Outings", type: "link" },
-        ],
-      },
+      // {
+      //   path: `/outing-management`,
+      //   icon: "widget",
+      //   title: "Outing Management",
+      //   type: "sub",
+      //   active: false,
+      //   children: [
+      //     { path: `/create-request`, title: "New Request", type: "link" },
+      //     { path: `/my-outings`, title: "My Outings", type: "link" },
+      //   ],
+      // },
       {
         path: `/student-foodbook`,
         icon: "widget",

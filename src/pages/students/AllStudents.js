@@ -59,7 +59,7 @@ const roomNumberOptions = [
 
 const AllStudents = () => {
   const [tableData, setTableData] = useState([]);
-  const socket = socketIOClient(LocalSocketAPI);
+  const socket = socketIOClient(WebSocketAPI);
 
   // const { data } = useContext(tableData);
   const [searchTerm, setSearchTerm] = useState("");
