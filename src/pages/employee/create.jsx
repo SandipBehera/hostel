@@ -74,7 +74,7 @@ export default function CreateEmployee() {
     data.append("userType", userType);
     data.append("branch_id", branch_id);
 
-    await fetch(`${LocalApi}/addEmployee`, {
+    await fetch(`${WebApi}/addEmployee`, {
       method: "POST",
       body: data,
     })
