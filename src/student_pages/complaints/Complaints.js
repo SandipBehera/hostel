@@ -99,7 +99,7 @@ const Complaints = () => {
     };
     console.log(fdata);
     try {
-      const response = await fetch(`${LocalApi}/create_complaint`, {
+      const response = await fetch(`${WebApi}/create_complaint`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
