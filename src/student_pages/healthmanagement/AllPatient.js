@@ -41,13 +41,14 @@ const AllPatient = () => {
   const [modal, setModal] = useState(false);
   const [selectedData, setSelectedData] = useState([]);
   const [data, setData] = useState([]);
-
+  const branchId = localStorage.getItem("branchId");
   useEffect(() => {
     // Fetch data from API
     const fetchData = async () => {
       const response = await fetch(`${WebApi}/getAllPatient`);
       const respData = await response.json();
-      setData(respData.data);
+      setData(respData.data
+        .filter(key=>key.branch_id===parseInt(branchId)));
     };
     fetchData();
   }, []);

@@ -13,6 +13,7 @@ const Complaints = () => {
     status: '',
     details: ''
   });
+  const branchId = localStorage.getItem("branchId");
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -31,6 +32,7 @@ const Complaints = () => {
       assigned_to : formData.assignedTo,
       status : formData.status,
       details : formData.details,
+      branch_id : branchId
     }
     try {
       const response = await fetch(`${WebApi}/create_complaint`, {

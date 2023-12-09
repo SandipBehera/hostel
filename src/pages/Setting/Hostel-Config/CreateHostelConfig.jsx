@@ -11,7 +11,7 @@ import {
   CardHeader,
 } from "reactstrap";
 import { H5, H6 } from "../../../AbstractElements";
-import { LocalApi } from "../../../api";
+import { LocalApi, WebApi } from "../../../api";
 import { toast } from "react-toastify";
 
 const CreateHostelConfig = (props) => {
@@ -42,9 +42,10 @@ const CreateHostelConfig = (props) => {
     const data = {
       config_type: props.config_type,
       config_type_name: inputFields,
+      branch_id: localStorage.getItem("branchId"),
     };
     data.config_type_name = JSON.stringify({ data: data.config_type_name });
-    const response = await fetch(`${LocalApi}/addConfig`, {
+    const response = await fetch(`${WebApi}/addConfig`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(data),

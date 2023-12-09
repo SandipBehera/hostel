@@ -31,8 +31,8 @@ export default function Purchases() {
   const [itemList, setItemList] = useState([]);
   const [isMarketPlace, setIsMarketPlace] = useState();
   const [file, setFile]= useState("");
-
-
+  
+  const branchId = localStorage.getItem("branchId")
 
   const toggleModal = () => {
     setModal(!modal);
@@ -119,6 +119,8 @@ export default function Purchases() {
       body: JSON.stringify({
         item_name: newItem,
         item_for: itemFor,
+        branch_id: branchId,
+
       }),
     });
 
@@ -146,6 +148,7 @@ export default function Purchases() {
   //       total_price: totalPrice,
   //       purchased_from: buyerName,
   //       purchase_date: selectedItems[0].created_at,
+            // branch_id : branchId
 
   //     }  
       

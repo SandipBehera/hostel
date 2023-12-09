@@ -296,6 +296,7 @@ export default function CreateEmployee() {
                     <Input
                       className="form-control"
                       type="file"
+                      accept="image/jpg, image/png"
                       onChange={(e) =>
                         setFormData((prevData) => ({
                           ...prevData,

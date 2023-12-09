@@ -139,6 +139,7 @@ const NewPatient = () => {
         reason: "",
         doctor: "",
         file: null,
+        branch_id: localStorage.getItem("branchId")
       });
 
       setSelectedHostel(null);

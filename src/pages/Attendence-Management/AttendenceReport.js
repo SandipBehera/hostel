@@ -46,6 +46,8 @@ const AttendenceReport = ({ attendanceData }) => {
   const [pillTab, setPillTab] = useState('1');
   const [hostelId, setHostelId] = useState("");
 
+  const branchId = localStorage.getItem("branchId");
+
   const handleExport = () => {
     const csv = Papa.unparse(data);
     const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
@@ -67,10 +69,12 @@ const AttendenceReport = ({ attendanceData }) => {
         method: "GET",
       });
       const resproom = await response.json();
-      setHostelData(resproom.data);
+      setHostelData(resproom.data)
+      console.log(resproom.data)
     };
     roomHostel();
   }, []);
+
 
   const hostel_name = hostelData?.map((key) => {
     return { value: key.id, label: key.hostel_name };
@@ -83,7 +87,9 @@ const AttendenceReport = ({ attendanceData }) => {
       body: JSON.stringify({ hostel_id: hostelId }),
     });
     const resproom = await response.json();
-    setData(resproom.data);
+    setData(resproom.data
+      .filter(key=>key.banch_id === parseInt(branchId)));
+    console.log(resproom.data)
   };
 
   const handleActionSelect = async (action, comment) => {
