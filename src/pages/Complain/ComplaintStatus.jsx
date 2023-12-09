@@ -127,11 +127,11 @@ export default function ComplaintStatus() {
                     <p>
                       Name: <b>{complaint.name}</b>
                     </p>
-                    {complaint.floor_no != null ||
+                    {complaint.floor_no !== null ||
                       (complaint.floor_no != "" && (
                         <p>Room: {complaint.floor_no}</p>
                       ))}
-                    {complaint.hostel_name != null && (
+                    {complaint.hostel_name !== null && (
                       <p>Hostel: {complaint.hostel_name}</p>
                     )}
                     {complaint.assignedEmployee !== null ? (
