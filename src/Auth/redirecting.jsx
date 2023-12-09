@@ -38,16 +38,17 @@ const RedirectionPage = () => {
             const dashboardLink = `/${data.data.user_type}/${data.data.user_id}/dashboard`;
             window.location.href = dashboardLink;
           } else {
-            navigation("/login");
+            window.location.href = "http://13.58.144.48/admin/dashboard";
           }
         } else {
           // User does not exist, redirect to the login page
-          navigation("/login");
+          window.location.href = "http://13.58.144.48/admin/dashboard";
         }
       } catch (error) {
         console.error("Error checking user in database:", error);
         // Handle error, for example, redirect to an error page
-        navigation("/error");
+        alert("user not found in database");
+        window.location.href = "http://13.58.144.48/admin/dashboard";
       } finally {
         // Set loading to false once the check is complete
         setLoading(false);
