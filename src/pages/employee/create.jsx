@@ -71,7 +71,7 @@ export default function CreateEmployee() {
     data.append("ifsc", formData.ifsc);
     data.append("doj", formData.doj);
     data.append("file", formData.file);
-    data.append("userType", userType);
+    data.append("userType", "employee");
     data.append("branch_id", branch_id);
 
     await fetch(`${WebApi}/addEmployee`, {
