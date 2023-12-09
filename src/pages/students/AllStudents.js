@@ -47,7 +47,7 @@ import { BasicColorData } from "../../Components/Common/Data/Ui-kits/index";
 import CommonDropDown from "../../Components/UiKits/Dropdown/Common/CommonDropDown";
 import { useNavigate } from "react-router-dom";
 import PopUpButton from "./PopUpButton";
-import { LocalApi, LocalSocketAPI, WebApi } from "../../api";
+import { LocalApi, LocalSocketAPI, WebApi, WebSocketAPI } from "../../api";
 import socketIOClient from "socket.io-client";
 
 const roomNumberOptions = [
@@ -84,23 +84,19 @@ const AllStudents = () => {
     setSelectedRowId(rowId);
   };
   const branchId = localStorage.getItem("branchId");
-
+  const getData = async () => {
+    const response = await fetch(`${WebApi}/get_all_users`, {
+      method: "GET",
+    });
+    const respdata = await response.json();
+    const data = respdata.data.filter(
+      (item) => item.campus_branch === parseInt(branchId)
+    );
+    setTableData(data);
+  };
   useEffect(() => {
-    const getData = async () => {
-      const response = await fetch(`${WebApi}/get_all_users`, {
-        method: "GET",
-      });
-      const respdata = await response.json();
-      const data = respdata.data.filter(
-        (item) => item.campus_branch === parseInt(branchId)
-      );
-      setTableData(data);
-    };
-    const handleNewUser = (newUsers) => {
-      setTableData((prevUsers) => [...prevUsers, newUsers]);
-    };
     getData();
-    socket.on("newUserOnBoard", handleNewUser);
+    socket.on("newUserOnBoard", getData());
     // Cleanup the socket listener when the component unmounts
     return () => {
       socket.off("newUserOnBoard", handleNewUser);
