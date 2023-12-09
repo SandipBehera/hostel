@@ -15,6 +15,18 @@ const MyProfile = () => {
   const [previousRoomNo, setPreviousRoomNo] = useState('');
   const [profileImage, setProfileImage] = useState(null);
   const [profileData, setProfileData] = useState({});
+  const [empId, setEmpId] = useState("");
+  const[contactNo, setContactNo] = useState("");
+  const [dob, setDob] = useState("");
+  const [email, setEmail] = useState("");
+  const [empAddress, setEmpAddress] = useState("");
+  const [aadhar, setAadhar] = useState("");
+  const [bank, setBank] = useState("");
+  const [bankAccount, setBankAccount] = useState('');
+  const [ifsc, setIfsc] = useState("");
+  const [pan, setPan] = useState("");
+  
+
 
   const userId = localStorage.getItem("userId");
   const userType = localStorage.getItem("userType");
@@ -50,15 +62,25 @@ const MyProfile = () => {
           setProfileData(fetchedUserData);
 
           // Set predefined data in state variables
-          setName(fetchedUserData.name || '');
-          setRegistrationNo(fetchedUserData.username || '');
+          setName(fetchedUserData.name || fetchedUserData.emp_name);
+          setRegistrationNo(fetchedUserData.username || fetchedUserData.employee_reg_no);
           setBranch(fetchedUserData.campus_branch || 'Not Assigned');
           setSemester(fetchedUserData.semesterYear || 'Not Assigned');
           setCurrentHostelName(fetchedUserData.hostel_name || '');
           setCurrentRoomNo(fetchedUserData.room_id || '');
-          setPreviousHostelName(fetchedUserData.previousHostelName || 'Not Assigned ');
-          setPreviousRoomNo(fetchedUserData.previousRoomNo || 'Not Assigned');
-          setProfileImage(fetchedUserData.image || '');
+        
+          setProfileImage(fetchedUserData.image || "");
+          setEmpId(fetchedUserData.emp_id || "Not filled");
+          setContactNo(fetchedUserData.emp_phone || "Not filled");
+          setDob(fetchedUserData.emp_dob || "");
+          setEmail(fetchedUserData.emp_email || "Not filled");
+          setEmpAddress(fetchedUserData.address || "Not filled");
+          setAadhar(fetchedUserData.aadhar_no || "Not filled");
+          setBank(fetchedUserData.bank_ac_name || "Not filled");
+          setBankAccount(fetchedUserData.bank_ac_no || "Not filled");
+          setIfsc(fetchedUserData.bank_ifsc || "Not filled");
+          setPan(fetchedUserData.pan_no || "Not filled");
+      
 
 
         } else {
@@ -127,6 +149,7 @@ const MyProfile = () => {
                 type="file"
                 style={{ display: 'none' }}
                 onChange={handleImageChange}
+                accept="image/png, image/jpeg"
               />
             </label>
           </div>
@@ -157,7 +180,10 @@ const MyProfile = () => {
                 </FormGroup>
               </Col>
             </Row>
-            <Row>
+            
+           {(userType ==="student") ?  
+           <div>
+           <Row>
               <Col sm="6">
                 <FormGroup>
                   <Label for="branch">Branch</Label>
@@ -184,34 +210,192 @@ const MyProfile = () => {
               </Col>
             </Row>
             <Row>
-              <Col>
-                <H5 >Current Hostel</H5>
-                <FormGroup>
-                  <Row>
-                    <Col sm="6">
-                      <Label for="currentHostel">Hostel Name</Label>
-                      <Input
-                        type="text"
-                        name="currentHostel"
-                        id="currentHostel"
-                        value={currentHostelName}
-                        onChange={(e) => setCurrentHostelName(e.target.value)}
-                      />
-                    </Col>
-                    <Col sm="6">
-                      <Label for="currentRoom">Room No.</Label>
-                      <Input
-                        type="text"
-                        name="currentRoom"
-                        id="currentRoom"
-                        value={currentRoomNo}
-                        onChange={(e) => setCurrentRoomNo(e.target.value)}
-                      />
-                    </Col>
-                  </Row>
-                </FormGroup>
-              </Col>
-            </Row>
+            <Col>
+              <H5 >Current Hostel</H5>
+              <FormGroup>
+                <Row>
+                  <Col sm="6">
+                    <Label for="currentHostel">Hostel Name</Label>
+                    <Input
+                      type="text"
+                      name="currentHostel"
+                      id="currentHostel"
+                      value={currentHostelName}
+                      onChange={(e) => setCurrentHostelName(e.target.value)}
+                    />
+                  </Col>
+                  <Col sm="6">
+                    <Label for="currentRoom">Room No.</Label>
+                    <Input
+                      type="text"
+                      name="currentRoom"
+                      id="currentRoom"
+                      value={currentRoomNo}
+                      onChange={(e) => setCurrentRoomNo(e.target.value)}
+                    />
+                  </Col>
+                </Row>
+              </FormGroup>
+            </Col>
+          </Row>
+            
+            </div>
+           :
+         (
+          <div>
+          <Row>
+           <Col>
+             <FormGroup>
+               <Row>
+                 <Col sm="6">
+                   <Label for="currentHostel">Employee Id</Label>
+                   <Input
+                     type="text"
+                     name="currentHostel"
+                     id="currentHostel"
+                     value={empId}
+                     onChange={(e) => setEmpId(e.target.value)}
+                   />
+                 </Col>
+                 <Col sm="6">
+                   <Label for="currentRoom">Contact No.</Label>
+                   <Input
+                     type="text"
+                     name="currentRoom"
+                     id="currentRoom"
+                     value={contactNo}
+                     onChange={(e) => setContactNo(e.target.value)}
+                   />
+                 </Col>
+               </Row>
+             </FormGroup>
+           </Col>
+         </Row>
+
+         <Row>
+         <Col>
+           <FormGroup>
+             <Row>
+               <Col sm="6">
+                 <Label for="currentHostel">Employee DOB</Label>
+                 <Input
+                   type="text"
+                   name="currentHostel"
+                   id="currentHostel"
+                   value={`${new Date(dob)}`.slice(4,15)}
+                   onChange={(e) => setDob(e.target.value)}
+                 />
+               </Col>
+               <Col sm="6">
+                 <Label for="currentRoom">Employee Email</Label>
+                 <Input
+                   type="text"
+                   name="currentRoom"
+                   id="currentRoom"
+                   value={email}
+                   onChange={(e) => setEmail(e.target.value)}
+                 />
+               </Col>
+             </Row>
+           </FormGroup>
+         </Col>
+       </Row>
+
+       <Row>
+       <Col>
+         <FormGroup>
+           <Row>
+             <Col sm="6">
+               <Label for="currentHostel">Employee Address</Label>
+               <Input
+                 type="text"
+                 name="currentHostel"
+                 id="currentHostel"
+                 value={empAddress}
+                 onChange={(e) => setEmpAddress(e.target.value)}
+               />
+             </Col>
+             <Col sm="6">
+               <Label for="currentRoom">Aadhar No.</Label>
+               <Input
+                 type="text"
+                 name="currentRoom"
+                 id="currentRoom"
+                 value={aadhar}
+                 onChange={(e) => setAadhar(e.target.value)}
+               />
+             </Col>
+           </Row>
+         </FormGroup>
+       </Col>
+     </Row>
+
+     <Row>
+     <Col>
+     <H5>Bank Account Details</H5>
+       <FormGroup>
+         <Row>
+           <Col sm="6">
+             <Label for="currentHostel">Bank Name</Label>
+             <Input
+               type="text"
+               name="currentHostel"
+               id="currentHostel"
+               value={bank}
+               onChange={(e) => setBank(e.target.value)}
+             />
+           </Col>
+           <Col sm="6">
+             <Label for="currentRoom">A/C No.</Label>
+             <Input
+               type="text"
+               name="currentRoom"
+               id="currentRoom"
+               value={bankAccount}
+               onChange={(e) => setBankAccount(e.target.value)}
+             />
+           </Col>
+         </Row>
+       </FormGroup>
+     </Col>
+   </Row>
+
+
+   <Row>
+     <Col>
+       <FormGroup>
+         <Row>
+           <Col sm="6">
+             <Label for="currentHostel">IFSC</Label>
+             <Input
+               type="text"
+               name="currentHostel"
+               id="currentHostel"
+               value={ifsc}
+               onChange={(e) => setIfsc(e.target.value)}
+             />
+           </Col>
+           <Col sm="6">
+             <Label for="currentRoom">PAN No.</Label>
+             <Input
+               type="text"
+               name="currentRoom"
+               id="currentRoom"
+               value={pan}
+               onChange={(e) => setPan(e.target.value)}
+             />
+           </Col>
+         </Row>
+       </FormGroup>
+     </Col>
+   </Row>
+
+
+          </div>
+         
+         )
+
+        }
         
           </Form>
         </Card>

@@ -16,7 +16,10 @@ import { AccountInformation, UploadFile } from "../../Constant";
 import { LocalApi, WebApi } from "../../api";
 import { toast } from "react-toastify";
 
+
 export default function CreateEmployee() {
+  const userType  = localStorage.getItem("userType");
+  const branch_id = localStorage.getItem("branchId");
   const [formData, setFormData] = React.useState({
     name: "",
     email: "",
@@ -31,6 +34,7 @@ export default function CreateEmployee() {
     ifsc: "",
     doj: "",
     file: "",
+   
   });
   const [designation, setDesignation] = React.useState([]);
   const fetchDesignation = async (type) => {
@@ -49,6 +53,7 @@ export default function CreateEmployee() {
     fetchDesignation("designation").then((data) => {
       setDesignation(data[0].config_type_name.data);
     });
+    console.log(branch_id, userType);
   }, []);
 
   const handleSubmit = async (e) => {
@@ -67,6 +72,9 @@ export default function CreateEmployee() {
     data.append("ifsc", formData.ifsc);
     data.append("doj", formData.doj);
     data.append("file", formData.file);
+    data.append("userType", userType);
+    data.append("branch_id", branch_id);
+ 
     await fetch(`${WebApi}/addEmployee`, {
       method: "POST",
       body: data,
