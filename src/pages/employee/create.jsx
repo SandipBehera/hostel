@@ -16,15 +16,14 @@ import { AccountInformation, UploadFile } from "../../Constant";
 import { LocalApi, WebApi } from "../../api";
 import { toast } from "react-toastify";
 
-
 export default function CreateEmployee() {
-  const userType  = localStorage.getItem("userType");
+  const userType = localStorage.getItem("userType");
   const branch_id = localStorage.getItem("branchId");
   const [formData, setFormData] = React.useState({
     name: "",
     email: "",
     contact: "",
-    employeeId:"",
+    employeeId: "",
     address: "",
     designation: "",
     aadhar: "",
@@ -34,7 +33,6 @@ export default function CreateEmployee() {
     ifsc: "",
     doj: "",
     file: "",
-   
   });
   const [designation, setDesignation] = React.useState([]);
   const fetchDesignation = async (type) => {
@@ -62,8 +60,9 @@ export default function CreateEmployee() {
     data.append("name", formData.name);
     data.append("email", formData.email);
     data.append("contact", formData.contact);
-    data.append("employeeId",formData.employeeId);
+    data.append("employeeId", formData.employeeId);
     data.append("address", formData.address);
+    data.append("employee_reg_no", formData.employeeId);
     data.append("designation", formData.designation);
     data.append("aadhar", formData.aadhar);
     data.append("pan", formData.pan);
@@ -72,9 +71,9 @@ export default function CreateEmployee() {
     data.append("ifsc", formData.ifsc);
     data.append("doj", formData.doj);
     data.append("file", formData.file);
-    data.append("userType", userType);
+    data.append("userType", "employee");
     data.append("branch_id", branch_id);
- 
+
     await fetch(`${WebApi}/addEmployee`, {
       method: "POST",
       body: data,
@@ -83,7 +82,7 @@ export default function CreateEmployee() {
       .then((data) => {
         if (data.status === "success") {
           toast.success(data.message);
-          console.log(data)
+          console.log(data);
         } else {
           toast.error(data.message);
         }
@@ -152,7 +151,7 @@ export default function CreateEmployee() {
                 </FormGroup>
                 <hr className="mt-4 mb-4" />
                 <H6>Employee Information</H6>
-                    
+
                 <FormGroup>
                   <Label className="col-form-label">Employee Id</Label>
                   <Input
@@ -167,7 +166,6 @@ export default function CreateEmployee() {
                     }
                   />
                 </FormGroup>
-
 
                 <FormGroup>
                   <Label className="col-form-label">Employee Address</Label>

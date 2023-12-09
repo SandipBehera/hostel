@@ -24,9 +24,10 @@ const RightHeader = () => {
           {/* <Language /> */}
           <Searchbar />
           {/* <BookmarkHeader /> */}
-          {/* <MoonLight /> */}
+
           {/* <CartHeader /> */}
           <Notificationbar />
+          <MoonLight />
           <UserHeader />
         </UL>
         {/* </Col> */}
