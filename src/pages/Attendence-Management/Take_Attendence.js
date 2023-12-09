@@ -61,6 +61,7 @@ const Take_Attendence = () => {
     setPresentButtonDisabled(false);
     setAbsentButtonDisabled(false);
   };
+  const branchId = localStorage.getItem("branchId");
 
   useEffect(() => {
     const roomHostel = async () => {
@@ -111,13 +112,7 @@ const Take_Attendence = () => {
   const currentDate = new Date();
   const time = currentDate.toTimeString();
 
-  // const toggleZoom = (id) => {
-  //   setZoomedInIds((prevIds) =>
-  //     prevIds.includes(id)
-  //       ? prevIds.filter((prevId) => prevId !== id)
-  //       : [...prevIds, id]
-  //   );
-  // };
+ 
 
   const openModal = () => {
     setModalOpen(!modalOpen);
@@ -134,6 +129,7 @@ const Take_Attendence = () => {
         hostel_id: selectedHostel,
         floor_id: selectedFloor,
         room_id: selectedRoom,
+        branch_id: branchId,
       }),
     });
     const result = await response.json();
@@ -183,6 +179,7 @@ const Take_Attendence = () => {
             room_id: selectedRoom,
             status: status,
             comments: comment,
+            branch_id: localStorage.getItem("branchId")
           }),
         });
 

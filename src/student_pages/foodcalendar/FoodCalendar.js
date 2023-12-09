@@ -6,11 +6,12 @@ import { WebApi } from "../../api";
 
 const FoodCalendar = () => {
   const [data, setData] = useState([]);
-
+  const branchId = localStorage.getItem("branchId");
   const fetchData = async () => {
     const response = await fetch(`${WebApi}/get_all_menu`);
     const respData = await response.json();
-    setData(respData.data);
+    setData(respData.data
+      .filter(key=>key.branchId===parseInt(branchId)));
   };
 
   useEffect(() => {

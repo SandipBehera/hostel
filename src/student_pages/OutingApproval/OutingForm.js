@@ -27,6 +27,7 @@ const OutingForm = () => {
       date: formData.date,
       destination: formData.destination,
       reason: formData.reason,
+      branch_id : localStorage.getItem("branchId"),
     };
 
     console.log("Form submitted:", formData);

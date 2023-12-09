@@ -850,16 +850,16 @@ export const StudentMenu = [
       },
 
       {
-        path: `/complaints`,
+        path: `/Requests`,
         icon: "widget",
-        title: "Complaints",
+        title: "Requests",
         type: "sub",
         active: false,
         children: [
-          { path: `/complaints`, title: "My Complaints", type: "link" },
+          { path: `/complaints`, title: "Raise Request", type: "link" },
           {
             path: `/complaints-report`,
-            title: "Complaints Report",
+            title: "My Requests",
             type: "link",
           },
         ],

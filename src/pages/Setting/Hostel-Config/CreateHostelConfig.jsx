@@ -42,6 +42,7 @@ const CreateHostelConfig = (props) => {
     const data = {
       config_type: props.config_type,
       config_type_name: inputFields,
+      branch_id: localStorage.getItem("branchId"),
     };
     data.config_type_name = JSON.stringify({ data: data.config_type_name });
     const response = await fetch(`${WebApi}/addConfig`, {

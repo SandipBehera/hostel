@@ -13,7 +13,7 @@ const StudentFoodBook = () => {
   const [isCodeValid, setIsCodeValid] = useState(false);
   const [gracePeriodExpired, setGracePeriodExpired] = useState(false);
   const [isButtonClicked, setIsButtonClicked] = useState(false);
-
+  const branchId = localStorage.getItem("branchId");
   //get this month name
   const date = new Date();
   const month = date.toLocaleString("default", { month: "long" });
@@ -26,7 +26,8 @@ const StudentFoodBook = () => {
     const fetched_data = respData.data.filter(
       (item) => item.month === monthName
     );
-    setMealData(fetched_data);
+    setMealData(fetched_data
+      .filter(key=>key.branch_id===parseInt(branchId)));
   };
 
   useEffect(() => {
@@ -91,6 +92,8 @@ const StudentFoodBook = () => {
           auth_code: generatedCode,
           regd_no: localStorage.getItem("userId"),
           meal_type: currentMeal,
+          branch_Id: branchId
+
         }),
       });
       const respData = await response.json();

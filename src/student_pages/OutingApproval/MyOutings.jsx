@@ -5,6 +5,7 @@ import { WebApi } from '../../api';
 
 const MyOutings = () => {
   const [data, setData] = useState([]);
+  const brnachId = localStorage.getItem("branchId");
 
 
   useEffect(() => {
@@ -29,7 +30,8 @@ const fetchData = async () => {
         const updatedData = jsonData.data;
         // Filter the data based on userId
         const userOutings = updatedData.filter(item => item.studentid === item.studentid );
-        setData(userOutings);
+        setData(userOutings
+          .filter(key=>key.brnach_id===parseInt(brnachId)));
         // console.log(userOutings);
       } else {
         console.log("Error", response.status);

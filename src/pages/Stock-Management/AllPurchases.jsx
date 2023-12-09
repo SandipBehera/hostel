@@ -12,6 +12,7 @@ export default function AllPurchases() {
   const toggleModal = () => setModal(!modal);
   // const [data, setData] = useState([])
 
+  const branchId = localStorage.getItem("branchId");
   useEffect(() => {
     const fetchAllPurchase = async () => {
       try {
@@ -27,7 +28,9 @@ export default function AllPurchases() {
         const fetched = res.data;
         
   
-        setData(fetched.map((item) => ({
+        setData(fetched
+          .filter((key)=>key.branch_id === parseInt(branchId))
+          .map((item) => ({
           id: item.id,
           date: item.created_at,
           purchasedBy: item.purchased_from,

@@ -12,6 +12,8 @@ const FloorConfig = ({ setSteps, setFormdata, formdata }) => {
   const [Ammenities, setAmmenities] = useState([]);
   const [RoomType, setRoomType] = useState([]);
 
+  const branchId = localStorage.getItem("branchId");
+
   const fetchRoomConfig = async (type) => {
     try {
       const response = await fetch(`${WebApi}/get_config_by_type/${type}`);
@@ -58,6 +60,7 @@ const FloorConfig = ({ setSteps, setFormdata, formdata }) => {
             amenities: getValues(amenitiesControl) || [],
             room_type: getValues(roomTypeControl) || "",
           },
+          branch_id: branchId
         };
 
         rooms.push(roomData);
