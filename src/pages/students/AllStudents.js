@@ -59,7 +59,7 @@ const roomNumberOptions = [
 
 const AllStudents = () => {
   const [tableData, setTableData] = useState([]);
-  const socket = socketIOClient(LocalSocketAPI);
+  const socket = socketIOClient(WebSocketAPI);
 
   // const { data } = useContext(tableData);
   const [searchTerm, setSearchTerm] = useState("");
@@ -92,8 +92,7 @@ const AllStudents = () => {
       });
       const respdata = await response.json();
       const data = respdata.data.filter((item) => item.user_type === "student");
-      setTableData(data
-        .filter(key=> key.branch_id === branchId));
+      setTableData(data.filter((key) => key.branch_id === branchId));
     };
     const handleNewUser = (newUsers) => {
       setTableData((prevUsers) => [...prevUsers, newUsers]);
@@ -127,7 +126,7 @@ const AllStudents = () => {
       hostel_id: selectedHostel,
       floor_id: selectedFloor,
       room_id: selectedRoom,
-      branch_id: branchId
+      branch_id: branchId,
     };
 
     const response = await fetch(`${WebApi}/assign_rooms`, {

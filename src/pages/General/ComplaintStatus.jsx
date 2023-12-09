@@ -14,26 +14,33 @@ import {
   Row,
 } from "reactstrap";
 
-import CKEditors from 'react-ckeditor-component';
-import { Breadcrumbs,   H5 } from "../../AbstractElements";
+import CKEditors from "react-ckeditor-component";
+import { Breadcrumbs, H5 } from "../../AbstractElements";
+import { useParams } from "react-router";
 export default function ComplaintStatus() {
-
-    const [content, setContent] = useState('content');
-    const onChange = (evt) => {
-        const newContent = evt.editor.getData();
-        setContent(newContent);
+  const id = useParams();
+  const [content, setContent] = useState("content");
+  const onChange = (evt) => {
+    const newContent = evt.editor.getData();
+    setContent(newContent);
+  };
+  const [data, setData] = useState([]);
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await fetch(`${WebApi}/get_complaints`, {
+          method: "GET",
+        });
+        const respData = await response.json();
+        setData(respData.data.filter((complaint) => complaint.id === id));
+        console.log(respData.data);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+        // Handle the error, for example, set an error state
+      }
     };
-  const [data, setData] = useState([
-    {
-      id: 4,
-      text: "Rahul",
-      room: 104,
-      hostel: "Hostel-4",
-      assignedEmployee: "Abhishek Gupta",
-      complaintDetails:
-        "There have been instances where the quality of ingredients used in the preparation of meals has been questionable. Freshness and hygiene are crucial aspects of a healthy diet, and I believe ensuring the procurement of high-quality ingredients is essential.",
-    },
-  ]);
+    fetchData();
+  }, []);
   return (
     <Fragment>
       <Breadcrumbs
@@ -51,45 +58,36 @@ export default function ComplaintStatus() {
               {data.map((complaint) => (
                 <>
                   <div key={complaint.id} className="">
-                    <p>Name: {complaint.text}</p>
-                    <p>Room: {complaint.room}</p>
+                    {/* <p>Name: {complaint.text}</p> */}
+                    {/* <p>Room: {complaint.room}</p>
                     <p>Hostel: {complaint.hostel}</p>
                     <p>Assigned Employee: {complaint.assignedEmployee}</p>
                     <h6>Complaint Description</h6>
-                    <p>{complaint.complaintDetails}</p>
-
-
+                    <p>{complaint.complaintDetails}</p> */}
 
                     <div>
-                    <Container fluid={true}>
-                    <Row>
-                        <Col sm="12">
+                      <Container fluid={true}>
+                        <Row>
+                          <Col sm="12">
                             <Card>
-                                
-                                    <H5>Status</H5>
-                                
-                                <CardBody>
-                                    <CKEditors
-                                        activeclassName="p10"
-                                        content={content}
-                                        events={{
-                                            'change': onChange
-                                        }}
-                                    />
-                                </CardBody>
+                              <H5>Status</H5>
+
+                              <CardBody>
+                                <CKEditors
+                                  activeclassName="p10"
+                                  content={content}
+                                  events={{
+                                    change: onChange,
+                                  }}
+                                />
+                              </CardBody>
                             </Card>
-                        </Col>
-                    </Row>
-
-                    </Container>
-                    
+                          </Col>
+                        </Row>
+                      </Container>
                     </div>
 
-
-
-                    <div>
-                    
-                    </div>
+                    <div></div>
                   </div>
                 </>
               ))}
@@ -104,5 +102,3 @@ export default function ComplaintStatus() {
     </Fragment>
   );
 }
-
-

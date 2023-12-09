@@ -10,11 +10,12 @@ import {
   Input,
 } from "reactstrap";
 import { Breadcrumbs } from "../../AbstractElements";
-import { LocalApi, WebApi } from "../../api";
+import { LocalApi, LocalSocketAPI, WebApi } from "../../api";
 import StudentComplaint from "./component/complaint";
 import StudentLeave from "./component/leave";
 import OutingComponent from "./component/outing";
 import { toast } from "react-toastify";
+import socketIOClient from "socket.io-client";
 
 const Complaints = () => {
   const studentId = localStorage.getItem("userId");
@@ -25,7 +26,19 @@ const Complaints = () => {
   const [leaveReason, setLeaveReason] = React.useState("");
   const [leaveFrom, setLeaveFrom] = React.useState("");
   const [leaveTo, setLeaveTo] = React.useState("");
+  const socket = socketIOClient(WebSocketAPI);
   console.log(complaint);
+  const date = new Date();
+  const formattedDate = date.toLocaleString("en-US", {
+    weekday: "short",
+    month: "short",
+    day: "2-digit",
+    year: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+    second: "2-digit",
+    timeZoneName: "short",
+  });
   useEffect(() => {
     const student_info = async () => {
       const response = await fetch(`${WebApi}/profile_info`, {
@@ -66,7 +79,10 @@ const Complaints = () => {
     e.preventDefault();
 
     if (formData.issueType === "Complaint") {
-      formData.details = JSON.stringify(complaint);
+      formData.details = [
+        { status: "new", content: complaint, date: formattedDate },
+      ];
+      formData.details = JSON.stringify(formData.details);
     } else if (
       formData.issueType === "Night Out Request" ||
       formData.issueType === "Leave Request"
@@ -113,7 +129,8 @@ const Complaints = () => {
         toast.error(res.message);
       } else {
         // const data = await response.json();
-        console.log("Response from API:", fdata);
+
+        socket.emit("newComplaint", fdata);
         toast.success(res.message);
         // Reset form a fter successful submission if needed
         setFormData({

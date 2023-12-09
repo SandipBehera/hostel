@@ -27,7 +27,7 @@ const AllRoom = () => {
   const [activeDropdown, setActiveDropdown] = useState(null);
   const [modalOpen, setModalOpen] = useState(false);
   const [edit, setEdit] = useState(-1);
-  const branchId= localStorage.getItem("branchId");
+  const branchId = localStorage.getItem("branchId");
   useEffect(() => {
     const roomHostel = async () => {
       const response = await fetch(`${WebApi}/get_rooms`, {
@@ -37,8 +37,9 @@ const AllRoom = () => {
       const resproom = await response.json();
       console.log("resproom data is", resproom);
       const fetchedData = resproom.data;
-      setData(fetchedData
-        .filter(key=>key.branchId===parseInt(branchId)));
+      setData(
+        fetchedData.filter((key) => key.branch_id === parseInt(branchId))
+      );
       if (resproom && resproom.status) {
         console.log("data fetched");
       }

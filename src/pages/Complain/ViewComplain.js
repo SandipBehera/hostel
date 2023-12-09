@@ -12,7 +12,7 @@ import { Link } from "react-router-dom";
 import { Breadcrumbs } from "../../AbstractElements";
 import "./Complaints.css";
 import socketIOClient from "socket.io-client";
-import { LocalApi, WebApi, WebSocketAPI } from "../../api";
+import { LocalApi, LocalSocketAPI, WebApi, WebSocketAPI } from "../../api";
 import { Selected } from "../../Constant";
 
 const ViewComplaint = () => {
@@ -25,23 +25,22 @@ const ViewComplaint = () => {
   const [processModalOpen, setProcessModalOpen] = useState(false);
   const [viewModalOpen, setViewModalOpen] = useState(false);
   const [successMessage, setSuccessMessage] = useState("");
-
+  const fetchData = async () => {
+    try {
+      const response = await fetch(`${WebApi}/get_complaints`, {
+        method: "GET",
+      });
+      const respData = await response.json();
+      setData(respData.data);
+      console.log(respData.data);
+    } catch (error) {
+      console.error("Error fetching data:", error);
+      // Handle the error, for example, set an error state
+    }
+  };
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await fetch(`${WebApi}/get_complaints`, {
-          method: "GET",
-        });
-        const respData = await response.json();
-        setData(respData.data);
-        console.log(respData.data);
-      } catch (error) {
-        console.error("Error fetching data:", error);
-        // Handle the error, for example, set an error state
-      }
-    };
-    const handleNewComplaint = (newComplaint) => {
-      setData((prevComplaints) => [...prevComplaints, newComplaint]);
+    const handleNewComplaint = () => {
+      fetchData();
     };
     fetchData();
     socket.on("newComplaint", handleNewComplaint);
@@ -82,8 +81,6 @@ const ViewComplaint = () => {
 
     setProcessModalOpen(false);
   };
-  console.log(data);
-  console.log(selectedComplaint);
 
   return (
     <div>
@@ -115,27 +112,27 @@ const ViewComplaint = () => {
                   </Button>
                 </td>
                 <td>
-                  {complaint.issue_type==="Complaint" ? (
+                  {complaint.issue_type === "Complaint" ? (
                     <Button
-                    color={complaint.status ? "success" : "primary"}
-                    onClick={() => handleStartProcess(complaint)}
-                  >
-                    {complaint.status !== "NEW" ? (
-                      <Link
-                        className="link-text"
-                        to={`complain-status/${complaint.id}`}
-                      >
-                        Assigned to:{complaint.assigned_to} <br /> Status:
-                        {complaint.status === "" ? "NEW" : complaint.status}
-                      </Link>
-                    ) : (
-                      "Start Process"
-                    )}
-                  </Button>
-                  ):(
+                      color={complaint.status ? "success" : "primary"}
+                      onClick={() => handleStartProcess(complaint)}
+                    >
+                      {complaint.status !== "NEW" ? (
+                        <Link
+                          className="link-text"
+                          to={`complain-status/${complaint.id}`}
+                        >
+                          Assigned to:{complaint.assigned_to} <br /> Status:
+                          {complaint.status === "" ? "NEW" : complaint.status}
+                        </Link>
+                      ) : (
+                        "Start Process"
+                      )}
+                    </Button>
+                  ) : (
                     <div>
-                    <Button color="success">Approve</Button> {" "}
-                    <Button color="danger">Reject</Button>
+                      <Button color="success">Approve</Button>{" "}
+                      <Button color="danger">Reject</Button>
                     </div>
                   )}
                 </td>
@@ -157,15 +154,24 @@ const ViewComplaint = () => {
         <ModalBody>
           {selectedComplaint && (
             <div>
-              
-              {selectedComplaint.issue_type==="Complaint"? selectedComplaint.details : <>
-              <p> <strong>From: </strong>{selectedComplaint.details.leave_from}</p>
-              <p><strong>To:</strong> {selectedComplaint.details.leave_to}</p>
-              <p><strong>Reason:</strong> {selectedComplaint.details.reason}</p>
-                </>}
-
-
-              </div>
+              {selectedComplaint.issue_type === "Complaint" ? (
+                selectedComplaint.details
+              ) : (
+                <>
+                  <p>
+                    {" "}
+                    <strong>From: </strong>
+                    {selectedComplaint.details.leave_from}
+                  </p>
+                  <p>
+                    <strong>To:</strong> {selectedComplaint.details.leave_to}
+                  </p>
+                  <p>
+                    <strong>Reason:</strong> {selectedComplaint.details.reason}
+                  </p>
+                </>
+              )}
+            </div>
           )}
         </ModalBody>
         <ModalFooter>

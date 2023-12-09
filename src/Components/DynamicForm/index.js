@@ -16,6 +16,7 @@ const DynamicForm = ({
     const roomDataTypes = RoomType.map((room) => {
       return { value: room, label: room };
     });
+    console.log("room dats", roomDataTypes);
     const roomAmenities = Ammenities.map((room) => {
       return { value: room, label: room };
     });
