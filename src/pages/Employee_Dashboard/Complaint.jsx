@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import React, { Fragment, useState } from 'react';
+import React, { Fragment, useEffect, useState } from 'react';
 import { Table, Button, Modal, ModalHeader, ModalBody, ModalFooter, Card } from 'reactstrap';
 import { Breadcrumbs,   H5 } from "../../AbstractElements";
 
@@ -10,9 +10,12 @@ const dummyData = [
   // Add more dummy data as needed
 ];
 
+
+
 const Complaint= () => {
   const [modal, setModal] = useState(false);
   const [selectedComplaint, setSelectedComplaint] = useState(null);
+  const [data, setData]=useState([]);
 
   const toggleModal = () => setModal(!modal);
 
@@ -20,6 +23,18 @@ const Complaint= () => {
     setSelectedComplaint(complaint);
     toggleModal();
   };
+
+  useEffect(() => {
+    const detailComplaints = async () => {
+      const response = await fetch(`${LocalApi}/get_complaints`, {
+        method: "GET"
+      });
+      const res = await response.json();
+      console.log(res.data);
+      setData(res.data);
+    };
+    detailComplaints();
+  }, []);
 
   return (
     <Fragment>

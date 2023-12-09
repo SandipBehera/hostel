@@ -13,6 +13,7 @@ import { Breadcrumbs } from "../../AbstractElements";
 import "./Complaints.css";
 import socketIOClient from "socket.io-client";
 import { LocalApi, WebApi, WebSocketAPI } from "../../api";
+import { Selected } from "../../Constant";
 
 const ViewComplaint = () => {
   const socket = socketIOClient(WebSocketAPI);
@@ -114,7 +115,8 @@ const ViewComplaint = () => {
                   </Button>
                 </td>
                 <td>
-                  <Button
+                  {complaint.issue_type==="Complaint" ? (
+                    <Button
                     color={complaint.status ? "success" : "primary"}
                     onClick={() => handleStartProcess(complaint)}
                   >
@@ -130,6 +132,12 @@ const ViewComplaint = () => {
                       "Start Process"
                     )}
                   </Button>
+                  ):(
+                    <div>
+                    <Button color="success">Approve</Button> {" "}
+                    <Button color="danger">Reject</Button>
+                    </div>
+                  )}
                 </td>
               </tr>
             ))
@@ -148,11 +156,16 @@ const ViewComplaint = () => {
         <ModalHeader>Complaint Details</ModalHeader>
         <ModalBody>
           {selectedComplaint && (
-            <div
-              dangerouslySetInnerHTML={{
-                __html: selectedComplaint.details.content,
-              }}
-            />
+            <div>
+              
+              {selectedComplaint.issue_type==="Complaint"? selectedComplaint.details : <>
+              <p> <strong>From: </strong>{selectedComplaint.details.leave_from}</p>
+              <p><strong>To:</strong> {selectedComplaint.details.leave_to}</p>
+              <p><strong>Reason:</strong> {selectedComplaint.details.reason}</p>
+                </>}
+
+
+              </div>
           )}
         </ModalBody>
         <ModalFooter>
