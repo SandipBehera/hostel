@@ -53,7 +53,6 @@ export default function ComplaintStatus() {
         const respData = await response.json();
         setData(respData.data);
         setAssignedEmployee(respData.data[0].assignedEmployee);
-        console.log(respData.data);
       } catch (error) {
         console.error("Error fetching data:", error);
         // Handle the error, for example, set an error state
@@ -66,7 +65,6 @@ export default function ComplaintStatus() {
         });
         const respData = await response.json();
         setEmpData(respData.data.filter((emp) => emp.branch_id === branch_id));
-        console.log(respData.data);
       } catch (error) {
         console.error("Error fetching data:", error);
         // Handle the error, for example, set an error state
@@ -82,14 +80,12 @@ export default function ComplaintStatus() {
       ...prevContent,
       { status: newStatus, content: content, date: formattedDate },
     ];
-    console.log(newContent);
     const updatedata = {
       complaint_id: id,
       status: newStatus,
       content: newContent,
       assignedEmployee: assignedEmployee,
     };
-    console.log(updatedata);
     updatedata.content = JSON.stringify(updatedata.content);
     const response = await fetch(`${WebApi}/update_complaint`, {
       method: "POST",
@@ -107,7 +103,6 @@ export default function ComplaintStatus() {
       toast.error(respData.message);
     }
   };
-  console.log(data[0].floor_no);
   return (
     <Fragment>
       <Breadcrumbs

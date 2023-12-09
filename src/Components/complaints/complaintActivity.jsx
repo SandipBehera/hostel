@@ -1,14 +1,17 @@
 import { Card, CardBody, CardHeader, Col } from "reactstrap";
 import { H5, H6, LI, P, UL } from "../../AbstractElements";
 
-const ComplaintActivity = ({ complaint }) => {
+const ComplaintActivity = ({ complaint, displayTtile }) => {
+  const title = displayTtile || false;
   return (
     <Col xxl="12" xl="12" md="12" sm="7" className="notification box-col-6">
       <Card className="height-equal">
         <CardHeader className="card-no-border">
-          <div className="header-top">
-            <H5 attrH5={{ className: "m-0" }}>Complaint Description</H5>
-          </div>
+          {title && (
+            <div className="header-top">
+              <H5 attrH5={{ className: "m-0" }}>Complaint Description</H5>
+            </div>
+          )}
         </CardHeader>
         <CardBody className="pt-0">
           <UL>

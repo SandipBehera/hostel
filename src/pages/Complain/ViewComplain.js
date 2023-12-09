@@ -14,6 +14,8 @@ import "./Complaints.css";
 import socketIOClient from "socket.io-client";
 import { LocalApi, LocalSocketAPI, WebApi, WebSocketAPI } from "../../api";
 import { Selected } from "../../Constant";
+import ComplaintActivity from "../../Components/complaints/complaintActivity";
+import { toast } from "react-toastify";
 
 const ViewComplaint = () => {
   const socket = socketIOClient(WebSocketAPI);
@@ -66,20 +68,29 @@ const ViewComplaint = () => {
     setViewModalOpen(false); // Close the view modal
   };
 
-  const handleProcessSubmit = () => {
-    // Perform the process assignment logic here
-    // For simplicity, just showing a success message
-    setSuccessMessage("Employee assigned successfully!");
+  const handleRequestProcess = async (id, type) => {
+    const getData = data.filter((item) => item.id === id);
 
-    // Update the processing status in the data
-    const updatedData = data.map((complaint) =>
-      complaint.id === selectedComplaint.id
-        ? { ...complaint, processing: true }
-        : complaint
-    );
-    setData(updatedData);
+    const updatedata = {
+      complaint_id: getData[0].id,
+      status: type,
+      assignedEmployee: localStorage.getItem("userId"),
+      content: getData[0].details,
+    };
 
-    setProcessModalOpen(false);
+    updatedata.content = JSON.stringify(updatedata.content);
+    const response = await fetch(`${WebApi}/update_complaint`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(updatedata),
+    });
+    const respData = await response.json();
+    if (respData.status === "success") {
+      toast.success(respData.message);
+      fetchData();
+    } else {
+      toast.error(respData.message);
+    }
   };
 
   return (
@@ -129,11 +140,36 @@ const ViewComplaint = () => {
                         "Start Process"
                       )}
                     </Button>
-                  ) : (
+                  ) : complaint.status !== "Approved" &&
+                    complaint.status !== "Rejected" ? (
                     <div>
-                      <Button color="success">Approve</Button>{" "}
-                      <Button color="danger">Reject</Button>
+                      <Button
+                        color="success"
+                        onClick={() =>
+                          handleRequestProcess(complaint.id, "Approved")
+                        }
+                      >
+                        Approve
+                      </Button>{" "}
+                      <Button
+                        color="danger"
+                        onClick={() =>
+                          handleRequestProcess(complaint.id, "Rejected")
+                        }
+                      >
+                        Reject
+                      </Button>
                     </div>
+                  ) : (
+                    <Button
+                      color="success"
+                      onClick={() =>
+                        handleRequestProcess(complaint.id, "Approved")
+                      }
+                      disabled={true}
+                    >
+                      {complaint.status}
+                    </Button>
                   )}
                 </td>
               </tr>
@@ -150,76 +186,38 @@ const ViewComplaint = () => {
 
       {/* View Complaint Modal */}
       <Modal isOpen={viewModalOpen}>
-        <ModalHeader>Complaint Details</ModalHeader>
+        <ModalHeader>{selectedComplaint?.issue_type} Details</ModalHeader>
         <ModalBody>
           {selectedComplaint && (
-            <div>
-              {selectedComplaint.issue_type === "Complaint" ? (
-                selectedComplaint.details
-              ) : (
-                <>
-                  <p>
-                    {" "}
-                    <strong>From: </strong>
-                    {selectedComplaint.details.leave_from}
-                  </p>
-                  <p>
-                    <strong>To:</strong> {selectedComplaint.details.leave_to}
-                  </p>
-                  <p>
-                    <strong>Reason:</strong> {selectedComplaint.details.reason}
-                  </p>
-                </>
-              )}
-            </div>
+            <>
+              <div>
+                {selectedComplaint.issue_type === "Complaint" ? (
+                  <ComplaintActivity
+                    complaint={selectedComplaint}
+                    displayTitle={true}
+                  />
+                ) : (
+                  <>
+                    <p>
+                      {" "}
+                      <strong>From: </strong>
+                      {selectedComplaint.details.leave_from}
+                    </p>
+                    <p>
+                      <strong>To:</strong> {selectedComplaint.details.leave_to}
+                    </p>
+                    <p>
+                      <strong>Reason:</strong>{" "}
+                      {selectedComplaint.details.reason}
+                    </p>
+                  </>
+                )}
+              </div>
+            </>
           )}
         </ModalBody>
         <ModalFooter>
           <Button color="secondary" onClick={() => setViewModalOpen(false)}>
-            Close
-          </Button>
-        </ModalFooter>
-      </Modal>
-
-      {/* Start Process Modal */}
-      <Modal isOpen={processModalOpen}>
-        <ModalHeader>Assign Employee</ModalHeader>
-        <ModalBody>
-          <Input
-            className="form-control form-control-primary-fill btn-square"
-            name="select"
-            type="select"
-            value={employeeId}
-            onChange={(e) => setEmployeeId(e.target.value)}
-          >
-            <option value="opt1">Select Employee</option>
-            <option value="opt2">Employee-1</option>
-            <option value="opt3">Employee-2</option>
-            <option value="opt4">Employee-3</option>
-            <option value="opt5">Employee-4</option>
-            <option value="opt6">Employee-5</option>
-            <option value="opt7">Employee-6</option>
-            <option value="opt8">Employee-7</option>
-          </Input>
-        </ModalBody>
-        <ModalFooter>
-          <Button color="primary" onClick={handleProcessSubmit}>
-            Assign
-          </Button>{" "}
-          <Button color="secondary" onClick={() => setProcessModalOpen(false)}>
-            Cancel
-          </Button>
-        </ModalFooter>
-      </Modal>
-
-      {/* Success Message Modal */}
-      <Modal isOpen={successMessage !== ""}>
-        <ModalHeader>Success!</ModalHeader>
-        <ModalBody>
-          <p>{successMessage}</p>
-        </ModalBody>
-        <ModalFooter>
-          <Button color="secondary" onClick={() => setSuccessMessage("")}>
             Close
           </Button>
         </ModalFooter>
