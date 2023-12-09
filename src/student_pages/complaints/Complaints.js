@@ -10,7 +10,7 @@ import {
   Input,
 } from "reactstrap";
 import { Breadcrumbs } from "../../AbstractElements";
-import { LocalApi, LocalSocketAPI, WebApi } from "../../api";
+import { LocalApi, LocalSocketAPI, WebApi, WebSocketAPI } from "../../api";
 import StudentComplaint from "./component/complaint";
 import StudentLeave from "./component/leave";
 import OutingComponent from "./component/outing";
