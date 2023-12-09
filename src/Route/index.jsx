@@ -61,7 +61,11 @@ const Routers = () => {
               element={<LayoutRoutes />}
             />
           </Route>
-          <Route exact path={`/users/:userId`} element={<RedirectionPage />} />
+          <Route
+            exact
+            path={`/users/:userId/branchId/:branchId`}
+            element={<RedirectionPage />}
+          />
           {/* <Route exact path={`/login`} element={<Signin />} /> */}
           {authRoutes.map(({ path, Component }, i) => (
             <Route path={path} element={Component} key={i++} />

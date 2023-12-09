@@ -4,7 +4,7 @@ import { LocalApi, WebApi, api } from "../api";
 
 const RedirectionPage = () => {
   const navigation = useNavigate();
-  const { userId } = useParams();
+  const { userId, branchId } = useParams();
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -24,7 +24,7 @@ const RedirectionPage = () => {
           localStorage.setItem("userId", data.data.user_id);
           localStorage.setItem("Name", data.data.name);
           localStorage.setItem("userType", data.data.user_type);
-          localStorage.setItem("branchId", data.data.branchId);
+          localStorage.setItem("branchId", branchId);
           if (data.data.user_type === "admin" && data.data.user_id !== null) {
             const dashboardLink = `/${data.data.user_type}/${data.data.user_id}/dashboard`;
             window.location.href = dashboardLink;
