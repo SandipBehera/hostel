@@ -21,9 +21,7 @@ const Dashboard = () => {
       <Container fluid={true}>
         <Row className="widget-grid">
           <GreetingCard name={localStorage.getItem("Name")} />
-          <WidgetsWrapper />
-
-          {/* <*/}
+          {/* <WidgetsWrapper />
           <OverallBalance
             title={"Mess Bookings"}
             student_type={["Hostler", "DayScholars"]}
@@ -36,7 +34,7 @@ const Dashboard = () => {
           <TimelineCard />
           <PreAccountCard />
           <TotalUserAndFollower />
-          <PaperNote />
+          <PaperNote /> */}
         </Row>
       </Container>
     </Fragment>
