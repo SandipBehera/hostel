@@ -91,9 +91,10 @@ const AllStudents = () => {
         method: "GET",
       });
       const respdata = await response.json();
-      const data = respdata.data.filter((item) => item.user_type === "student");
-      setTableData(data
-        .filter(key=> key.branch_id === branchId));
+      const data = respdata.data.filter(
+        (item) => item.campus_branch === parseInt(branchId)
+      );
+      setTableData(data);
     };
     const handleNewUser = (newUsers) => {
       setTableData((prevUsers) => [...prevUsers, newUsers]);
@@ -127,7 +128,7 @@ const AllStudents = () => {
       hostel_id: selectedHostel,
       floor_id: selectedFloor,
       room_id: selectedRoom,
-      branch_id: branchId
+      branch_id: branchId,
     };
 
     const response = await fetch(`${WebApi}/assign_rooms`, {
@@ -217,7 +218,7 @@ const AllStudents = () => {
                   <div className="mb-2" style={{ width: "30%" }}>
                     <Label className="col-form-label"></Label>
                     <Select
-                      options={options2}
+                      options={hostel_name}
                       className="js-example-basic-single col-sm-12"
                     />
                   </div>
@@ -225,7 +226,7 @@ const AllStudents = () => {
                   <div className="" style={{ width: "30%" }}>
                     <Label className="col-form-label"></Label>
                     <Select
-                      options={options2}
+                      options={floorData}
                       className="js-example-basic-single col-sm-12"
                     />
                   </div>
@@ -239,7 +240,7 @@ const AllStudents = () => {
                       <Input
                         type="text"
                         placeholder="Search"
-                        value={searchTerm}
+                        value={roomData}
                         onChange={handleChange}
                       />
                     </InputGroup>
