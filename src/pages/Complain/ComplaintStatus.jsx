@@ -107,6 +107,7 @@ export default function ComplaintStatus() {
       toast.error(respData.message);
     }
   };
+  console.log(data[0].floor_no);
   return (
     <Fragment>
       <Breadcrumbs
@@ -127,10 +128,9 @@ export default function ComplaintStatus() {
                     <p>
                       Name: <b>{complaint.name}</b>
                     </p>
-                    {complaint.floor_no !== null ||
-                      (complaint.floor_no != "" && (
-                        <p>Room: {complaint.floor_no}</p>
-                      ))}
+                    {complaint.floor_no !== null && (
+                      <p>Room: {complaint.floor_no}</p>
+                    )}
                     {complaint.hostel_name !== null && (
                       <p>Hostel: {complaint.hostel_name}</p>
                     )}
