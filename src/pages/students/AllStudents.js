@@ -78,6 +78,8 @@ const AllStudents = () => {
   const [selectedFloor, setSelectedFloor] = useState(null);
   const [selectedRoom, setSelectedRoom] = useState(null);
   const [selectedRowId, setSelectedRowId] = useState(null);
+  const [selectedStudent, setSelectedStudent] = useState(null);
+
 
   const toggleAssignRoomModal = (rowId) => {
     setAssignRoomModalOpen(!assignRoomModalOpen);
@@ -89,6 +91,7 @@ const AllStudents = () => {
       method: "GET",
     });
     const respdata = await response.json();
+    console.log(respdata);
     const data = respdata.data.filter(
       (item) => item.campus_branch === parseInt(branchId)
     );
@@ -182,12 +185,17 @@ const AllStudents = () => {
     setDropdownOpen(!dropdownOpen);
   };
 
+
   const handleOptionSelect = (option, id) => {
     if (option === "Edit") {
       setModalOpen(true);
     } else if (option === "Assign Room") {
       toggleAssignRoomModal(id);
       setUserid(id);
+    } else if (option === "View") {
+      const student = tableData.find((item) => item.id === id);
+      setSelectedStudent(student);
+      toggleModal();
     }
   };
 
@@ -203,7 +211,7 @@ const AllStudents = () => {
         subParent="Hostel Students"
         title="All Hostel Students"
       />
-      <Container fluid={true}>
+      <Container fluid={true} >
         <Card>
           <CardBody>
             <Row style={{ padding: "6px" }}>
@@ -246,9 +254,9 @@ const AllStudents = () => {
             </Row>
 
             <Col sm="12">
-              <Card>
+              <Card className="h-auto">
                 <div className="table-responsive">
-                  <Table>
+                  <Table >
                     <thead>
                       <tr className="border-bottom-primary">
                         <th scope="col">{"Id"}</th>
@@ -260,7 +268,7 @@ const AllStudents = () => {
                         <th scope="col">{"Action"}</th>
                       </tr>
                     </thead>
-                    <tbody>
+                    <tbody >
                       {tableData.map((item) => (
                         <tr
                           key={item.id}
@@ -286,7 +294,7 @@ const AllStudents = () => {
                               : "need to assign"}
                           </td>
                           <td>
-                            <PopUpButton />
+                          <PopUpButton student={item} onViewClick={() => handleOptionSelect("View", item.id)} />
                           </td>
                           <td>
                             <Dropdown
@@ -294,7 +302,7 @@ const AllStudents = () => {
                               toggle={() => toggleDropdown(item.id)}
                             >
                               <DropdownToggle caret>{Action}</DropdownToggle>
-                              <DropdownMenu>
+                              <DropdownMenu >
                                 <DropdownItem
                                   onClick={() => handleOptionSelect("Edit")}
                                 >

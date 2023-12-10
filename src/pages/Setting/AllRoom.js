@@ -56,10 +56,11 @@ const AllRoom = () => {
     setData((prevData) =>
       prevData.map((item) => ({
         ...item,
-        activeDropdown: item.sl_no === id ? !item.activeDropdown : false,
+        activeDropdown: item.id === id ? !item.activeDropdown : false,
       }))
     );
   };
+  
 
   const handleOptionSelect = (option, id) => {
     if (option === "Edit") {

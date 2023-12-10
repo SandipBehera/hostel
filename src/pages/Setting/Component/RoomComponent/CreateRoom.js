@@ -33,7 +33,7 @@ const CreateRoom = ({ setSteps, setFormdata, formdata }) => {
             className="form-bookmark needs-validation"
           >
             <FormGroup className="mb-3">
-              <Label htmlFor="hostel_name">Block Name</Label>
+              <Label htmlFor="hostel_name">Hostel Name</Label>
               <input
                 className={`form-control ${errors.hostel_name && "is-invalid"}`}
                 id="hostel_name"
