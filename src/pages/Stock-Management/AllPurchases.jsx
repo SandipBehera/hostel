@@ -27,10 +27,10 @@ export default function AllPurchases() {
         const res = await response.json();
         const fetched = res.data;
         
-  
+        console.log(fetched);
         setData(fetched
-          .filter((key)=>key.branch_id === parseInt(branchId))
-          .map((item) => ({
+          ?.filter((key)=>key.branch_id === parseInt(branchId))
+          ?.map((item) => ({
           id: item.id,
           date: item.created_at,
           purchasedBy: item.purchased_from,

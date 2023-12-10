@@ -11,6 +11,7 @@ import {
   Input,
   Label,
   Table,
+  Toast,
 } from "reactstrap";
 import "./stock.css";
 import { LocalApi, WebApi } from "../../api";
@@ -83,6 +84,7 @@ export default function Purchases() {
               }
             : item
         );
+        toast.success("Item")
 
         const updatedTotalPrice = totalPrice + itemPrice * selectedQuantity;
 
@@ -127,7 +129,6 @@ export default function Purchases() {
     const data = await response.json();
     console.log(data);
     if (data.status === "success") {
-      toast.success("Item added successfully");
       setItemList([...itemList, { id: data.data, item_name: newItem }]);
       setModal(!modal);
     } else {
@@ -138,34 +139,34 @@ export default function Purchases() {
 
   const handleSubmit = async() =>{
     console.log(selectedItems);
-  //   console.log(file, isMarketPlace)
-  //   {
-  //     const data={
-  //       item_name: selectedItems[0].item_name,
-  //       item_for:selectedItems[0].item_for,
-  //       quantity:selectedItems[0].quantity,
-  //       price_per:selectedItems[0].price,
-  //       total_price: totalPrice,
-  //       purchased_from: buyerName,
-  //       purchase_date: selectedItems[0].created_at,
-            // branch_id : branchId
+    console.log(file, isMarketPlace)
+    {
+      const data={
+        item_name: selectedItems[0].item_name,
+        item_for:selectedItems[0].item_for,
+        quantity:selectedItems[0].quantity,
+        price_per:selectedItems[0].price,
+        total_price: totalPrice,
+        purchased_from: buyerName,
+        purchase_date: selectedItems[0].created_at,
+            branch_id : branchId
 
-  //     }  
+      }  
       
-  //     await fetch(`${WebApi}/add_stock`, {
-  //       method: "POST",
-  //       body: JSON.stringify(data),
-  //       headers: {
-  //         "Content-type" : "Application/json"
-  //       }
-  //     })
-  //     .then((response)=> response.json())
-  //     .then((data)=>{console.log(data)
-  //     toast.success("Stock Added Successfuly")}
-  //     )
-  //     .catch((e)=>{console.log(e),
-  //     toast.error("Faild to add stocks")})
-  // }
+      await fetch(`${WebApi}/add_stock`, {
+        method: "POST",
+        body: JSON.stringify(data),
+        headers: {
+          "Content-type" : "Application/json"
+        }
+      })
+      .then((response)=> response.json())
+      .then((data)=>{console.log(data)
+      toast.success("Stock Added Successfuly")}
+      )
+      .catch((e)=>{console.log(e),
+      toast.error("Faild to add stocks")})
+  }
 }
   return (
     <Fragment>
