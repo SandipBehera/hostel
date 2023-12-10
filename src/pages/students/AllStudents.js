@@ -49,6 +49,9 @@ import { useNavigate } from "react-router-dom";
 import PopUpButton from "./PopUpButton";
 import { LocalApi, LocalSocketAPI, WebApi, WebSocketAPI } from "../../api";
 import socketIOClient from "socket.io-client";
+import { toast } from "react-toastify";
+import { el } from "date-fns/locale";
+import { get } from "react-hook-form";
 
 const roomNumberOptions = [
   { value: "room1", label: "Room 1" },
@@ -79,7 +82,6 @@ const AllStudents = () => {
   const [selectedRoom, setSelectedRoom] = useState(null);
   const [selectedRowId, setSelectedRowId] = useState(null);
   const [selectedStudent, setSelectedStudent] = useState(null);
-
 
   const toggleAssignRoomModal = (rowId) => {
     setAssignRoomModalOpen(!assignRoomModalOpen);
@@ -139,9 +141,12 @@ const AllStudents = () => {
     });
     const resproom = await response.json();
 
-    if (resproom.ok) {
-      updateTableData(userid, selectedHostel, selectedRoom);
+    if (resproom.status === "success") {
+      getData();
       setAssignRoomModalOpen(false);
+      toast.success(resproom.message);
+    } else {
+      toast.error(resproom.message);
     }
   };
 
@@ -185,11 +190,8 @@ const AllStudents = () => {
     setDropdownOpen(!dropdownOpen);
   };
 
-
   const handleOptionSelect = (option, id) => {
-    if (option === "Edit") {
-      setModalOpen(true);
-    } else if (option === "Assign Room") {
+    if (option === "Assign Room") {
       toggleAssignRoomModal(id);
       setUserid(id);
     } else if (option === "View") {
@@ -202,6 +204,7 @@ const AllStudents = () => {
   const toggleModal = () => {
     setModalOpen(!modalOpen);
   };
+  console.log(userid);
 
   return (
     <Fragment>
@@ -211,7 +214,7 @@ const AllStudents = () => {
         subParent="Hostel Students"
         title="All Hostel Students"
       />
-      <Container fluid={true} >
+      <Container fluid={true}>
         <Card>
           <CardBody>
             <Row style={{ padding: "6px" }}>
@@ -256,7 +259,7 @@ const AllStudents = () => {
             <Col sm="12">
               <Card className="h-auto">
                 <div className="table-responsive">
-                  <Table >
+                  <Table>
                     <thead>
                       <tr className="border-bottom-primary">
                         <th scope="col">{"Id"}</th>
@@ -268,7 +271,7 @@ const AllStudents = () => {
                         <th scope="col">{"Action"}</th>
                       </tr>
                     </thead>
-                    <tbody >
+                    <tbody>
                       {tableData.map((item) => (
                         <tr
                           key={item.id}
@@ -289,12 +292,22 @@ const AllStudents = () => {
                           <td>{item.semesterYear}</td>
                           <td>{item.branch}</td>
                           <td>
-                            {item.room_id !== null
-                              ? `${item?.hostel_name}:${item.room_id}`
-                              : "need to assign"}
+                            {item.room_id !== null ? (
+                              <>
+                                <p>Hostel Name: {item?.hostel_name}</p>
+                                <p>Room No: {item?.room_id}</p>
+                              </>
+                            ) : (
+                              "need to assign"
+                            )}
                           </td>
                           <td>
-                          <PopUpButton student={item} onViewClick={() => handleOptionSelect("View", item.id)} />
+                            <PopUpButton
+                              student={item}
+                              onViewClick={() =>
+                                handleOptionSelect("View", item.id)
+                              }
+                            />
                           </td>
                           <td>
                             <Dropdown
@@ -302,17 +315,12 @@ const AllStudents = () => {
                               toggle={() => toggleDropdown(item.id)}
                             >
                               <DropdownToggle caret>{Action}</DropdownToggle>
-                              <DropdownMenu >
-                                <DropdownItem
-                                  onClick={() => handleOptionSelect("Edit")}
-                                >
-                                  Edit
-                                </DropdownItem>
+                              <DropdownMenu>
                                 <DropdownItem
                                   onClick={() =>
                                     handleOptionSelect(
                                       "Assign Room",
-                                      item.username
+                                      item.userId
                                     )
                                   }
                                 >
@@ -320,11 +328,11 @@ const AllStudents = () => {
                                     ? "Reassign Room"
                                     : "Assign Room"}
                                 </DropdownItem>
-                                <DropdownItem
+                                {/* <DropdownItem
                                   onClick={() => setActive(!active)}
                                 >
                                   {active ? "ACTIVE" : "IN ACTIVE"}
-                                </DropdownItem>
+                                </DropdownItem> */}
                               </DropdownMenu>
                             </Dropdown>
                           </td>
@@ -378,19 +386,6 @@ const AllStudents = () => {
                       </ModalBody>
                     </Modal>
                   )}
-
-                  {/* popup modal view */}
-
-                  <Modal isOpen={modalOpen} toggle={toggleModal}>
-                    <ModalHeader toggle={toggleModal}>Popup Modal</ModalHeader>
-                    <ModalBody>
-                      {/* Content for the modal */}
-                      <p>Popup content goes here.</p>
-                      <Button color="primary" onClick={toggleModal}>
-                        Close
-                      </Button>
-                    </ModalBody>
-                  </Modal>
                 </div>
               </Card>
             </Col>
