@@ -21,6 +21,7 @@ const ViewComplaint = () => {
   const socket = socketIOClient(WebSocketAPI);
 
   const [data, setData] = useState([]);
+  const user = localStorage.getItem("userType");
 
   const [selectedComplaint, setSelectedComplaint] = useState(null);
   const [employeeId, setEmployeeId] = useState("");
@@ -33,8 +34,20 @@ const ViewComplaint = () => {
         method: "GET",
       });
       const respData = await response.json();
-      setData(respData.data);
-      console.log(respData.data);
+      if (user === "admin") {
+        setData(
+          respData.data.filter(
+            (item) =>
+              item.branch_id === parseInt(localStorage.getItem("branchId"))
+          )
+        );
+      } else {
+        setData(
+          respData.data.filter(
+            (item) => item.assigned_to === localStorage.getItem("userId")
+          )
+        );
+      }
     } catch (error) {
       console.error("Error fetching data:", error);
       // Handle the error, for example, set an error state

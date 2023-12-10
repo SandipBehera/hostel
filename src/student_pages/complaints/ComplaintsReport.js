@@ -27,11 +27,20 @@ const ComplaintsReport = () => {
       });
       const res = await response.json();
       console.log(res.data);
-      setRow(res.data);
+      setRow(
+        res.data.filter(
+          (item) =>
+            item.branch_id ===
+            parseInt(
+              localStorage.getItem("branchId") &&
+                item.issued_by === localStorage.getItem("userId")
+            )
+        )
+      );
     };
     allComplaints();
   }, []);
-
+  console.log(rows);
   const viewRowData = (row) => {
     setRowData(row);
     toggleModal();
