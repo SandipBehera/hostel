@@ -29,6 +29,7 @@ const NewPatient = () => {
     doctor: "",
     file: null,
   });
+  const branch_id=localStorage.getItem("branchId");
   const [hostelData, sethostelData] = useState([]);
   const [floorData, setFloorData] = useState([]);
   const [roomData, setRoomData] = useState([]);
@@ -114,6 +115,8 @@ const NewPatient = () => {
     formDataForSubmission.append("reason", formData.reason);
     formDataForSubmission.append("doctorname", formData.doctor);
     formDataForSubmission.append("file", formData.file);
+    formDataForSubmission.append("branch_id", branch_id );
+
     console.log([...formDataForSubmission.entries()]);
     try {
       // Make the API call

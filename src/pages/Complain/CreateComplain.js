@@ -66,7 +66,7 @@ export default function CreateComplain() {
     setHostelNumber(value);
     setAssignTo(wardenNames[value] || "");
   };
-
+  const branchId= localStorage.getItem("branchId")
   const handleSubmit = async () => {
     const data = {
       issue_type: issueType,
@@ -76,6 +76,7 @@ export default function CreateComplain() {
       assigned_to: assignTo,
       details: { content: content.replace(/\n/g, "\\n").replace(/\t/g, "\\t") },
       status: status,
+      branch_id: branchId
     };
     data.details = JSON.stringify(data.details);
     try {
