@@ -42,7 +42,9 @@ export default function Purchases() {
   const fetchItems = async () => {
     const response = await fetch(WebApi + "/get_items", { method: "GET" });
     const data = await response.json();
-    setItemList(data.data.filter((item) => item.branch_id === branchId));
+    setItemList(
+      data.data.filter((item) => item.branch_id === parseInt(branchId))
+    );
   };
   useEffect(() => {
     fetchItems();
