@@ -151,7 +151,7 @@ export default function Purchases() {
       };
       console.log(data);
 
-      await fetch(`${LocalApi}/add_stock`, {
+      await fetch(`${WebApi}/add_stock`, {
         method: "POST",
         body: JSON.stringify(data),
         headers: {
