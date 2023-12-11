@@ -73,12 +73,12 @@ const AllRoom = () => {
   const toggleModal = () => {
     setModalOpen(!modalOpen);
   };
-  function handleDelete(id) {
-    const updated = data.filter((item) => item.id !== id);
-    setData(updated);
-    console.log(updated);
-  }
-  
+function handleDelete(id) {
+  const updated = data.filter((item) => item.id !== id);
+  setData(updated);
+  console.log(updated);
+}
+
   console.log(data);
   return (
     <Fragment>
