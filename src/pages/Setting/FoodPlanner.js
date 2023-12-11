@@ -12,6 +12,7 @@ import {
 } from "reactstrap";
 import { Breadcrumbs, H5 } from "../../AbstractElements";
 import { LocalApi, WebApi } from "../../api";
+import { toast } from "react-toastify";
 
 const FoodPlanner = () => {
   const [month, setMonth] = useState("January"); // Initial month
@@ -35,6 +36,8 @@ const FoodPlanner = () => {
     updatedMealData[day][mealType][field] = e.target.value;
     setMealData(updatedMealData);
   };
+  const branchId  = localStorage.getItem("branchId");
+  console.log(branchId)
   // Function to handle form submission
   const handleSubmit = async () => {
     // Display the updated meal data in the console
@@ -43,6 +46,7 @@ const FoodPlanner = () => {
       month: month,
       year: year,
       food_menu: mealData,
+      branch_id: branchId
     };
     data.food_menu = JSON.stringify(data.food_menu);
 
@@ -53,10 +57,9 @@ const FoodPlanner = () => {
     });
     const respdata = await response.json();
     if (respdata.status === "success") {
-      alert("Food Menu Created Successfully");
+      toast.success("Food Menu Created")
     } else {
-      alert("Food Menu Not Created");
-    }
+toast.error("Failed to create food menu")    }
   };
   // Function to handle month change
   const handleMonthChange = (selectedMonth) => {

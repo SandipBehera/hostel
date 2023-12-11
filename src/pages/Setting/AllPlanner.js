@@ -22,10 +22,15 @@ const AllPlanner = () => {
   // Sample data for the table
   const [data, setData] = useState([]);
   // Function to fetch data from the API
+  const branchID = localStorage.getItem("branchId");
+  console.log(branchID)
   const fetchData = async () => {
     const response = await fetch(`${WebApi}/get_all_menu`);
     const respData = await response.json();
-    setData(respData.data);
+    
+    setData(respData.data
+      .filter((key) => key.branch_id === parseInt(branchID))
+      );
   };
   // Fetch data on component mount
   useEffect(() => {

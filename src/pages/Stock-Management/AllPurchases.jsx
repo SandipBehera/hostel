@@ -31,7 +31,7 @@ const AllPurchases = () => {
 
         console.log(fetched);
         setData(fetched
-          ?.filter((key) => key.branch_id === parseInt(branchId))
+          ?.filter(key => key.branch_id === parseInt(branchId))
           ?.map((item) => ({
             id: item.id,
             date: item.created_at,
