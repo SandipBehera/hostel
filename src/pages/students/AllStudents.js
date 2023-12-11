@@ -94,11 +94,11 @@ const AllStudents = () => {
     });
     const respdata = await response.json();
     console.log(respdata);
-    const data = respdata.data.
-      filter(item => item.campus_branch === parseInt(branchId)
+    const data = respdata.data.filter(
+      (item) => item.campus_branch === parseInt(branchId)
     );
     setTableData(data);
-    console.log(data)
+    console.log(data);
   };
   useEffect(() => {
     getData();
@@ -115,7 +115,9 @@ const AllStudents = () => {
         method: "GET",
       });
       const resproom = await response.json();
-      sethostelData(resproom.data);
+      sethostelData(
+        resproom.data.filter((key) => key.branch_id === parseInt(branchId))
+      );
     };
     roomHostel();
   }, []);
@@ -396,6 +398,5 @@ const AllStudents = () => {
     </Fragment>
   );
 };
-
 
 export default AllStudents;
