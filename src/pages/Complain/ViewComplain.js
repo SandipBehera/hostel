@@ -17,8 +17,10 @@ import { Selected } from "../../Constant";
 import ComplaintActivity from "../../Components/complaints/complaintActivity";
 import { toast } from "react-toastify";
 
+
 const ViewComplaint = () => {
   const socket = socketIOClient(WebSocketAPI);
+  const branch_id = localStorage.getItem("branchId");
 
   const [data, setData] = useState([]);
   const user = localStorage.getItem("userType");
@@ -36,11 +38,13 @@ const ViewComplaint = () => {
       const respData = await response.json();
       if (user === "admin") {
         setData(
-          respData.data.filter(
-            (item) =>
+          respData.data
+          .filter(item =>
               item.branch_id === parseInt(localStorage.getItem("branchId"))
           )
         );
+
+        console.log(respData.data);
       } else {
         setData(
           respData.data.filter(
@@ -65,15 +69,15 @@ const ViewComplaint = () => {
     };
   }, []);
 
-  const handleView = (complaint) => {
-    data.filter((item) => {
-      if (item.id === complaint) {
-        setSelectedComplaint(item);
-      }
-    });
-    setViewModalOpen(true);
-    setProcessModalOpen(false); // Close the process modal
+  const handleView = (complaintId) => {
+    const selected = data.find((item) => item.id === complaintId);
+    if (selected) {
+      setSelectedComplaint(selected);
+      setViewModalOpen(true);
+      setProcessModalOpen(false);
+    }
   };
+  
 
   const handleStartProcess = (complaint) => {
     setSelectedComplaint(complaint);
@@ -201,40 +205,54 @@ const ViewComplaint = () => {
       <Modal isOpen={viewModalOpen}>
         <ModalHeader>{selectedComplaint?.issue_type} Details</ModalHeader>
         <ModalBody>
-          {selectedComplaint && (
-            <>
+  {selectedComplaint && (
+    <>
+      <div>
+        {selectedComplaint.issue_type === "Complaint" ? (
+          <ComplaintActivity
+            complaint={selectedComplaint}
+            displayTitle={true}
+          />
+        ) : (
+          <>
+            {selectedComplaint.details && (
+              <>
+               {(selectedComplaint.issue_type==="Mess Issue" || selectedComplaint.issue_type==="General Issue")?
               <div>
-                {selectedComplaint.issue_type === "Complaint" ? (
-                  <ComplaintActivity
-                    complaint={selectedComplaint}
-                    displayTitle={true}
-                  />
-                ) : (
-                  <>
-                    <p>
-                      {" "}
-                      <strong>From: </strong>
-                      {selectedComplaint.details.leave_from}
-                    </p>
-                    <p>
-                      <strong>To:</strong> {selectedComplaint.details.leave_to}
-                    </p>
-                    <p>
-                      <strong>Reason:</strong>{" "}
-                      {selectedComplaint.details.reason}
-                    </p>
-                  </>
-                )}
-              </div>
-            </>
-          )}
-        </ModalBody>
+              <p><strong>Complaint Details: </strong></p>
+              <p>{selectedComplaint.details.content}</p>
+
+              </div>:
+            <div>
+            <p>
+            <strong>Issue Type </strong>
+            {selectedComplaint.details.leave_from}
+          </p>
+          <p>
+            <strong>To:</strong> {selectedComplaint.details.leave_to}
+          </p>
+          <p>
+            <strong>Reason:</strong>{" "}
+            {selectedComplaint.details.reason}
+          </p>
+            </div>}
+              </>
+            )}
+          </>
+        )}
+      </div>
+    </>
+  )}
+</ModalBody>
+
         <ModalFooter>
           <Button color="secondary" onClick={() => setViewModalOpen(false)}>
             Close
           </Button>
         </ModalFooter>
       </Modal>
+
+      
     </div>
   );
 };

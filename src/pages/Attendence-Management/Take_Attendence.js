@@ -120,7 +120,7 @@ const Take_Attendence = () => {
   };
 
   const handleSubmit = async () => {
-    const response = await fetch(`${LocalApi}/get_student_by_room`, {
+    const response = await fetch(`${WebApi}/get_student_by_room`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -356,7 +356,79 @@ const Take_Attendence = () => {
                               <Button
                                 color="secondary"
                                 onClick={() => {
-                                  makeAttandance(stud.user_id, 0, msg);
+                                  makeAttandance(stud.userId, 0, msg);
+                                  openModal();
+                                  setAbsentButtonDisabled(true);
+                                }}
+                              >
+                                Submit
+                              </Button>
+                              {/* Additional buttons or actions can be added here */}
+                            </ModalFooter>
+                          </Modal>
+                          <Modal
+                            isOpen={modalOpen}
+                            toggle={openModal}
+                            onClose={resetButtonStates}
+                          >
+                            <ModalHeader toggle={openModal}>Reason</ModalHeader>
+                            <ModalBody>
+                              <FormGroup>
+                                <div>
+                                  <Label check>
+                                    <Input
+                                      type="radio"
+                                      name="reason"
+                                      value="Reason 1"
+                                      checked={msg === "Reason 1"}
+                                      onChange={() => setMsg("Reason 1")}
+                                    />
+                                    {" Reason 1"}
+                                  </Label>
+                                </div>
+                                <div>
+                                  <Label check>
+                                    <Input
+                                      type="radio"
+                                      name="reason"
+                                      value="Reason 2"
+                                      checked={msg === "Reason 2"}
+                                      onChange={() => setMsg("Reason 2")}
+                                    />
+                                    {" Reason 2"}
+                                  </Label>
+                                </div>
+                                {/* Add more radio button options as needed */}
+                                <div>
+                                  <Label check>
+                                    <Input
+                                      type="radio"
+                                      name="reason"
+                                      value="Others"
+                                      checked={msg === "Others"}
+                                      onChange={() => setMsg("Others")}
+                                    />
+                                    {" Others"}
+                                  </Label>
+                                </div>
+                                {msg === "Others" && (
+                                  <Input
+                                    value={otherMessage}
+                                    onChange={(e) =>
+                                      setOtherMessage(e.target.value)
+                                    }
+                                    type="text"
+                                    className="mt-3"
+                                    placeholder="Write a reason"
+                                  />
+                                )}
+                              </FormGroup>
+                            </ModalBody>
+                            <ModalFooter>
+                              <Button
+                                color="secondary"
+                                onClick={() => {
+                                  makeAttandance(stud.userId, 0, msg);
                                   openModal();
                                   setAbsentButtonDisabled(true);
                                 }}
