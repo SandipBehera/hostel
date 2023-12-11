@@ -144,15 +144,12 @@ export default function Purchases() {
     console.log(file, isMarketPlace);
     {
       const data = {
-        item_name: selectedItems[0].item_name,
-        item_for: selectedItems[0].item_for,
-        quantity: selectedItems[0].quantity,
-        price_per: selectedItems[0].price,
         total_price: totalPrice,
         purchased_from: buyerName,
-        purchase_date: selectedItems[0].created_at,
         branch_id: branchId,
+        allItems: selectedItems,
       };
+      console.log(data);
 
       await fetch(`${WebApi}/add_stock`, {
         method: "POST",
@@ -164,7 +161,7 @@ export default function Purchases() {
         .then((response) => response.json())
         .then((data) => {
           console.log(data);
-          toast.success("Stock Added Successfuly");
+          toast.success(data.message);
         })
         .catch((e) => {
           console.log(e), toast.error("Faild to add stocks");

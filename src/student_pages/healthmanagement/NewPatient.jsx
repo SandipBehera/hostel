@@ -29,7 +29,7 @@ const NewPatient = () => {
     doctor: "",
     file: null,
   });
-  const branch_id=localStorage.getItem("branchId");
+  const branch_id = localStorage.getItem("branchId");
   const [hostelData, sethostelData] = useState([]);
   const [floorData, setFloorData] = useState([]);
   const [roomData, setRoomData] = useState([]);
@@ -43,7 +43,11 @@ const NewPatient = () => {
         method: "GET",
       });
       const resproom = await response.json();
-      sethostelData(resproom.data);
+      sethostelData(
+        resproom.data.filter(
+          (hostel) => hostel.branch_id === parseInt(branch_id)
+        )
+      );
       console.log(resproom.data);
     };
     roomHostel();
@@ -52,7 +56,7 @@ const NewPatient = () => {
   const hostel_name = hostelData?.map((key) => {
     return { value: key.id, label: key.hostel_name };
   });
-
+  console.log(hostel_name);
   const handleHostelSelect = (hostelid) => {
     setSelectedHostel(hostelid);
     const floors = hostelid
@@ -115,7 +119,7 @@ const NewPatient = () => {
     formDataForSubmission.append("reason", formData.reason);
     formDataForSubmission.append("doctorname", formData.doctor);
     formDataForSubmission.append("file", formData.file);
-    formDataForSubmission.append("branch_id", branch_id );
+    formDataForSubmission.append("branch_id", branch_id);
 
     console.log([...formDataForSubmission.entries()]);
     try {
@@ -142,7 +146,7 @@ const NewPatient = () => {
         reason: "",
         doctor: "",
         file: null,
-        branch_id: localStorage.getItem("branchId")
+        branch_id: parseInt(localStorage.getItem("branchId")),
       });
 
       setSelectedHostel(null);
