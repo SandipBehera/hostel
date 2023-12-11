@@ -27,7 +27,7 @@ import { Breadcrumbs, H5 } from "../../AbstractElements";
 import "../styles/take_attendence.css";
 import { data } from "./data";
 import AttendenceReport from "./AttendenceReport";
-import { WebApi } from "../../api";
+import { LocalApi, WebApi } from "../../api";
 import { toast } from "react-toastify";
 
 const Take_Attendence = () => {
@@ -120,7 +120,7 @@ const Take_Attendence = () => {
   };
 
   const handleSubmit = async () => {
-    const response = await fetch(`${WebApi}/get_student_by_room`, {
+    const response = await fetch(`${LocalApi}/get_student_by_room`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -288,9 +288,9 @@ const Take_Attendence = () => {
                 <tbody>
                   {studentData.map((stud, index) => (
                     <tr key={index}>
-                      <td>{stud.id}</td>
+                      <td>{index + 1}</td>
                       <td>{stud.name}</td>
-                      <td>{stud.user_id}</td>
+                      <td>{stud.userId}</td>
                       <td>{selectedRoom}</td>
                       <td>
                         <div>
@@ -377,9 +377,7 @@ const Take_Attendence = () => {
                                 setSelectedId(stud.userId);
                             }}
                             disabled={
-                              selectedId === stud.username
-                                ? presentButtonDisabled
-                                : ""
+                              stud.userId === "1" ? presentButtonDisabled : ""
                             }
                           >
                             Present
