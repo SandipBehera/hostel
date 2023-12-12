@@ -71,20 +71,20 @@ export const EmployeeMenu = [
           { path: `/today-Booking`, title: "Today's  Booking", type: "link" },
         ],
       },
-      {
-        title: "Purchase Data",
-        icon: "widget",
-        type: "sub",
-        active: false,
-        children: [
-          {
-            path: `/day-to-day-order`,
-            title: "Day to Day Order",
-            type: "link",
-          },
-          { path: `/purchase-report`, title: "Purchase Report", type: "link" },
-        ],
-      },
+      // {
+      //   title: "Purchase Data",
+      //   icon: "widget",
+      //   type: "sub",
+      //   active: false,
+      //   children: [
+      //     {
+      //       path: `/day-to-day-order`,
+      //       title: "Day to Day Order",
+      //       type: "link",
+      //     },
+      //     { path: `/purchase-report`, title: "Purchase Report", type: "link" },
+      //   ],
+      // },
 
       {
         title: "Tickets & Complains",

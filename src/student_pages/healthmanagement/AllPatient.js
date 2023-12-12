@@ -82,7 +82,7 @@ const AllPatient = () => {
     localStorage.getItem("userType") === "admin" ||
     localStorage.getItem("userType") === "employee"
       ? data
-      : data.filter(
+      : data?.filter(
           (key) => key.patient_regdno === localStorage.getItem("userId")
         );
   return (
