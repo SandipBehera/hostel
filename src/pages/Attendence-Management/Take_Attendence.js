@@ -27,7 +27,7 @@ import { Breadcrumbs, H5 } from "../../AbstractElements";
 import "../styles/take_attendence.css";
 import { data } from "./data";
 import AttendenceReport from "./AttendenceReport";
-import { WebApi } from "../../api";
+import { LocalApi, WebApi } from "../../api";
 import { toast } from "react-toastify";
 
 const Take_Attendence = () => {
@@ -52,10 +52,17 @@ const Take_Attendence = () => {
   const [presentButtonDisabled, setPresentButtonDisabled] = useState(false);
   const [absentButtonDisabled, setAbsentButtonDisabled] = useState(false);
   const [selectedId, setSelectedId] = useState("");
+  const [reasonModal, setReasonModal] = useState(false);
+  const [selectedComment, setSelectedComment] = useState(""); // Add new state for selected comment
+
+
+  const [commentt, setComment] = useState("");
 
   const [otherMessage, setOtherMessage] = useState("");
 
   const reasons = ["Reason 1", "Reason 2", "Reason 3", "Other"];
+
+  
 
   const resetButtonStates = () => {
     setPresentButtonDisabled(false);
@@ -69,7 +76,9 @@ const Take_Attendence = () => {
         method: "GET",
       });
       const resproom = await response.json();
-      sethostelData(resproom.data);
+      sethostelData(
+        resproom.data.filter((key) => key.branch_id === parseInt(branchId))
+      );
     };
     roomHostel();
   }, []);
@@ -112,11 +121,14 @@ const Take_Attendence = () => {
   const currentDate = new Date();
   const time = currentDate.toTimeString();
 
- 
-
   const openModal = () => {
     setModalOpen(!modalOpen);
     resetButtonStates();
+  };
+
+  const viewReason = (comment) => {
+    setSelectedComment(comment);
+    setReasonModal(!reasonModal);
   };
 
   const handleSubmit = async () => {
@@ -147,7 +159,7 @@ const Take_Attendence = () => {
     if (status === 1) {
       setPresentButtonDisabled(true);
       setAbsentButtonDisabled(false);
-    } else if(status===0){
+    } else if (status === 0) {
       setPresentButtonDisabled(false);
       // setAbsentButtonDisabled(true);
     }
@@ -158,8 +170,12 @@ const Take_Attendence = () => {
       if (comments === null) {
         comment = "{}";
       } else {
+       
         comment = JSON.stringify({ comment: comments });
+    
       }
+    
+     
       // console.log({
       //   user_id: studentregistration,
       //   hostel_id: selectedHostel,
@@ -179,7 +195,7 @@ const Take_Attendence = () => {
             room_id: selectedRoom,
             status: status,
             comments: comment,
-            branch_id: localStorage.getItem("branchId")
+            branch_id: localStorage.getItem("branchId"),
           }),
         });
 
@@ -208,15 +224,15 @@ const Take_Attendence = () => {
     // Call the async function
     await processAttendance();
   };
-  console.log(absentButtonDisabled)
+  // console.log(absentButtonDisabled);
 
   return (
     <Fragment>
       <Breadcrumbs
         parent="Student"
         mainTitle="Attendance"
-        subParent="Take Attendance"
-        title="Take Attandence"
+        subParent="Take Attaendance"
+        title="Take Attendance"
       />
       <Card>
         <CardBody>
@@ -278,7 +294,7 @@ const Take_Attendence = () => {
               <table className="table text-center">
                 <thead>
                   <tr>
-                  <th>ID</th>
+                    <th>ID</th>
                     <th>Name</th>
                     <th>Regd No</th>
                     <th>Room No</th>
@@ -288,99 +304,116 @@ const Take_Attendence = () => {
                 <tbody>
                   {studentData.map((stud, index) => (
                     <tr key={index}>
-                    <td>{stud.id}</td>
+                      <td>{index + 1}</td>
                       <td>{stud.name}</td>
-                      <td>{stud.username}</td>
+                      <td>{stud.userId}</td>
                       <td>{selectedRoom}</td>
                       <td>
                         <div>
-                        <Modal isOpen={modalOpen} toggle={openModal} onClose={resetButtonStates}>
-                        <ModalHeader toggle={openModal}>Reason</ModalHeader>
-                        <ModalBody>
-                          <FormGroup>
-                            <div>
-                              <Label check>
-                                <Input
-                                  type="radio"
-                                  name="reason"
-                                  value="Reason 1"
-                                  checked={msg === 'Reason 1'}
-                                  onChange={() => setMsg('Reason 1')}
-                                />
-                                {' Reason 1'}
-                              </Label>
-                            </div>
-                            <div>
-                              <Label check>
-                                <Input
-                                  type="radio"
-                                  name="reason"
-                                  value="Reason 2"
-                                  checked={msg === 'Reason 2'}
-                                  onChange={() => setMsg('Reason 2')}
-                                />
-                                {' Reason 2'}
-                              </Label>
-                            </div>
-                            {/* Add more radio button options as needed */}
-                            <div>
-                              <Label check>
-                                <Input
-                                  type="radio"
-                                  name="reason"
-                                  value="Others"
-                                  checked={msg === 'Others'}
-                                  onChange={() => setMsg('Others')}
-                                />
-                                {' Others'}
-                              </Label>
-                            </div>
-                            {msg === 'Others' && (
-                              <Input
-                                value={otherMessage}
-                                onChange={(e) => setOtherMessage(e.target.value)}
-                                type="text"
-                                className="mt-3"
-                                placeholder="Write a reason"
-                              />
-                            )}
-                          </FormGroup>
-                        </ModalBody>
-                        <ModalFooter>
-                          <Button
-                            color="secondary"
-                            onClick={() => {
-                              makeAttandance(stud.id, 0, msg);
-                              openModal();
-                              setAbsentButtonDisabled(true);
-                            }}
+                          <Modal
+                            isOpen={modalOpen}
+                            toggle={openModal}
+                            onClose={resetButtonStates}
                           >
-                            Submit
-                          </Button>
-                          {/* Additional buttons or actions can be added here */}
-                        </ModalFooter>
-                      </Modal>
+                            <ModalHeader toggle={openModal}>Reason</ModalHeader>
+                            <ModalBody>
+                              <FormGroup>
+                                <div>
+                                  <Label check>
+                                    <Input
+                                      type="radio"
+                                      name="reason"
+                                      value="Reason 1"
+                                      checked={msg === "Reason 1"}
+                                      onChange={() => setMsg("Reason 1")}
+                                    />
+                                    {" Reason 1"}
+                                  </Label>
+                                </div>
+                                <div>
+                                  <Label check>
+                                    <Input
+                                      type="radio"
+                                      name="reason"
+                                      value="Reason 2"
+                                      checked={msg === "Reason 2"}
+                                      onChange={() => setMsg("Reason 2")}
+                                    />
+                                    {" Reason 2"}
+                                  </Label>
+                                </div>
+                                {/* Add more radio button options as needed */}
+                                <div>
+                                  <Label check>
+                                    <Input
+                                      type="radio"
+                                      name="reason"
+                                      value="Others"
+                                      checked={msg === "Others"}
+                                      onChange={() => setMsg("Others")}
+                                    />
+                                    {" Others"}
+                                  </Label>
+                                </div>
+                                {msg === "Others" && (
+                                  <Input
+                                    value={otherMessage}
+                                    onChange={(e) =>
+                                      setOtherMessage(e.target.value)
+                                    }
+                                    type="text"
+                                    className="mt-3"
+                                    placeholder="Write a reason"
+                                  />
+                                )}
+                              </FormGroup>
+                            </ModalBody>
+                            <ModalFooter>
+                              <Button
+                                color="secondary"
+                                onClick={() => {
+                                  makeAttandance(stud.userId, 0, msg);
+                                  openModal();
+                                  setAbsentButtonDisabled(true);
+                                }}
+                              >
+                                Submit
+                              </Button>
+                              {/* Additional buttons or actions can be added here */}
+                            </ModalFooter>
+                          </Modal>
+
+                          <Modal isOpen={reasonModal} toggle={viewReason}>
+                            <ModalHeader toggle={viewReason}>
+                              Absent Reason
+                            </ModalHeader>
+                            <ModalBody>
+                            <p>{selectedComment}</p>
+                            </ModalBody>
+                          </Modal>
                         </div>
-                        {(absentButtonDisabled && selectedId===stud.id) ? (
-                          ""
+                        {absentButtonDisabled && selectedId === stud.userId ? (
+                          <Button
+                            color="primary"
+                            onClick={() => viewReason(stud.comments.comment)}
+                          >
+                            View
+                          </Button>
                         ) : (
                           <Button
                             color="success"
                             onClick={() => {
-                              makeAttandance(stud.id, 1, null),
-                                setSelectedId(stud.id);
+                              makeAttandance(stud.userId, 1, null),
+                                setSelectedId(stud.userId);
                             }}
                             disabled={
-                              selectedId === stud.id
-                                ? presentButtonDisabled
-                                : ""
+                              stud.userId === "1" ? presentButtonDisabled : ""
                             }
                           >
                             Present
                           </Button>
                         )}{" "}
-                        {presentButtonDisabled &&
-                        selectedId === stud.id ? (
+                        {presentButtonDisabled && selectedId === stud.userId ? (
                           ""
                         ) : (
                           <Button
@@ -388,12 +421,13 @@ const Take_Attendence = () => {
                             onClick={() => {
                               openModal();
                               setMsg("");
-                              setSelectedId(stud.id);
-
+                              setSelectedId(stud.userId);
                             }}
-                            disabled={selectedId === stud.id
-                              ? absentButtonDisabled
-                              : ""}
+                            disabled={
+                              selectedId === stud.userId
+                                ? absentButtonDisabled
+                                : ""
+                            }
                           >
                             Absent
                           </Button>
@@ -412,5 +446,3 @@ const Take_Attendence = () => {
 };
 
 export default Take_Attendence;
-
-

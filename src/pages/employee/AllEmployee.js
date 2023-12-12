@@ -1,5 +1,5 @@
 import React, { Fragment, useContext, useEffect, useState } from "react";
-import { Col, Card, CardHeader, Row, Button } from "reactstrap";
+import { Col, Card, CardHeader, Row, Button, Modal, ModalHeader, ModalBody, Label, Input, ModalFooter } from "reactstrap";
 import DataTable from "react-data-table-component";
 import { Breadcrumbs, H5 } from "../../AbstractElements";
 import { useNavigate } from "react-router-dom";
@@ -13,6 +13,7 @@ const AllEmployee = () => {
 
   const [empData, setEmpData] = useState([]);
   const branchID = localStorage.getItem("branchId");
+  const [editModal, setEditModal] = useState(false);
   console.log("branch_id", branchID);
   console.log(typeof branchID);
   useEffect(() => {
@@ -37,8 +38,8 @@ const AllEmployee = () => {
         setEmpData(
           fetchedData
             .filter((key) => key.branch_id === parseInt(branchID))
-            .map((item) => ({
-              id: item.id,
+            .map((item, index) => ({
+              id: index+1,
               name: item.emp_name,
               email: item.emp_email,
               contact: item.emp_phone,
@@ -54,6 +55,14 @@ const AllEmployee = () => {
 
     getAllEmployee();
   }, []);
+
+  const viewEditModal = () =>{
+    setEditModal(!editModal);
+    
+  }
+  const CustomButton = ({ onClick, text }) => (
+    <Button color="primary" onClick={onClick}>Edit</Button>
+  );
 
   let colData = [
     {
@@ -93,6 +102,18 @@ const AllEmployee = () => {
       sortable: true,
       center: false,
     },
+
+    {
+      name: 'Action',
+      cell: (row) => (
+        <CustomButton
+          onClick={() => viewEditModal(row.id)} // Replace with your action
+          text="Edit"
+        />
+      ),
+      center: true,
+    },
+    
   ];
 
   return (
@@ -122,7 +143,23 @@ const AllEmployee = () => {
                 pagination
               />
             </div>
+
+            <Modal isOpen={editModal} toggle={viewEditModal}>
+            <ModalHeader toggle={viewEditModal}>Edit Employee Details</ModalHeader>
+            <ModalBody>
+            <Label>Employee Name</Label>
+            <Input></Input>
+            <Label>Designation</Label>
+            <Input></Input>
+            <Label>Address</Label>
+            <Input></Input>
+            </ModalBody>
+            <ModalFooter>
+            <Button>Submit</Button>
+            </ModalFooter>
+            </Modal>
           </Card>
+         
         </Col>
       </div>
     </Fragment>

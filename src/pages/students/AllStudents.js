@@ -238,12 +238,12 @@ const AllStudents = () => {
                       </tr>
                     </thead>
                     <tbody>
-                      {tableData.map((item) => (
+                      {tableData.map((item, index) => (
                         <tr
                           key={item.id}
                           className={`border-bottom-${item.color}`}
                         >
-                          <th scope="row">{item.id}</th>
+                          <th scope="row">{index+1}</th>
                           <td>
                             {/* <Image
                               attrImage={{

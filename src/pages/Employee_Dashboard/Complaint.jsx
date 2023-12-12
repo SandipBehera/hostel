@@ -73,9 +73,9 @@ const Complaint = () => {
             </tr>
           </thead>
           <tbody>
-            {dummyData.map((complaint) => (
+            {dummyData.map((complaint, index) => (
               <tr key={complaint.id}>
-                <td>{complaint.id}</td>
+                <td>{index+1}</td>
                 <td>{complaint.name}</td>
                 <td>{complaint.issueType}</td>
                 <td>
