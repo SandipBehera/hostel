@@ -129,9 +129,9 @@ const ViewComplaint = () => {
         </thead>
         <tbody>
           {data !== undefined && data.length > 0 ? (
-            data.map((complaint) => (
+            data.map((complaint, index) => (
               <tr key={complaint.id}>
-                <td>{complaint.id}</td>
+                <td>{index+1}</td>
                 <td>{complaint.issued_by}</td>
                 <td>{complaint.issue_type}</td>
                 <td>

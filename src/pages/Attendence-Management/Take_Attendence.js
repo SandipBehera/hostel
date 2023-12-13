@@ -52,10 +52,17 @@ const Take_Attendence = () => {
   const [presentButtonDisabled, setPresentButtonDisabled] = useState(false);
   const [absentButtonDisabled, setAbsentButtonDisabled] = useState(false);
   const [selectedId, setSelectedId] = useState("");
+  const [reasonModal, setReasonModal] = useState(false);
+  const [selectedComment, setSelectedComment] = useState(""); // Add new state for selected comment
+
+
+  const [commentt, setComment] = useState("");
 
   const [otherMessage, setOtherMessage] = useState("");
 
   const reasons = ["Reason 1", "Reason 2", "Reason 3", "Other"];
+
+  
 
   const resetButtonStates = () => {
     setPresentButtonDisabled(false);
@@ -119,6 +126,11 @@ const Take_Attendence = () => {
     resetButtonStates();
   };
 
+  const viewReason = (comment) => {
+    setSelectedComment(comment);
+    setReasonModal(!reasonModal);
+  };
+
   const handleSubmit = async () => {
     const response = await fetch(`${WebApi}/get_student_by_room`, {
       method: "POST",
@@ -158,8 +170,12 @@ const Take_Attendence = () => {
       if (comments === null) {
         comment = "{}";
       } else {
+       
         comment = JSON.stringify({ comment: comments });
+    
       }
+    
+     
       // console.log({
       //   user_id: studentregistration,
       //   hostel_id: selectedHostel,
@@ -208,15 +224,15 @@ const Take_Attendence = () => {
     // Call the async function
     await processAttendance();
   };
-  console.log(absentButtonDisabled);
+  // console.log(absentButtonDisabled);
 
   return (
     <Fragment>
       <Breadcrumbs
         parent="Student"
-        mainTitle="Attandance"
-        subParent="Take Attandance"
-        title="Take Attandance"
+        mainTitle="Attendance"
+        subParent="Take Attaendance"
+        title="Take Attendance"
       />
       <Card>
         <CardBody>
@@ -366,81 +382,23 @@ const Take_Attendence = () => {
                               {/* Additional buttons or actions can be added here */}
                             </ModalFooter>
                           </Modal>
-                          <Modal
-                            isOpen={modalOpen}
-                            toggle={openModal}
-                            onClose={resetButtonStates}
-                          >
-                            <ModalHeader toggle={openModal}>Reason</ModalHeader>
+
+                          <Modal isOpen={reasonModal} toggle={viewReason}>
+                            <ModalHeader toggle={viewReason}>
+                              Absent Reason
+                            </ModalHeader>
                             <ModalBody>
-                              <FormGroup>
-                                <div>
-                                  <Label check>
-                                    <Input
-                                      type="radio"
-                                      name="reason"
-                                      value="Reason 1"
-                                      checked={msg === "Reason 1"}
-                                      onChange={() => setMsg("Reason 1")}
-                                    />
-                                    {" Reason 1"}
-                                  </Label>
-                                </div>
-                                <div>
-                                  <Label check>
-                                    <Input
-                                      type="radio"
-                                      name="reason"
-                                      value="Reason 2"
-                                      checked={msg === "Reason 2"}
-                                      onChange={() => setMsg("Reason 2")}
-                                    />
-                                    {" Reason 2"}
-                                  </Label>
-                                </div>
-                                {/* Add more radio button options as needed */}
-                                <div>
-                                  <Label check>
-                                    <Input
-                                      type="radio"
-                                      name="reason"
-                                      value="Others"
-                                      checked={msg === "Others"}
-                                      onChange={() => setMsg("Others")}
-                                    />
-                                    {" Others"}
-                                  </Label>
-                                </div>
-                                {msg === "Others" && (
-                                  <Input
-                                    value={otherMessage}
-                                    onChange={(e) =>
-                                      setOtherMessage(e.target.value)
-                                    }
-                                    type="text"
-                                    className="mt-3"
-                                    placeholder="Write a reason"
-                                  />
-                                )}
-                              </FormGroup>
+                            <p>{selectedComment}</p>
                             </ModalBody>
-                            <ModalFooter>
-                              <Button
-                                color="secondary"
-                                onClick={() => {
-                                  makeAttandance(stud.userId, 0, msg);
-                                  openModal();
-                                  setAbsentButtonDisabled(true);
-                                }}
-                              >
-                                Submit
-                              </Button>
-                              {/* Additional buttons or actions can be added here */}
-                            </ModalFooter>
                           </Modal>
                         </div>
                         {absentButtonDisabled && selectedId === stud.userId ? (
-                          ""
+                          <Button
+                            color="primary"
+                            onClick={() => viewReason(stud.comments.comment)}
+                          >
+                            View
+                          </Button>
                         ) : (
                           <Button
                             color="success"

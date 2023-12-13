@@ -220,44 +220,7 @@ const AllStudents = () => {
       <Container fluid={true}>
         <Card>
           <CardBody>
-            <Row style={{ padding: "6px" }}>
-              <Col sm="12">
-                <div
-                  style={{ display: "flex", justifyContent: "space-between" }}
-                >
-                  <div className="mb-2" style={{ width: "30%" }}>
-                    <Label className="col-form-label"></Label>
-                    <Select
-                      options={hostel_name}
-                      className="js-example-basic-single col-sm-12"
-                    />
-                  </div>
-
-                  <div className="" style={{ width: "30%" }}>
-                    <Label className="col-form-label"></Label>
-                    <Select
-                      options={floorData}
-                      className="js-example-basic-single col-sm-12"
-                    />
-                  </div>
-                  <div className="">
-                    <Label className="col-form-label"></Label>
-                    <InputGroup>
-                      <InputGroupText>
-                        <FaSearch />
-                      </InputGroupText>
-
-                      <Input
-                        type="text"
-                        placeholder="Search"
-                        value={roomData}
-                        onChange={handleChange}
-                      />
-                    </InputGroup>
-                  </div>
-                </div>
-              </Col>
-            </Row>
+            
 
             <Col sm="12">
               <Card className="h-auto">
@@ -275,12 +238,12 @@ const AllStudents = () => {
                       </tr>
                     </thead>
                     <tbody>
-                      {tableData.map((item) => (
+                      {tableData.map((item, index) => (
                         <tr
                           key={item.id}
                           className={`border-bottom-${item.color}`}
                         >
-                          <th scope="row">{item.id}</th>
+                          <th scope="row">{index+1}</th>
                           <td>
                             {/* <Image
                               attrImage={{

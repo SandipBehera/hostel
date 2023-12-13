@@ -106,7 +106,7 @@ function handleDelete(id) {
                     </thead>
                     <tbody style={{ textAlign: "center" }}>
                       {data && data.length > 0 ? (
-                        data.map((item) =>
+                        data.map((item, index) =>
                           edit === item.id ? (
                             <EditForm
                               item={item}
@@ -120,7 +120,7 @@ function handleDelete(id) {
                               key={item.id}
                               className={`border-bottom-${item.color}`}
                             >
-                              <th scope="row">{item.id}</th>
+                              <th scope="row">{index+1}</th>
                               <td>{item.hostel_name}</td>
                               <td>{item.floor_count}</td>
                               <td>

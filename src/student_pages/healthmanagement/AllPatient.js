@@ -82,7 +82,7 @@ const AllPatient = () => {
     localStorage.getItem("userType") === "admin" ||
     localStorage.getItem("userType") === "employee"
       ? data
-      : data.filter(
+      : data?.filter(
           (key) => key.patient_regdno === localStorage.getItem("userId")
         );
   return (
@@ -115,7 +115,7 @@ const AllPatient = () => {
                   <td>{item.hostelid}</td>
                   <td>{item.floorid}</td>
                   <td>{item.roomno}</td>
-                  <td>{item.date}</td>
+                  <td>{`${new Date(item.date)}`.slice(4, 15)}</td>
                   <td>{item.time}</td>
                   <td>
                     <Button color="primary" onClick={() => toggleModal(item)}>
@@ -135,10 +135,8 @@ const AllPatient = () => {
                   {/* Display details of selected data in the modal */}
                   <p>Student Name: {selectedData.patientname}</p>
                   <p>Doctor Name: {selectedData.doctorname}</p>
-                  <p>Hostel Name: {selectedData.hostelid}</p>
-                  <p>Floor No.: {selectedData.floorid}</p>
-                  <p>Room No.: {selectedData.roomno}</p>
-                  <p>Date: {selectedData.date}</p>
+                  
+                  <p>Date: {`${new Date(selectedData.date)}`.slice(4, 15)}</p>
                   <p>Time: {selectedData.time}</p>
                   <p>Preception Copy</p>
                   <img
