@@ -3,8 +3,9 @@ import { Col, Card, CardHeader, Row, Button, Modal, ModalHeader, ModalBody, Labe
 import DataTable from "react-data-table-component";
 import { Breadcrumbs, H5 } from "../../AbstractElements";
 import { useNavigate } from "react-router-dom";
-import { WebApi } from "../../api";
+import { LocalApi, WebApi } from "../../api";
 import TableContext from "../../_helper/Table";
+import UpdateEmployee from "./UpdateEmployee";
 
 const AllEmployee = () => {
   const navigate = useNavigate();
@@ -14,6 +15,7 @@ const AllEmployee = () => {
   const [empData, setEmpData] = useState([]);
   const branchID = localStorage.getItem("branchId");
   const [editModal, setEditModal] = useState(false);
+  const [selectedEmployee, setSelectedEmployee] = useState(null);
   console.log("branch_id", branchID);
   console.log(typeof branchID);
   useEffect(() => {
@@ -35,9 +37,10 @@ const AllEmployee = () => {
         const res = await response.json();
         console.log(res);
         const fetchedData = res.data;
+        console.log(fetchedData[0])
         setEmpData(
           fetchedData
-            .filter((key) => key.branch_id === parseInt(branchID))
+            ?.filter((key) => key.branch_id === parseInt(branchID))
             .map((item, index) => ({
               id: index+1,
               name: item.emp_name,
@@ -46,6 +49,12 @@ const AllEmployee = () => {
               address: item.address,
               designation: item.emp_designation,
               image: item.emp_pic,
+              aadhar: item.aadhar_no,
+              pan: item.pan_no,
+              regNo: item.employee_reg_no,
+              bank:item.bank_ac_name,
+              bankNo: item.bank_ac_no,
+              ifsc: item.bank_ifsc
             }))
         );
       } catch (error) {
@@ -56,12 +65,13 @@ const AllEmployee = () => {
     getAllEmployee();
   }, []);
 
-  const viewEditModal = () =>{
-    setEditModal(!editModal);
-    
-  }
-  const CustomButton = ({ onClick, text }) => (
-    <Button color="primary" onClick={onClick}>Edit</Button>
+  const viewEditModal = (row) => {
+    setSelectedEmployee(row);
+    setEditModal(true);
+    console.log("Edit modal state:", editModal);
+  };
+  const CustomButton = ({ onClick, text, row }) => (
+    <Button color="primary" onClick={() => onClick(row)}>{text}</Button>
   );
 
   let colData = [
@@ -104,11 +114,12 @@ const AllEmployee = () => {
     },
 
     {
-      name: 'Action',
+      name: "Action",
       cell: (row) => (
         <CustomButton
-          onClick={() => viewEditModal(row.id)} // Replace with your action
+        onClick={() => viewEditModal(row)}
           text="Edit"
+          row={row}
         />
       ),
       center: true,
@@ -144,20 +155,14 @@ const AllEmployee = () => {
               />
             </div>
 
-            <Modal isOpen={editModal} toggle={viewEditModal}>
-            <ModalHeader toggle={viewEditModal}>Edit Employee Details</ModalHeader>
-            <ModalBody>
-            <Label>Employee Name</Label>
-            <Input></Input>
-            <Label>Designation</Label>
-            <Input></Input>
-            <Label>Address</Label>
-            <Input></Input>
-            </ModalBody>
-            <ModalFooter>
-            <Button>Submit</Button>
-            </ModalFooter>
-            </Modal>
+           
+            <UpdateEmployee
+          
+              isOpen={editModal}
+              toggle={() => setEditModal(!editModal)}
+              employeeDetails={selectedEmployee || {}}
+            
+          />
           </Card>
          
         </Col>
@@ -188,3 +193,19 @@ export default AllEmployee;
 //                   ))}
 //                 </tbody>
 //               </Table>
+
+
+// <Modal isOpen={editModal} toggle={viewEditModal}>
+// <ModalHeader toggle={viewEditModal}>Edit Employee Details</ModalHeader>
+// <ModalBody>
+// <Label>Employee Name</Label>
+// <Input></Input>
+// <Label>Designation</Label>
+// <Input></Input>
+// <Label>Address</Label>
+// <Input></Input>
+// </ModalBody>
+// <ModalFooter>
+// <Button>Submit</Button>
+// </ModalFooter>
+// </Modal>
