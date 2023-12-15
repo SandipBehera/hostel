@@ -16,8 +16,6 @@ const AllEmployee = () => {
   const branchID = localStorage.getItem("branchId");
   const [editModal, setEditModal] = useState(false);
   const [selectedEmployee, setSelectedEmployee] = useState(null);
-  console.log("branch_id", branchID);
-  console.log(typeof branchID);
   useEffect(() => {
     const getAllEmployee = async () => {
       try {
@@ -35,9 +33,7 @@ const AllEmployee = () => {
         }
 
         const res = await response.json();
-        console.log(res);
         const fetchedData = res.data;
-        console.log(fetchedData[0])
         setEmpData(
           fetchedData
             ?.filter((key) => key.branch_id === parseInt(branchID))
@@ -172,40 +168,3 @@ const AllEmployee = () => {
 };
 
 export default AllEmployee;
-
-// <Table>
-//                 <thead>
-//                   <tr className="border-bottom-primary">
-//                     {colData.map((col) => (
-//                       <th key={col.name} scope="col">
-//                         {col.name}
-//                       </th>
-//                     ))}
-//                   </tr>
-//                 </thead>
-//                 <tbody>
-//                   {empData.map((item) => (
-//                     <tr key={item.id}>
-//                       {colData.map((col) => (
-//                         <td key={col.name}>{item[col.name.toLowerCase()]}</td>
-//                       ))}
-//                     </tr>
-//                   ))}
-//                 </tbody>
-//               </Table>
-
-
-// <Modal isOpen={editModal} toggle={viewEditModal}>
-// <ModalHeader toggle={viewEditModal}>Edit Employee Details</ModalHeader>
-// <ModalBody>
-// <Label>Employee Name</Label>
-// <Input></Input>
-// <Label>Designation</Label>
-// <Input></Input>
-// <Label>Address</Label>
-// <Input></Input>
-// </ModalBody>
-// <ModalFooter>
-// <Button>Submit</Button>
-// </ModalFooter>
-// </Modal>
