@@ -223,7 +223,7 @@ const AttendenceReport = ({ attendanceData }) => {
                                             toggleDropdown(item.id)
                                           }
                                         >
-                                          {/* <option value="">Action</option> */}
+                                       
                                           {item.status == 1 ? (
                                             <option value={0}>Absent</option>
                                           ) : (
