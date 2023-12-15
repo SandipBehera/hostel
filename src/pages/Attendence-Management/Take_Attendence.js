@@ -29,6 +29,7 @@ import { data } from "./data";
 import AttendenceReport from "./AttendenceReport";
 import { LocalApi, WebApi } from "../../api";
 import { toast } from "react-toastify";
+import { json } from "react-router";
 
 const Take_Attendence = () => {
   const [modalOpen, setModalOpen] = useState(false);
@@ -127,9 +128,11 @@ const Take_Attendence = () => {
   };
 
   const viewReason = (comment) => {
-    setSelectedComment(comment);
+    
+    const commentText = typeof comment === 'object' ? comment.comment : comment;
+    setSelectedComment(commentText);
     setReasonModal(!reasonModal);
-  };
+  }
 
   const handleSubmit = async () => {
     const response = await fetch(`${WebApi}/get_student_by_room`, {
