@@ -24,6 +24,7 @@ const AllPlanner = () => {
   // Function to fetch data from the API
   const branchID = localStorage.getItem("branchId");
   console.log(branchID)
+
   const fetchData = async () => {
     const response = await fetch(`${WebApi}/get_all_menu`);
     const respData = await response.json();
@@ -32,6 +33,38 @@ const AllPlanner = () => {
       .filter((key) => key.branch_id === parseInt(branchID))
       );
   };
+  //edit feture
+  const editItem = async (itemId) => {
+    try {
+      // Fetch the details of the item based on itemId
+      const response = await fetch(`${WebApi}/get_menu_item/${itemId}`);
+      const itemDetails = await response.json();
+      // Perform the edit action using the fetched details
+      console.log('Editing item with ID:', itemId, 'Details:', itemDetails);
+      // Add your logic for editing here, e.g., show a modal for editing
+    } catch (error) {
+      console.error('Error fetching item details:', error);
+    }
+  };
+  //delete feature
+  const deleteItem = async (itemId) => {
+    try {
+      // Perform the actual deletion using the API
+      await fetch(`${WebApi}/delete_menu_item/${itemId}`, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+      // After successful deletion, update the data
+      fetchData();
+      // Close the modal
+      toggleModal();
+    } catch (error) {
+      console.error('Error deleting item:', error);
+    }
+  };
+  
   // Fetch data on component mount
   useEffect(() => {
     fetchData();
@@ -64,10 +97,12 @@ const AllPlanner = () => {
     if (selectedAction === "Edit") {
       // Perform Edit action based on the selected item ID
       console.log(`Editing item with ID: ${selectedItemId}`);
+      editItem(selectedItemId)
       // Add your logic for editing here
     } else if (selectedAction === "Delete") {
       // Perform Delete action based on the selected item ID
       console.log(`Deleting item with ID: ${selectedItemId}`);
+      deleteItem(selectedItemId)
       // Add your logic for deleting here
     }
     toggleModal();
