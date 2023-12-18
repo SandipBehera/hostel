@@ -10,8 +10,9 @@ const FoodCalendar = () => {
   const fetchData = async () => {
     const response = await fetch(`${WebApi}/get_all_menu`);
     const respData = await response.json();
-    setData(respData.data
-      .filter(key=>key.branchId===parseInt(branchId)));
+    setData(
+      respData.data.filter((key) => key.branch_id === parseInt(branchId))
+    );
   };
 
   useEffect(() => {

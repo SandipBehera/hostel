@@ -1,5 +1,17 @@
 import React, { Fragment, useContext, useEffect, useState } from "react";
-import { Col, Card, CardHeader, Row, Button, Modal, ModalHeader, ModalBody, Label, Input, ModalFooter } from "reactstrap";
+import {
+  Col,
+  Card,
+  CardHeader,
+  Row,
+  Button,
+  Modal,
+  ModalHeader,
+  ModalBody,
+  Label,
+  Input,
+  ModalFooter,
+} from "reactstrap";
 import DataTable from "react-data-table-component";
 import { Breadcrumbs, H5 } from "../../AbstractElements";
 import { Link, useNavigate } from "react-router-dom";
@@ -16,8 +28,6 @@ const AllEmployee = () => {
   const branchID = localStorage.getItem("branchId");
   const [editModal, setEditModal] = useState(false);
   const [selectedEmployee, setSelectedEmployee] = useState(null);
-  console.log("branch_id", branchID);
-  console.log(typeof branchID);
   useEffect(() => {
     const getAllEmployee = async () => {
       try {
@@ -35,14 +45,13 @@ const AllEmployee = () => {
         }
 
         const res = await response.json();
-        console.log(res);
         const fetchedData = res.data;
-        
+
         setEmpData(
           fetchedData
             ?.filter((key) => key.branch_id === parseInt(branchID))
             .map((item, index) => ({
-              id: index+1,
+              id: index + 1,
               name: item.emp_name,
               email: item.emp_email,
               contact: item.emp_phone,
@@ -52,16 +61,14 @@ const AllEmployee = () => {
               aadhar: item.aadhar_no,
               pan: item.pan_no,
               regNo: item.employee_reg_no,
-              bank:item.bank_ac_name,
+              bank: item.bank_ac_name,
               bankNo: item.bank_ac_no,
               ifsc: item.bank_ifsc,
               empId: item.emp_id,
-              doj: item.emp_dob
-              
+              doj: item.emp_dob,
             }))
-            
         );
-        console.log(empData)
+        console.log(empData);
       } catch (error) {
         console.error("Error fetching data:", error.message);
       }
@@ -121,13 +128,15 @@ const AllEmployee = () => {
     {
       name: "Action",
       cell: (row) => (
-      <Link to={`/admin/2079/edit/${row.id}`} state={{employeeDetails:row}}>  
-      <Button color="primary">Edit</Button>
-      </Link>
+        <Link
+          to={`/admin/2079/edit/${row.id}`}
+          state={{ employeeDetails: row }}
+        >
+          <Button color="primary">Edit</Button>
+        </Link>
       ),
       center: true,
     },
-    
   ];
 
   return (
@@ -157,11 +166,7 @@ const AllEmployee = () => {
                 pagination
               />
             </div>
-
-           
-        
           </Card>
-         
         </Col>
       </div>
     </Fragment>
@@ -169,40 +174,3 @@ const AllEmployee = () => {
 };
 
 export default AllEmployee;
-
-// <Table>
-//                 <thead>
-//                   <tr className="border-bottom-primary">
-//                     {colData.map((col) => (
-//                       <th key={col.name} scope="col">
-//                         {col.name}
-//                       </th>
-//                     ))}
-//                   </tr>
-//                 </thead>
-//                 <tbody>
-//                   {empData.map((item) => (
-//                     <tr key={item.id}>
-//                       {colData.map((col) => (
-//                         <td key={col.name}>{item[col.name.toLowerCase()]}</td>
-//                       ))}
-//                     </tr>
-//                   ))}
-//                 </tbody>
-//               </Table>
-
-
-// <Modal isOpen={editModal} toggle={viewEditModal}>
-// <ModalHeader toggle={viewEditModal}>Edit Employee Details</ModalHeader>
-// <ModalBody>
-// <Label>Employee Name</Label>
-// <Input></Input>
-// <Label>Designation</Label>
-// <Input></Input>
-// <Label>Address</Label>
-// <Input></Input>
-// </ModalBody>
-// <ModalFooter>
-// <Button>Submit</Button>
-// </ModalFooter>
-// </Modal>
