@@ -115,26 +115,31 @@ export default function Purchases() {
   };
 
   const handleCreateItem = async () => {
-    const response = await fetch(WebApi + "/create_item", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        item_name: newItem,
-        item_for: itemFor,
-        branch_id: branchId,
-      }),
-    });
-
-    const data = await response.json();
-    console.log(data);
-    if (data.status === "success") {
-      toast.success(data.message);
-      fetchItems();
-      setModal(!modal);
-    } else {
-      toast.error(data.message);
+    if(newItem===""||itemFor===""){
+      toast.warning("All Fields Required")
+    }
+    else{
+      const response = await fetch(WebApi + "/create_item", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          item_name: newItem,
+          item_for: itemFor,
+          branch_id: branchId,
+        }),
+      });
+  
+      const data = await response.json();
+      console.log(data);
+      if (data.status === "success") {
+        toast.success(data.message);
+        fetchItems();
+        setModal(!modal);
+      } else {
+        toast.error(data.message);
+      }
     }
   };
   console.log("selectedItems", selectedItems);
@@ -142,7 +147,11 @@ export default function Purchases() {
   const handleSubmit = async () => {
     console.log(selectedItems);
     console.log(file, isMarketPlace);
-    {
+    if(buyerName===""||totalPrice===0){
+      toast.warning("Please Select Items")
+    }
+    else{
+{
       const data = {
         total_price: totalPrice,
         purchased_from: buyerName,
@@ -166,6 +175,7 @@ export default function Purchases() {
         .catch((e) => {
           console.log(e), toast.error("Faild to add stocks");
         });
+    }
     }
   };
   return (

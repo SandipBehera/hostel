@@ -37,6 +37,7 @@ const ViewComplaint = () => {
       });
       const respData = await response.json();
       if (user === "admin") {
+        
         setData(
           respData.data
           .filter(item =>
@@ -140,7 +141,8 @@ const ViewComplaint = () => {
                   </Button>
                 </td>
                 <td>
-                  {complaint.issue_type === "Complaint" ? (
+                  {(complaint.issue_type === "Complaint" || complaint.issue_type==="Hostel Issue" ||
+                  complaint.issue_type==="Mess Issue" || complaint.issue_type==="General Issue") ? (
                     <Button
                       color={complaint.status ? "success" : "primary"}
                       onClick={() => handleStartProcess(complaint)}
@@ -208,7 +210,7 @@ const ViewComplaint = () => {
   {selectedComplaint && (
     <>
       <div>
-        {selectedComplaint.issue_type === "Complaint" ? (
+        {selectedComplaint.issue_type === "Complaint"? (
           <ComplaintActivity
             complaint={selectedComplaint}
             displayTitle={true}
@@ -217,7 +219,8 @@ const ViewComplaint = () => {
           <>
             {selectedComplaint.details && (
               <>
-               {(selectedComplaint.issue_type==="Mess Issue" || selectedComplaint.issue_type==="General Issue")?
+               {(selectedComplaint.issue_type==="Mess Issue" || selectedComplaint.issue_type==="General Issue"
+               ||selectedComplaint.issue_type === "Hostel Issue")?
               <div>
               <p><strong>Complaint Details: </strong></p>
               <p>{selectedComplaint.details.content}</p>

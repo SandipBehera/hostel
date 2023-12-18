@@ -1,4 +1,4 @@
-import React, { Fragment, useState } from "react";
+import React, { Fragment, useState, useEffect } from "react";
 import { Breadcrumbs, H5 } from "../../AbstractElements";
 import {
   Button,
@@ -26,10 +26,12 @@ export default function CreateComplain() {
 
   const role = localStorage.getItem("userType");
 
+ 
+
   const [issueType, setIssueType] = useState("");
   const [hostelNumber, setHostelNumber] = useState("");
   const [roomNumber, setRoomNumber] = useState("");
-  const [assignTo, setAssignTo] = useState(""); // Updated state for Assign To dropdown
+  const [assignTo, setAssignTo] = useState("");
   const [selectedEmployee, setSelectedEmployee] = useState("");
   const [complaint, setComplaint] = useState("");
   const [status, setStatus] = useState("");
@@ -37,9 +39,10 @@ export default function CreateComplain() {
   const socket = socketIOClient(WebSocketAPI);
 
   const issueTypes = ["Hostel Issue", "Mess Issue", "General Issue"];
-  const hostels = ["Hostel 1", "Hostel 2", "Hostel 3"]; // Replace with your actual hostel numbers
-  const rooms = ["Room 101", "Room 102", "Room 103"]; // Replace with your actual room numbers
-  const employees = ["Employee 1", "Employee 2", "Employee 3"]; // Replace with your actual employee list
+  const hostels = ["Hostel 1", "Hostel 2", "Hostel 3"];
+  const rooms = ["Room 101", "Room 102", "Room 103"];
+  const employees = ["Employee 1", "Employee 2", "Employee 3"];
+  
 
   const wardenNames = {
     "Hostel 1": "Warden A",
@@ -64,10 +67,25 @@ export default function CreateComplain() {
 
   const handleHostelNumberChange = (value) => {
     setHostelNumber(value);
-    setAssignTo(wardenNames[value] || "");
   };
-  const branchId= localStorage.getItem("branchId")
+
+  useEffect(() => {
+    setAssignTo(wardenNames[hostelNumber] || "");
+  }, [hostelNumber]);
+
+  const branchId = localStorage.getItem("branchId");
+
+
   const handleSubmit = async () => {
+    if(issueType==="Hostel Issue" && (content===""||hostelNumber===""||roomNumber===""))
+    {
+      toast.warning("All fields required")
+    }
+    else if((issueType==="Mess Issue" || issueType==="General Issue") && (content===""))
+    {
+      toast.warning("All fields required")
+    }
+   else{
     const data = {
       issue_type: issueType,
       issued_by: userid,
@@ -76,7 +94,7 @@ export default function CreateComplain() {
       assigned_to: assignTo,
       details: { content: content.replace(/\n/g, "\\n").replace(/\t/g, "\\t") },
       status: status,
-      branch_id: branchId
+      branch_id: branchId,
     };
     data.details = JSON.stringify(data.details);
     try {
@@ -90,9 +108,7 @@ export default function CreateComplain() {
       });
       console.log("response", response);
       if (response.status === 200) {
-        // Emit the "newComplaint" event directly without wrapping in an extra object
         socket.emit("newComplaint", data);
-
         toast.success("Complaint Created Successfully");
       } else {
         toast.error("Something went wrong");
@@ -100,6 +116,7 @@ export default function CreateComplain() {
     } catch (err) {
       console.error("Error:", err);
     }
+   }
   };
 
   return (
@@ -247,13 +264,6 @@ export default function CreateComplain() {
                   spellChecker: false,
                 }}
               />
-              {/* <CKEditors
-                  activeclassName="p10"
-                  content={content}
-                  events={{
-                    change: onChange,
-                  }}
-                /> */}
             </Col>
           </Row>
         </Container>
