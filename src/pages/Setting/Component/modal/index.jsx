@@ -1,30 +1,36 @@
+
+
 import React, { useState } from "react";
-import {
-  Button,
-  Modal,
-  ModalBody,
-  ModalFooter,
-  ModalHeader,
-  Table,
-} from "reactstrap";
+import { Button, Modal, ModalBody, ModalFooter, ModalHeader, Table } from "reactstrap";
 
 export default function ViewModal({ data, id }) {
   const [modalOpen, setModalOpen] = useState(false);
   const [modalData, setModalData] = useState([]);
   const [filterData, setFilterData] = useState([]);
-
-  const [userType, setUserType]= useState(localStorage.getItem("userType"))
+  const [userType, setUserType] = useState(localStorage.getItem("userType"));
 
   const toggleModal = () => {
     setModalOpen(!modalOpen);
     const fData = data
       .filter((item) => item.id === id)
       .map((_item) => _item.menu_data);
-    const days = Object.keys(fData[0]);
-    setModalData(days);
+
+    // Create an array of objects with day and corresponding data
+    const dataArray = Object.keys(fData[0]).map((day) => ({
+      day,
+      data: fData[0][day],
+    }));
+
+    // Define the desired order of days
+    const desiredOrder = ['Sunday','Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', ];
+
+    // Sort the array based on the desired order
+    dataArray.sort((a, b) => desiredOrder.indexOf(a.day) - desiredOrder.indexOf(b.day));
+
+    setModalData(dataArray);
     setFilterData(fData[0]);
   };
-  console.log(modalData);
+  console.log("days are",modalData)
   return (
     <>
       <Button color="primary" onClick={toggleModal}>
@@ -37,45 +43,41 @@ export default function ViewModal({ data, id }) {
             <thead style={{ textAlign: "center" }}>
               <tr>
                 <th>Week Days Name</th>
-                <th>BrakFast</th>
+                <th>BreakFast</th>
                 <th>Lunch</th>
                 <th>Dinner</th>
               </tr>
             </thead>
             <tbody style={{ textAlign: "center" }}>
-              {modalData.map((day) => (
-                <tr key={day}>
-                  <td>{day}</td>
+              {modalData.map((item) => (
+                <tr key={item.day}>
+                  <td>{item.day}</td>
                   <td>
-                    {filterData[day].Breakfast.Description}
+                    {item.data.Breakfast.Description}
                     <p>
-                      from:{filterData[day].Breakfast.From} to:{" "}
-                      {filterData[day].Breakfast.To}
+                      from: {item.data.Breakfast.From} to: {item.data.Breakfast.To}
                     </p>
-                    {userType==="employee"? (
-                      <p>{filterData[day].Breakfast.Price}rs./</p>
-                    ):""}
-                   
+                    {userType === "employee" ? (
+                      <p>{item.data.Breakfast.Price}rs./</p>
+                    ) : ""}
                   </td>
                   <td>
-                    {filterData[day].Lunch.Description}
+                    {item.data.Lunch.Description}
                     <p>
-                      from:{filterData[day].Lunch.From} to:{" "}
-                      {filterData[day].Lunch.To}
+                      from: {item.data.Lunch.From} to: {item.data.Lunch.To}
                     </p>
-                    {userType==="employee"? (
-                      <p>{filterData[day].Lunch.Price}rs./</p>
-                    ):""}
+                    {userType === "employee" ? (
+                      <p>{item.data.Lunch.Price}rs./</p>
+                    ) : ""}
                   </td>
                   <td>
-                    {filterData[day].Dinner.Description}
+                    {item.data.Dinner.Description}
                     <p>
-                      from:{filterData[day].Dinner.From} to:{" "}
-                      {filterData[day].Dinner.To}
+                      from: {item.data.Dinner.From} to: {item.data.Dinner.To}
                     </p>
-                    {userType==="employee"? (
-                      <p>{filterData[day].Dinner.Price}rs./</p>
-                    ):""}
+                    {userType === "employee" ? (
+                      <p>{item.data.Dinner.Price}rs./</p>
+                    ) : ""}
                   </td>
                 </tr>
               ))}

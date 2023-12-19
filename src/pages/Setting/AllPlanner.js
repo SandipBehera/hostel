@@ -18,9 +18,13 @@ import {
 import { Breadcrumbs, H5 } from "../../AbstractElements";
 import { LocalApi, WebApi } from "../../api";
 import ViewModal from "./Component/modal";
+import EditFoodplanner from "./EditFoodplanner";
+import { toast } from "react-toastify";
 const AllPlanner = () => {
   // Sample data for the table
   const [data, setData] = useState([]);
+  const [editModalOpen, setEditModalOpen] = useState(false);
+ const[selectedItem,setSelectedItem]=useState(null)
   // Function to fetch data from the API
   const branchID = localStorage.getItem("branchId");
   console.log(branchID)
@@ -28,43 +32,59 @@ const AllPlanner = () => {
   const fetchData = async () => {
     const response = await fetch(`${WebApi}/get_all_menu`);
     const respData = await response.json();
+    console.log(respData)
     
     setData(respData.data
-      .filter((key) => key.branch_id === parseInt(branchID))
+      ?.filter((key) => key.branch_id === parseInt(branchID))
       );
   };
   //edit feture
   const editItem = async (itemId) => {
+   
     try {
-      // Fetch the details of the item based on itemId
-      const response = await fetch(`${WebApi}/get_menu_item/${itemId}`);
-      const itemDetails = await response.json();
-      // Perform the edit action using the fetched details
-      console.log('Editing item with ID:', itemId, 'Details:', itemDetails);
-      // Add your logic for editing here, e.g., show a modal for editing
+       // Fetch the details of the item based on itemId
+      // const response = await fetch(`${WebApi}/get_menu_item/${itemId}`);
+      // const itemDetails = await response.json();
+      setEditModalOpen(true);
+      setSelectedItem(itemId)
+     
+      
     } catch (error) {
       console.error('Error fetching item details:', error);
     }
   };
-  //delete feature
+
   const deleteItem = async (itemId) => {
+    console.log('dlete id is',itemId)
     try {
-      // Perform the actual deletion using the API
-      await fetch(`${WebApi}/delete_menu_item/${itemId}`, {
-        method: 'DELETE',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      });
-      // After successful deletion, update the data
-      fetchData();
-      // Close the modal
-      toggleModal();
+      const response = await fetch(
+        `${WebApi}/delete_menu`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ id:itemId }),
+
+        }
+      );
+
+      if (response.ok) {
+        toast.success("Food plan deleted successfully");
+        fetchData(); // Update the data after successful deletion
+      } else {
+        toast.error("Failed to delete food menu")
+        // Handle errors or show an error message to the user
+      }
     } catch (error) {
-      console.error('Error deleting item:', error);
+      console.error("Error during delete:", error);
+      // Handle network errors or other exceptions
     }
+
+    toggleModal();
   };
-  
+
+  console.log("delete ")
   // Fetch data on component mount
   useEffect(() => {
     fetchData();
@@ -85,29 +105,9 @@ const AllPlanner = () => {
   const [selectedAction, setSelectedAction] = useState("");
   const [selectedItemId, setSelectedItemId] = useState(null);
 
-  // Function to handle actions (Edit or Delete)
-  const handleAction = (action, itemId) => {
-    setSelectedAction(action);
-    setSelectedItemId(itemId);
-    toggleModal();
-  };
 
-  // Function to perform edit or delete based on the user's choice
-  const performAction = () => {
-    if (selectedAction === "Edit") {
-      // Perform Edit action based on the selected item ID
-      console.log(`Editing item with ID: ${selectedItemId}`);
-      editItem(selectedItemId)
-      // Add your logic for editing here
-    } else if (selectedAction === "Delete") {
-      // Perform Delete action based on the selected item ID
-      console.log(`Deleting item with ID: ${selectedItemId}`);
-      deleteItem(selectedItemId)
-      // Add your logic for deleting here
-    }
-    toggleModal();
-  };
-
+  console.log("food data is",data)
+  console.log("selected id is",selectedItem)
   return (
     <Fragment>
       <Breadcrumbs
@@ -146,45 +146,32 @@ const AllPlanner = () => {
                           toggle={() => toggleDropdown(item.id)}
                         >
                           <DropdownToggle caret>Actions</DropdownToggle>
-                          <DropdownMenu>
-                            <DropdownItem
-                              onClick={() => handleAction("Edit", item.id)}
-                            >
-                              Edit
-                            </DropdownItem>
-                            <DropdownItem
-                              onClick={() => handleAction("Delete", item.id)}
-                            >
-                              Delete
-                            </DropdownItem>
-                          </DropdownMenu>
+                         <DropdownMenu>
+                             <DropdownItem
+                               onClick={() => editItem(item.id)}
+                               >
+                                Edit
+                          </DropdownItem>
+                         <DropdownItem
+                       onClick={() => deleteItem(item.id)}
+                        >
+                    Delete
+                  </DropdownItem>
+               </DropdownMenu>
                         </Dropdown>
                       </td>
                     </tr>
                   ))}
                 </tbody>
               </Table>
-              {/* Modal for Edit/Delete confirmation */}
-              <Modal isOpen={modalOpen} toggle={toggleModal}>
-                <ModalHeader toggle={toggleModal}>
-                  {selectedAction === "Edit"
-                    ? "Edit Confirmation"
-                    : "Delete Confirmation"}
-                </ModalHeader>
-                <ModalBody>
-                  {selectedAction === "Edit"
-                    ? `Are you sure you want to edit this item?`
-                    : `Are you sure you want to delete this item?`}
-                </ModalBody>
-                <ModalFooter>
-                  <Button color="primary" onClick={performAction}>
-                    Confirm
-                  </Button>{" "}
-                  <Button color="secondary" onClick={toggleModal}>
-                    Cancel
-                  </Button>
-                </ModalFooter>
-              </Modal>
+              <EditFoodplanner 
+              data={data}
+              setData={setData}
+              isOpen={editModalOpen}
+              toggle={() => setEditModalOpen(!editModalOpen)}
+              selectedItem={selectedItem}
+              />
+           
             </div>
           </Card>
         </Row>
@@ -194,3 +181,6 @@ const AllPlanner = () => {
 };
 
 export default AllPlanner;
+
+
+
