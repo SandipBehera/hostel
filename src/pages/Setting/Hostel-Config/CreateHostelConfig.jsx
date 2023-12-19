@@ -38,26 +38,33 @@ const CreateHostelConfig = (props) => {
   const handleSubmit = async (event) => {
     event.preventDefault();
     // Do something with inputFields data, for example:
-    console.log(inputFields);
-    const data = {
-      config_type: props.config_type,
-      config_type_name: inputFields,
-      branch_id: parseInt(localStorage.getItem("branchId")),
-    };
-    data.config_type_name = JSON.stringify({ data: data.config_type_name });
-    const response = await fetch(`${WebApi}/addConfig`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(data),
-    });
-    const res = await response.json();
-    if (res.status === "success") {
-      toast.success(res.message);
-      setInputFields([""]);
-    } else {
-      toast.success(res.message);
+    if (inputFields.length === 0 || inputFields.some(field => field.trim() === "")) {
+      toast.warning("Cannot Add Empty Field");
     }
-  };
+   
+     else{
+      console.log(inputFields);
+      const data = {
+        config_type: props.config_type,
+        config_type_name: inputFields,
+        branch_id: parseInt(localStorage.getItem("branchId")),
+      };
+      data.config_type_name = JSON.stringify({ data: data.config_type_name });
+      const response = await fetch(`${WebApi}/addConfig`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data),
+      });
+      const res = await response.json();
+      if (res.status === "success") {
+        toast.success(res.message);
+        setInputFields([""]);
+      } else {
+        toast.success(res.message);
+      }
+      
+    };
+     }
 
   const handleCancel = () => {
     // Handle cancel action if needed

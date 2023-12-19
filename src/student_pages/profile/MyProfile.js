@@ -149,7 +149,7 @@ const MyProfile = () => {
                 type="file"
                 style={{ display: 'none' }}
                 onChange={handleImageChange}
-                accept="image/png, image/jpeg"
+                accept="image/*"
               />
             </label>
           </div>

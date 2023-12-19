@@ -17,7 +17,6 @@ import { Selected } from "../../Constant";
 import ComplaintActivity from "../../Components/complaints/complaintActivity";
 import { toast } from "react-toastify";
 
-
 const ViewComplaint = () => {
   const socket = socketIOClient(WebSocketAPI);
   const branch_id = localStorage.getItem("branchId");
@@ -38,8 +37,8 @@ const ViewComplaint = () => {
       const respData = await response.json();
       if (user === "admin") {
         setData(
-          respData.data
-          .filter(item =>
+          respData.data.filter(
+            (item) =>
               item.branch_id === parseInt(localStorage.getItem("branchId"))
           )
         );
@@ -77,7 +76,6 @@ const ViewComplaint = () => {
       setProcessModalOpen(false);
     }
   };
-  
 
   const handleStartProcess = (complaint) => {
     setSelectedComplaint(complaint);
@@ -131,8 +129,10 @@ const ViewComplaint = () => {
           {data !== undefined && data.length > 0 ? (
             data.map((complaint, index) => (
               <tr key={complaint.id}>
-                <td>{index+1}</td>
-                <td>{complaint.issued_by}</td>
+                <td>{index + 1}</td>
+                <td>
+                  {complaint.user_name}- {complaint.registration_number}
+                </td>
                 <td>{complaint.issue_type}</td>
                 <td>
                   <Button color="info" onClick={() => handleView(complaint.id)}>
@@ -140,7 +140,10 @@ const ViewComplaint = () => {
                   </Button>
                 </td>
                 <td>
-                  {complaint.issue_type === "Complaint" ? (
+                  {complaint.issue_type === "Complaint" ||
+                  complaint.issue_type === "Hostel Issue" ||
+                  complaint.issue_type === "Mess Issue" ||
+                  complaint.issue_type === "General Issue" ? (
                     <Button
                       color={complaint.status ? "success" : "primary"}
                       onClick={() => handleStartProcess(complaint)}
@@ -205,45 +208,51 @@ const ViewComplaint = () => {
       <Modal isOpen={viewModalOpen}>
         <ModalHeader>{selectedComplaint?.issue_type} Details</ModalHeader>
         <ModalBody>
-  {selectedComplaint && (
-    <>
-      <div>
-        {selectedComplaint.issue_type === "Complaint" ? (
-          <ComplaintActivity
-            complaint={selectedComplaint}
-            displayTitle={true}
-          />
-        ) : (
-          <>
-            {selectedComplaint.details && (
-              <>
-               {(selectedComplaint.issue_type==="Mess Issue" || selectedComplaint.issue_type==="General Issue")?
+          {selectedComplaint && (
+            <>
               <div>
-              <p><strong>Complaint Details: </strong></p>
-              <p>{selectedComplaint.details.content}</p>
-
-              </div>:
-            <div>
-            <p>
-            <strong>Issue Type </strong>
-            {selectedComplaint.details.leave_from}
-          </p>
-          <p>
-            <strong>To:</strong> {selectedComplaint.details.leave_to}
-          </p>
-          <p>
-            <strong>Reason:</strong>{" "}
-            {selectedComplaint.details.reason}
-          </p>
-            </div>}
-              </>
-            )}
-          </>
-        )}
-      </div>
-    </>
-  )}
-</ModalBody>
+                {selectedComplaint.issue_type === "Complaint" ? (
+                  <ComplaintActivity
+                    complaint={selectedComplaint}
+                    displayTitle={true}
+                  />
+                ) : (
+                  <>
+                    {selectedComplaint.details && (
+                      <>
+                        {selectedComplaint.issue_type === "Mess Issue" ||
+                        selectedComplaint.issue_type === "General Issue" ||
+                        selectedComplaint.issue_type === "Hostel Issue" ? (
+                          <div>
+                            <p>
+                              <strong>Complaint Details: </strong>
+                            </p>
+                            <p>{selectedComplaint.details.content}</p>
+                          </div>
+                        ) : (
+                          <div>
+                            <p>
+                              <strong>Issue Type </strong>
+                              {selectedComplaint.details.leave_from}
+                            </p>
+                            <p>
+                              <strong>To:</strong>{" "}
+                              {selectedComplaint.details.leave_to}
+                            </p>
+                            <p>
+                              <strong>Reason:</strong>{" "}
+                              {selectedComplaint.details.reason}
+                            </p>
+                          </div>
+                        )}
+                      </>
+                    )}
+                  </>
+                )}
+              </div>
+            </>
+          )}
+        </ModalBody>
 
         <ModalFooter>
           <Button color="secondary" onClick={() => setViewModalOpen(false)}>
@@ -251,8 +260,6 @@ const ViewComplaint = () => {
           </Button>
         </ModalFooter>
       </Modal>
-
-      
     </div>
   );
 };
