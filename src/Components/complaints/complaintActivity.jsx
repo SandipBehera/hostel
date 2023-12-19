@@ -2,6 +2,7 @@ import { Card, CardBody, CardHeader, Col } from "reactstrap";
 import { H5, H6, LI, P, UL } from "../../AbstractElements";
 
 const ComplaintActivity = ({ complaint, displayTtile }) => {
+  console.log(complaint)
   const title = displayTtile || false;
   return (
     <Col xxl="12" xl="12" md="12" sm="7" className="notification box-col-6">
