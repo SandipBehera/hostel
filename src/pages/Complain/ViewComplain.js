@@ -31,7 +31,7 @@ const ViewComplaint = () => {
   const [successMessage, setSuccessMessage] = useState("");
   const fetchData = async () => {
     try {
-      const response = await fetch(`${WebApi}/get_complaints`, {
+      const response = await fetch(`${LocalApi}/get_complaints`, {
         method: "GET",
       });
       const respData = await response.json();
@@ -130,9 +130,7 @@ const ViewComplaint = () => {
             data.map((complaint, index) => (
               <tr key={complaint.id}>
                 <td>{index + 1}</td>
-                <td>
-                  {complaint.user_name}- {complaint.registration_number}
-                </td>
+                <td>{complaint.Issued_by}</td>
                 <td>{complaint.issue_type}</td>
                 <td>
                   <Button color="info" onClick={() => handleView(complaint.id)}>
@@ -153,7 +151,7 @@ const ViewComplaint = () => {
                           className="link-text"
                           to={`complain-status/${complaint.id}`}
                         >
-                          Assigned to:{complaint.assigned_to} <br /> Status:
+                          Assigned to:{complaint.Assigned_to} <br /> Status:
                           {complaint.status === "" ? "NEW" : complaint.status}
                         </Link>
                       ) : (

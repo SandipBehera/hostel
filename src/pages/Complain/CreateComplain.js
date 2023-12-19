@@ -17,6 +17,7 @@ import { LocalApi, WebApi, WebSocketAPI } from "../../api";
 import socketIOClient from "socket.io-client";
 import { toast } from "react-toastify";
 import SimpleMDE from "react-simplemde-editor";
+import { set } from "date-fns";
 
 export default function CreateComplain() {
   const [content, setContent] = useState("");
@@ -35,17 +36,9 @@ export default function CreateComplain() {
   const [status, setStatus] = useState("");
   const userid = localStorage.getItem("userId");
   const socket = socketIOClient(WebSocketAPI);
-
+  const [hostels, setHostels] = useState([]);
+  const [employees, setEmployees] = useState([]);
   const issueTypes = ["Hostel Issue", "Mess Issue", "General Issue"];
-  const hostels = ["Hostel 1", "Hostel 2", "Hostel 3"];
-  const rooms = ["Room 101", "Room 102", "Room 103"];
-  const employees = ["Employee 1", "Employee 2", "Employee 3"];
-
-  const wardenNames = {
-    "Hostel 1": "Warden A",
-    "Hostel 2": "Warden B",
-    "Hostel 3": "Warden C",
-  };
 
   const complaint_stages = [
     {
@@ -66,16 +59,45 @@ export default function CreateComplain() {
     setHostelNumber(value);
   };
 
-  useEffect(() => {
-    setAssignTo(wardenNames[hostelNumber] || "");
-  }, [hostelNumber]);
+  const getHostelNames = async () => {
+    fetch(`${WebApi}/get_rooms`, {
+      method: "GET",
+    })
+      .then((res) => res.json())
+      .then((res) => {
+        const fetchedData = res.data.filter(
+          (item) =>
+            item.branch_id === parseInt(localStorage.getItem("branchId"))
+        );
+        setHostels(fetchedData);
+      });
+  };
+  const getEmployeeNames = async () => {
+    fetch(`${WebApi}/getEmployee`, {
+      method: "GET",
+    })
+      .then((res) => res.json())
+      .then((res) => {
+        const fetchedData = res.data.filter(
+          (item) =>
+            item.branch_id === parseInt(localStorage.getItem("branchId")) &&
+            item.user_type === "employee"
+        );
+        setEmployees(fetchedData);
+      });
+  };
 
+  useEffect(() => {
+    getHostelNames();
+    getEmployeeNames();
+  }, []);
+  console.log("employees", employees);
   const branchId = localStorage.getItem("branchId");
 
   const handleSubmit = async () => {
     if (
       issueType === "Hostel Issue" &&
-      (content === "" || hostelNumber === "" || roomNumber === "")
+      (content === "" || hostelNumber === "" || assignTo === "")
     ) {
       toast.warning("All fields required");
     } else if (
@@ -159,32 +181,14 @@ export default function CreateComplain() {
               >
                 <option value="">Select a hostel number</option>
                 {hostels.map((hostel) => (
-                  <option key={hostel} value={hostel}>
-                    {hostel}
+                  <option key={hostel.id} value={hostel.id}>
+                    {hostel.hostel_name}
                   </option>
                 ))}
               </Input>
             </FormGroup>
 
-            <FormGroup>
-              <label>Room Number:</label>
-              <Input
-                className="form-control form-control-secondary-fill btn-square w-50"
-                name="select"
-                type="select"
-                value={roomNumber}
-                onChange={(e) => setRoomNumber(e.target.value)}
-              >
-                <option value="">Select a room number</option>
-                {rooms.map((room) => (
-                  <option key={room} value={room}>
-                    {room}
-                  </option>
-                ))}
-              </Input>
-            </FormGroup>
-
-            {role === "employee" ? (
+            {role === "employee" || role === "admin" ? (
               <FormGroup>
                 <label>Assign To:</label>
                 <Input
@@ -195,9 +199,9 @@ export default function CreateComplain() {
                   onChange={(e) => setAssignTo(e.target.value)}
                 >
                   <option value="">Select a person to assign</option>
-                  {Object.values(wardenNames).map((warden) => (
-                    <option key={warden} value={warden}>
-                      {warden}
+                  {employees.map((warden) => (
+                    <option key={warden.emp_id} value={warden.emp_id}>
+                      {warden.emp_name}
                     </option>
                   ))}
                 </Input>
