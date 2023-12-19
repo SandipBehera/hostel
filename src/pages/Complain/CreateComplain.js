@@ -26,8 +26,6 @@ export default function CreateComplain() {
 
   const role = localStorage.getItem("userType");
 
- 
-
   const [issueType, setIssueType] = useState("");
   const [hostelNumber, setHostelNumber] = useState("");
   const [roomNumber, setRoomNumber] = useState("");
@@ -42,7 +40,6 @@ export default function CreateComplain() {
   const hostels = ["Hostel 1", "Hostel 2", "Hostel 3"];
   const rooms = ["Room 101", "Room 102", "Room 103"];
   const employees = ["Employee 1", "Employee 2", "Employee 3"];
-  
 
   const wardenNames = {
     "Hostel 1": "Warden A",
@@ -75,48 +72,51 @@ export default function CreateComplain() {
 
   const branchId = localStorage.getItem("branchId");
 
-
   const handleSubmit = async () => {
-    if(issueType==="Hostel Issue" && (content===""||hostelNumber===""||roomNumber===""))
-    {
-      toast.warning("All fields required")
-    }
-    else if((issueType==="Mess Issue" || issueType==="General Issue") && (content===""))
-    {
-      toast.warning("All fields required")
-    }
-   else{
-    const data = {
-      issue_type: issueType,
-      issued_by: userid,
-      hostel_id: hostelNumber,
-      floor_no: roomNumber,
-      assigned_to: assignTo,
-      details: { content: content.replace(/\n/g, "\\n").replace(/\t/g, "\\t") },
-      status: status,
-      branch_id: branchId,
-    };
-    data.details = JSON.stringify(data.details);
-    try {
-      const response = await fetch(`${WebApi}/create_complaint`, {
-        method: "POST",
-        body: JSON.stringify(data),
-        headers: {
-          "Content-Type": "application/json",
-          "Access-Control-Allow-Origin": "*",
-        },
-      });
-      console.log("response", response);
-      if (response.status === 200) {
-        socket.emit("newComplaint", data);
-        toast.success("Complaint Created Successfully");
-      } else {
-        toast.error("Something went wrong");
+    if (
+      issueType === "Hostel Issue" &&
+      (content === "" || hostelNumber === "" || roomNumber === "")
+    ) {
+      toast.warning("All fields required");
+    } else if (
+      (issueType === "Mess Issue" || issueType === "General Issue") &&
+      content === ""
+    ) {
+      toast.warning("All fields required");
+    } else {
+      const data = {
+        issue_type: issueType,
+        issued_by: userid,
+        hostel_id: hostelNumber,
+        floor_no: roomNumber,
+        assigned_to: assignTo,
+        details: [
+          { content: content.replace(/\n/g, "\\n").replace(/\t/g, "\\t") },
+        ],
+        status: status,
+        branch_id: branchId,
+      };
+      data.details = JSON.stringify(data.details);
+      try {
+        const response = await fetch(`${WebApi}/create_complaint`, {
+          method: "POST",
+          body: JSON.stringify(data),
+          headers: {
+            "Content-Type": "application/json",
+            "Access-Control-Allow-Origin": "*",
+          },
+        });
+        console.log("response", response);
+        if (response.status === 200) {
+          socket.emit("newComplaint", data);
+          toast.success("Complaint Created Successfully");
+        } else {
+          toast.error("Something went wrong");
+        }
+      } catch (err) {
+        console.error("Error:", err);
       }
-    } catch (err) {
-      console.error("Error:", err);
     }
-   }
   };
 
   return (
