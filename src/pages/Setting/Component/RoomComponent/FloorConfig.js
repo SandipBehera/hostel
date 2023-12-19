@@ -45,7 +45,7 @@ const FloorConfig = ({ setSteps, setFormdata, formdata }) => {
   }, []); // Empty dependency array means this useEffect runs once on mount
 
   const onSubmit = async () => {
-    const rooms = [];
+    const updatedRooms = [];
 
     for (let floor = 1; floor <= formdata.floor_count; floor++) {
       for (let room = 1; room <= formdata.room_count; room++) {
@@ -65,7 +65,7 @@ const FloorConfig = ({ setSteps, setFormdata, formdata }) => {
           branch_id: branchId,
         };
 
-        rooms.push(roomData);
+        updatedRooms.push(roomData);
       }
     }
 
