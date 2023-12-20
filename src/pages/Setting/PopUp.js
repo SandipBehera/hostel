@@ -9,6 +9,7 @@ import {
 } from "reactstrap";
 
 const PopUp = ({ data, id }) => {
+  console.log("data is",data)
   const [modalOpen, setModalOpen] = useState(false);
   const [modalData, setModalData] = useState([]);
 
@@ -19,7 +20,7 @@ const PopUp = ({ data, id }) => {
       .map((_item) => _item.room_details);
     setModalData(filterData[0]);
   };
-
+console.log("model data",modalData)
   return (
     <div>
       <Button color="primary" onClick={toggleModal}>
@@ -37,6 +38,7 @@ const PopUp = ({ data, id }) => {
                 <th>Room Capacity</th>
                 <th>Room Type</th>
                 <th>Amenities</th>
+                <th>Student Name</th>
               </tr>
             </thead>
             <tbody style={{ textAlign: "center" }}>
