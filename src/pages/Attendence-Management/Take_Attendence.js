@@ -19,6 +19,7 @@ import { Breadcrumbs, H5 } from "../../AbstractElements";
 import "../styles/take_attendence.css";
 import { LocalApi, WebApi } from "../../api";
 import { toast } from "react-toastify";
+import { tr } from "date-fns/locale";
 
 const Take_Attendence = () => {
   const [modalOpen, setModalOpen] = useState(false);
@@ -364,8 +365,8 @@ const Take_Attendence = () => {
                             disabled={
                               stud.attendance_taken === "taken" ||
                               stud.userId === selectedId
-                                ? presentButtonDisabled
-                                : ""
+                                ? true
+                                : false
                             }
                           >
                             Present
@@ -384,8 +385,8 @@ const Take_Attendence = () => {
                             disabled={
                               stud.attendance_taken === "not taken" ||
                               stud.userId === selectedId
-                                ? absentButtonDisabled
-                                : ""
+                                ? true
+                                : false
                             }
                           >
                             Absent
