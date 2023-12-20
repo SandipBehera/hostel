@@ -251,6 +251,7 @@ const Take_Attendence = () => {
                 <thead>
                   <tr>
                     <th>ID</th>
+                    <th>Image</th>
                     <th>Name</th>
                     <th>Regd No</th>
                     <th>Room No</th>
@@ -261,10 +262,17 @@ const Take_Attendence = () => {
                   {studentData.map((stud, index) => (
                     <tr key={index}>
                       <td>{index + 1}</td>
-                      <td>{stud.name}</td>
-                      <td>{stud.userId}</td>
-                      <td>{selectedRoom}</td>
                       <td>
+                        <img
+                          className="img-100 me-2"
+                          src={stud.image}
+                          alt="image"
+                        />
+                      </td>
+                      <td style={{ padding: "26px" }}>{stud.name}</td>
+                      <td style={{ padding: "26px" }}>{stud.userId}</td>
+                      <td style={{ padding: "26px" }}>{selectedRoom}</td>
+                      <td style={{ padding: "26px" }}>
                         <div>
                           <Modal
                             isOpen={modalOpen}
@@ -351,7 +359,9 @@ const Take_Attendence = () => {
                         {absentButtonDisabled && selectedId === stud.userId ? (
                           <Button
                             color="primary"
-                            onClick={() => viewReason(stud.comments.comment)}
+                            onClick={() =>
+                              viewReason(JSON.parse(stud.comments))
+                            }
                           >
                             View
                           </Button>
@@ -383,7 +393,7 @@ const Take_Attendence = () => {
                               setSelectedId(stud.userId);
                             }}
                             disabled={
-                              stud.attendance_taken === "not taken" ||
+                              stud.attendance_taken === "taken" ||
                               stud.userId === selectedId
                                 ? true
                                 : false
