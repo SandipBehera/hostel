@@ -47,7 +47,7 @@ export default function ComplaintStatus() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch(`${LocalApi}/get_complaints_by_id/${id}`, {
+        const response = await fetch(`${WebApi}/get_complaints_by_id/${id}`, {
           method: "GET",
         });
         const respData = await response.json();
