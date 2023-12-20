@@ -31,7 +31,7 @@ const ViewComplaint = () => {
   const [successMessage, setSuccessMessage] = useState("");
   const fetchData = async () => {
     try {
-      const response = await fetch(`${LocalApi}/get_complaints`, {
+      const response = await fetch(`${WebApi}/get_complaints`, {
         method: "GET",
       });
       const respData = await response.json();
