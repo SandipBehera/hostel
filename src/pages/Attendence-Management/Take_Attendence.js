@@ -119,7 +119,7 @@ const Take_Attendence = () => {
   };
 
   const handleSubmit = async () => {
-    const response = await fetch(`${LocalApi}/get_student_by_room`, {
+    const response = await fetch(`${WebApi}/get_student_by_room`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
