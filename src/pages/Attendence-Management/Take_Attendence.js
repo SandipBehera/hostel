@@ -2,34 +2,23 @@ import React, { useState, useEffect, Fragment } from "react";
 import {
   Row,
   Col,
-  Dropdown,
-  DropdownToggle,
-  DropdownMenu,
-  DropdownItem,
   Card,
   Input,
-  CardTitle,
   Label,
   Button,
   Container,
   CardBody,
-  CardSubtitle,
-  CardText,
   Modal,
   ModalHeader,
   ModalBody,
   ModalFooter,
   FormGroup,
-  Toast,
 } from "reactstrap";
 import Select from "react-select";
 import { Breadcrumbs, H5 } from "../../AbstractElements";
 import "../styles/take_attendence.css";
-import { data } from "./data";
-import AttendenceReport from "./AttendenceReport";
 import { LocalApi, WebApi } from "../../api";
 import { toast } from "react-toastify";
-import { json } from "react-router";
 
 const Take_Attendence = () => {
   const [modalOpen, setModalOpen] = useState(false);
@@ -373,8 +362,8 @@ const Take_Attendence = () => {
                                 setSelectedId(stud.userId);
                             }}
                             disabled={
-                              stud.userId === selectedId ||
-                              stud.attendance_taken === "taken"
+                              stud.attendance_taken === "taken" ||
+                              stud.userId === selectedId
                                 ? presentButtonDisabled
                                 : ""
                             }
@@ -393,8 +382,8 @@ const Take_Attendence = () => {
                               setSelectedId(stud.userId);
                             }}
                             disabled={
-                              stud.userId === selectedId ||
-                              stud.attendance_taken === "not taken"
+                              stud.attendance_taken === "not taken" ||
+                              stud.userId === selectedId
                                 ? absentButtonDisabled
                                 : ""
                             }
