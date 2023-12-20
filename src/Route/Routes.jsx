@@ -215,6 +215,7 @@ import MyOutings from "../student_pages/OutingApproval/MyOutings";
 import FoodBookEntry from "../wardenPages/foodbook/entry";
 import MonthlyAttendanceReport from "../pages/Attendence-Management/MonthlyAttendenceReport";
 import HostelConfig from "../pages/Setting/HostelConfig";
+import UpdateEmployee from "../pages/employee/UpdateEmployee";
 
 export const routes = [
   { path: `/dashboard`, Component: <Dashboard /> },
@@ -243,6 +244,8 @@ export const routes = [
   { path: `/allemployee`, Component: <AllEmployee /> },
   { path: `/all-student`, Component: <AllStudents /> },
   { path: `/complaint/complain-action/:id`, Component: <ComplainAction /> },
+  {path: `/edit/:id`, Component: <UpdateEmployee/> },
+
 
   //ROOM MANAGEMENT
   { path: `/room-management`, Component: <RoomManagement /> },

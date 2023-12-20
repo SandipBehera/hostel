@@ -164,7 +164,7 @@ const Take_Attendence = () => {
       setAbsentButtonDisabled(false);
     } else if (status === 0) {
       setPresentButtonDisabled(false);
-      // setAbsentButtonDisabled(true);
+      setAbsentButtonDisabled(true);
     }
 
     console.log(status);
@@ -172,7 +172,13 @@ const Take_Attendence = () => {
       let comment = "";
       if (comments === null) {
         comment = "{}";
-      } else {
+        
+      } 
+      else if(comments==="Others"){
+        comment = JSON.stringify({ comment: otherMessage });
+      }
+      
+      else {
        
         comment = JSON.stringify({ comment: comments });
     
@@ -197,7 +203,7 @@ const Take_Attendence = () => {
             hostel_id: selectedHostel,
             room_id: selectedRoom,
             status: status,
-            comments: comment,
+            comments: comment==="Others"?otherMessage:comment,
             branch_id: localStorage.getItem("branchId"),
           }),
         });
@@ -223,9 +229,11 @@ const Take_Attendence = () => {
         console.error("Error Making Attendance Request:", error.message);
       }
     };
+    
 
     // Call the async function
     await processAttendance();
+    
   };
   // console.log(absentButtonDisabled);
 
@@ -410,7 +418,7 @@ const Take_Attendence = () => {
                                 setSelectedId(stud.userId);
                             }}
                             disabled={
-                              stud.userId === "1" ? presentButtonDisabled : ""
+                              stud.userId === selectedId ? presentButtonDisabled : ""
                             }
                           >
                             Present

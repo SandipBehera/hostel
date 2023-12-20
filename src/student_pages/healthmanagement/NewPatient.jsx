@@ -106,58 +106,66 @@ const NewPatient = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+if(studentName==="" ||selectedFloor=== "" || selectedHostel===""||selectedRoom===""||formData.date===""||formData.time===""||formData.reason===""||
+doctor===""||file===null)
+{
+toast.warning("Please Fill All The Required Fields")
+}
+else{
+   // Prepare form data for submission
+   const formDataForSubmission = new FormData();
+   formDataForSubmission.append("patientname", formData.studentName);
+   formDataForSubmission.append("patient_regdno", "110101csr025");
+   formDataForSubmission.append("hostelid", selectedHostel);
+   formDataForSubmission.append("floorid", selectedFloor);
+   formDataForSubmission.append("roomno", selectedRoom);
+   formDataForSubmission.append("date", formData.date);
+   formDataForSubmission.append("time", formData.time);
+   formDataForSubmission.append("reason", formData.reason);
+   formDataForSubmission.append("doctorname", formData.doctor);
+   formDataForSubmission.append("file", formData.file);
+   formDataForSubmission.append("branch_id", branch_id);
 
-    // Prepare form data for submission
-    const formDataForSubmission = new FormData();
-    formDataForSubmission.append("patientname", formData.studentName);
-    formDataForSubmission.append("patient_regdno", "110101csr025");
-    formDataForSubmission.append("hostelid", selectedHostel);
-    formDataForSubmission.append("floorid", selectedFloor);
-    formDataForSubmission.append("roomno", selectedRoom);
-    formDataForSubmission.append("date", formData.date);
-    formDataForSubmission.append("time", formData.time);
-    formDataForSubmission.append("reason", formData.reason);
-    formDataForSubmission.append("doctorname", formData.doctor);
-    formDataForSubmission.append("file", formData.file);
-    formDataForSubmission.append("branch_id", branch_id);
+   console.log([...formDataForSubmission.entries()]);
+   try {
+     // Make the API call
+     const response = await fetch(`${WebApi}/add_patient`, {
+       method: "POST",
+       body: formDataForSubmission,
+     });
 
-    console.log([...formDataForSubmission.entries()]);
-    try {
-      // Make the API call
-      const response = await fetch(`${WebApi}/add_patient`, {
-        method: "POST",
-        body: formDataForSubmission,
-      });
+     if (!response.ok) {
+       throw new Error("Failed to add patient");
+     }
 
-      if (!response.ok) {
-        throw new Error("Failed to add patient");
-      }
+     const result = await response.json();
+     toast.success(result.message);
+     // Handle the result as needed
+     console.log(result);
 
-      const result = await response.json();
-      toast.success(result.message);
-      // Handle the result as needed
-      console.log(result);
+     // Reset form after successful submission
+     setFormData({
+       studentName: "",
+       date: "",
+       time: "",
+       reason: "",
+       doctor: "",
+       file: null,
+       branch_id: parseInt(localStorage.getItem("branchId")),
+     });
 
-      // Reset form after successful submission
-      setFormData({
-        studentName: "",
-        date: "",
-        time: "",
-        reason: "",
-        doctor: "",
-        file: null,
-        branch_id: parseInt(localStorage.getItem("branchId")),
-      });
+     setSelectedHostel(null);
+     setSelectedFloor(null);
+     setSelectedRoom(null);
 
-      setSelectedHostel(null);
-      setSelectedFloor(null);
-      setSelectedRoom(null);
+     // Optionally, you can redirect the user or show a success message
+   } catch (error) {
+     console.error(error);
+     // Handle errors (e.g., show an error message)
+   }
 
-      // Optionally, you can redirect the user or show a success message
-    } catch (error) {
-      console.error(error);
-      // Handle errors (e.g., show an error message)
-    }
+}
+   
   };
 
   const [dropdownOpen, setDropdownOpen] = useState(false);

@@ -14,6 +14,7 @@ const StudentFoodBook = () => {
   const [gracePeriodExpired, setGracePeriodExpired] = useState(false);
   const [isButtonClicked, setIsButtonClicked] = useState(false);
   const branchId = localStorage.getItem("branchId");
+  const [disabledBtn, setDisabledBtn] = useState(false);
   //get this month name
   const date = new Date();
   const month = date.toLocaleString("default", { month: "long" });
@@ -24,10 +25,15 @@ const StudentFoodBook = () => {
     const response = await fetch(`${WebApi}/get_all_menu`);
     const respData = await response.json();
     const fetched_data = respData.data.filter(
-      (item) => item.month === monthName
+      (item) =>
+        item.month === monthName && item.branch_id === parseInt(branchId)
     );
-    setMealData(fetched_data
-      .filter(key=>key.branch_id===parseInt(branchId)));
+    if (fetchedData.length > 0) {
+      setMealData(fetched_data);
+    } else {
+      setDisabledBtn(true);
+      setMealData([]);
+    }
   };
 
   useEffect(() => {
@@ -38,24 +44,9 @@ const StudentFoodBook = () => {
   console.log(mealData);
 
   const handleBookButtonClick = async () => {
-    // const breakfastStart = new Date();
-    // breakfastStart.setHours(7, 0, 0); // Set breakfast start time (7 am)
-    // const breakfastEnd = new Date();
-    // breakfastEnd.setHours(9, 0, 0); // Set breakfast end time (9 am)
-
-    // const lunchStart = new Date();
-    // lunchStart.setHours(12, 0, 0); // Set lunch start time (12 pm)
-    // const lunchEnd = new Date();
-    // lunchEnd.setHours(14, 0, 0); // Set lunch end time (1 pm)
-
-    // const dinnerStart = new Date();
-    // dinnerStart.setHours(18, 0, 0); // Set dinner start time (6 pm)
-    // const dinnerEnd = new Date();
-    // dinnerEnd.setHours(20, 0, 0); // Set dinner end time (8 pm)
-
     const day = now.toLocaleString("default", { weekday: "long" });
     console.log(day);
-    const mealTimings = getMealTimings(mealData[0].menu_data, day);
+    const mealTimings = getMealTimings(mealData[0]?.menu_data, day);
     const breakfastStart = mealTimings.breakfastStart;
     const breakfastEnd = mealTimings.breakfastEnd;
 
@@ -92,8 +83,7 @@ const StudentFoodBook = () => {
           auth_code: generatedCode,
           regd_no: localStorage.getItem("userId"),
           meal_type: currentMeal,
-          branch_Id: branchId
-
+          branch_Id: branchId,
         }),
       });
       const respData = await response.json();
@@ -137,13 +127,18 @@ const StudentFoodBook = () => {
                   block
                   style={{ marginTop: "20px", marginBottom: "20px" }}
                   onClick={handleBookButtonClick}
-                  disabled={isCodeValid || gracePeriodExpired}
+                  disabled={isCodeValid || gracePeriodExpired || disabledBtn}
                 >
                   {isCodeValid ? "Code Generated" : "Book Food"}
                 </Button>
                 {isCodeValid && (
                   <p style={{ textAlign: "center" }}>
                     Generated Code: {generatedCode}
+                  </p>
+                )}
+                {disabledBtn && (
+                  <p style={{ textAlign: "center" }}>
+                    No Menu Available for this month
                   </p>
                 )}
               </Fragment>
