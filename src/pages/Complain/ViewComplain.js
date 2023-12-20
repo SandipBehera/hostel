@@ -43,7 +43,7 @@ const ViewComplaint = () => {
           )
         );
 
-        console.log(respData.data);
+        console.log(respData);
       } else {
         setData(
           respData.data.filter(
@@ -209,7 +209,10 @@ const ViewComplaint = () => {
           {selectedComplaint && (
             <>
               <div>
-                {selectedComplaint.issue_type === "Complaint" ? (
+                {selectedComplaint.issue_type === "Complaint" ||
+                selectedComplaint.issue_type === "Hostel Issue" ||
+                selectedComplaint.issue_type === "Mess Issue" ||
+                selectedComplaint.issue_type === "General Issue" ? (
                   <ComplaintActivity
                     complaint={selectedComplaint}
                     displayTitle={true}
@@ -218,8 +221,7 @@ const ViewComplaint = () => {
                   <>
                     {selectedComplaint.details && (
                       <>
-                        {selectedComplaint.issue_type === "Mess Issue" ||
-                        selectedComplaint.issue_type === "General Issue" ||
+                        {selectedComplaint.issue_type === "General Issue" ||
                         selectedComplaint.issue_type === "Hostel Issue" ? (
                           <div>
                             <p>

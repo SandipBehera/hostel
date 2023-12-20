@@ -46,7 +46,6 @@ const AllEmployee = () => {
 
         const res = await response.json();
         const fetchedData = res.data;
-
         setEmpData(
           fetchedData
             ?.filter((key) => key.branch_id === parseInt(branchID))

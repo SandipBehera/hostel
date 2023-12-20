@@ -1,4 +1,4 @@
-import React, { Fragment, useState } from "react";
+import React, { Fragment, useEffect, useState } from "react";
 import {
   Modal,
   ModalHeader,
@@ -39,6 +39,8 @@ const UpdateEmployee = ({ isOpen, toggle }) => {
   const [ifsc, setIfsc] = useState(employeeDetails?.ifsc || "");
   const [image, setImage] = useState(employeeDetails?.image || "");
   const [doj, setDoj] = useState(employeeDetails.doj || "");
+  const [preview, setPreview] = useState("");
+  console.log(image)
 
   const handleSave = async () => {
     try {
@@ -85,6 +87,11 @@ const UpdateEmployee = ({ isOpen, toggle }) => {
       toast.error("Faild to update employee details");
     }
   };
+  useEffect(()=>{
+    if(preview){
+        setImage(preview)
+    }
+  },[preview])
 
   return (
     <Fragment>
@@ -97,16 +104,17 @@ const UpdateEmployee = ({ isOpen, toggle }) => {
         <tr style={{ height: "40px", width: "40px" }}>
           <label htmlFor="upload-input">
             <img
-              src={employeeDetails?.image || "https://via.placeholder.com/200"}
+              src={preview ? URL.createObjectURL(preview) : 
+                `http://13.58.217.203:3001/upload/employee/${employeeDetails?.image}`}
               alt="Profile"
-              style={{ height: "40px", width: "40px" }}
+              style={{ height: "10rem", width: "10rem", borderRadius: "50%" }}
             />
             <input
               id="upload-input"
               type="file"
               style={{ display: "none" }}
               onChange={(e) => {
-                setImage(e.target.files[0]);
+                setPreview(e.target.files[0]);
               }}
               accept="image/*"
             />
@@ -232,40 +240,3 @@ const UpdateEmployee = ({ isOpen, toggle }) => {
 };
 
 export default UpdateEmployee;
-
-// {
-//     name: 'Test12',
-//     email: 'test12@gmail.com',
-//     contact: '9876543210',
-//     employeeId: '12345',
-//     address: 'Tadong',
-//     employee_reg_no: '12345',
-//     designation: 'Incharge',
-//     aadhar: '1234567890',
-//     pan: '123456',
-//     account: '12345678',
-//     bank: 'BOI',
-//     ifsc: '123456A',
-//     doj: '2023-12-26',
-//     userType: 'employee',
-//     branch_id: '35'
-//   }
-
-// {
-//     name: 'Test12',
-//     email: 'test12@gmail.com',
-//     regNo: '12345',
-//     designation: 'Incharge',
-//     address: 'Tadong',
-//     contact: '9876543210',
-//     pan: 'DB123456',
-//     aadhar: '2023-12-19',
-//     bank: 'BOI',
-//     bankNo: '12345678',
-//     ifsc: '123456A',
-//     userType: 'admin',
-//     branch_id: '35',
-//     emp_dob: '2023-12-26T00:00:00.000Z',
-//     image: '1702879138850_image (10).png',
-//     employeeId: '12345'
-//   }
