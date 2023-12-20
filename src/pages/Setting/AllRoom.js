@@ -20,6 +20,7 @@ import { Col, Card, Table, DropdownToggle, Row, Container } from "reactstrap";
 import { Action } from "../../Constant";
 import PopUp from "./PopUp";
 import EditForm from "./EditForm";
+import { toast } from "react-toastify";
 
 const AllRoom = () => {
   const [data, setData] = useState([]);
@@ -28,30 +29,35 @@ const AllRoom = () => {
   const [modalOpen, setModalOpen] = useState(false);
   const [edit, setEdit] = useState(-1);
   const branchId = localStorage.getItem("branchId");
-  useEffect(() => {
-    const roomHostel = async () => {
-      const response = await fetch(`${WebApi}/get_rooms`, {
-        method: "GET",
-      });
 
-      const resproom = await response.json();
-      console.log("resproom data is", resproom);
-      const fetchedData = resproom.data;
-      setData(
-        fetchedData.filter((key) => key.branch_id === parseInt(branchId))
-      );
-      if (resproom && resproom.status) {
-        console.log("data fetched");
-      }
-    };
+  const roomHostel = async () => {
+    const response = await fetch(`${WebApi}/get_rooms`, {
+      method: "GET",
+    });
+
+    const resproom = await response.json();
+    const fetchedData = resproom.data;
+    setData(fetchedData.filter((key) => key.branch_id === parseInt(branchId)));
+  };
+  function handleDelete(id) {
+    fetch(`${WebApi}/delete_rooms/${id}`, {
+      method: "DELETE",
+    })
+      .then((res) => res.json())
+      .then((res) => {
+        if (res.status === "success") {
+          toast.success("Room Deleted Successfully");
+          roomHostel();
+        } else {
+          toast.error("Room Not Deleted");
+        }
+      });
+  }
+
+  useEffect(() => {
     roomHostel();
   }, []);
-  console.log(data);
 
-  //    const toggleDropdown = (id) => {
-  //    setActiveDropdown(activeDropdown === id ? null : id);
-  //     setDropdownOpen(!dropdownOpen);
-  //   };
   const toggleDropdown = (id) => {
     setData((prevData) =>
       prevData.map((item) => ({
@@ -60,7 +66,6 @@ const AllRoom = () => {
       }))
     );
   };
-  
 
   const handleOptionSelect = (option, id) => {
     if (option === "Edit") {
@@ -73,13 +78,7 @@ const AllRoom = () => {
   const toggleModal = () => {
     setModalOpen(!modalOpen);
   };
-function handleDelete(id) {
-  const updated = data.filter((item) => item.id !== id);
-  setData(updated);
-  console.log(updated);
-}
 
-  console.log(data);
   return (
     <Fragment>
       <Breadcrumbs
@@ -120,7 +119,7 @@ function handleDelete(id) {
                               key={item.id}
                               className={`border-bottom-${item.color}`}
                             >
-                              <th scope="row">{index+1}</th>
+                              <th scope="row">{index + 1}</th>
                               <td>{item.hostel_name}</td>
                               <td>{item.floor_count}</td>
                               <td>
