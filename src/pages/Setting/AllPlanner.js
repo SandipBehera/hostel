@@ -24,56 +24,45 @@ const AllPlanner = () => {
   // Sample data for the table
   const [data, setData] = useState([]);
   const [editModalOpen, setEditModalOpen] = useState(false);
- const[selectedItem,setSelectedItem]=useState(null)
+  const [selectedItem, setSelectedItem] = useState(null);
   // Function to fetch data from the API
   const branchID = localStorage.getItem("branchId");
-  console.log(branchID)
+  console.log(branchID);
 
   const fetchData = async () => {
     const response = await fetch(`${WebApi}/get_all_menu`);
     const respData = await response.json();
-    console.log(respData)
-    
-    setData(respData.data
-      ?.filter((key) => key.branch_id === parseInt(branchID))
-      );
+    console.log(respData);
+
+    setData(
+      respData.data?.filter((key) => key.branch_id === parseInt(branchID))
+    );
   };
   //edit feture
   const editItem = async (itemId) => {
-   
     try {
-       // Fetch the details of the item based on itemId
-      // const response = await fetch(`${WebApi}/get_menu_item/${itemId}`);
-      // const itemDetails = await response.json();
       setEditModalOpen(true);
-      setSelectedItem(itemId)
-     
-      
+      setSelectedItem(itemId);
     } catch (error) {
-      console.error('Error fetching item details:', error);
+      console.error("Error fetching item details:", error);
     }
   };
 
   const deleteItem = async (itemId) => {
-    console.log('dlete id is',itemId)
     try {
-      const response = await fetch(
-        `${WebApi}/delete_menu`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ id:itemId }),
-
-        }
-      );
+      const response = await fetch(`${WebApi}/delete_menu`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ id: itemId }),
+      });
 
       if (response.ok) {
         toast.success("Food plan deleted successfully");
         fetchData(); // Update the data after successful deletion
       } else {
-        toast.error("Failed to delete food menu")
+        toast.error("Failed to delete food menu");
         // Handle errors or show an error message to the user
       }
     } catch (error) {
@@ -83,8 +72,6 @@ const AllPlanner = () => {
 
     toggleModal();
   };
-
-  console.log("delete ")
   // Fetch data on component mount
   useEffect(() => {
     fetchData();
@@ -105,9 +92,8 @@ const AllPlanner = () => {
   const [selectedAction, setSelectedAction] = useState("");
   const [selectedItemId, setSelectedItemId] = useState(null);
 
-
-  console.log("food data is",data)
-  console.log("selected id is",selectedItem)
+  console.log("food data is", data);
+  console.log("selected id is", selectedItem);
   return (
     <Fragment>
       <Breadcrumbs
@@ -146,32 +132,28 @@ const AllPlanner = () => {
                           toggle={() => toggleDropdown(item.id)}
                         >
                           <DropdownToggle caret>Actions</DropdownToggle>
-                         <DropdownMenu>
-                             <DropdownItem
-                               onClick={() => editItem(item.id)}
-                               >
-                                Edit
-                          </DropdownItem>
-                         <DropdownItem
-                       onClick={() => deleteItem(item.id)}
-                        >
-                    Delete
-                  </DropdownItem>
-               </DropdownMenu>
+                          <DropdownMenu>
+                            <DropdownItem onClick={() => editItem(item.id)}>
+                              Edit
+                            </DropdownItem>
+                            <DropdownItem onClick={() => deleteItem(item.id)}>
+                              Delete
+                            </DropdownItem>
+                          </DropdownMenu>
                         </Dropdown>
                       </td>
                     </tr>
                   ))}
                 </tbody>
               </Table>
-              <EditFoodplanner 
-              data={data}
-              setData={setData}
-              isOpen={editModalOpen}
-              toggle={() => setEditModalOpen(!editModalOpen)}
-              selectedItem={selectedItem}
+              <EditFoodplanner
+                data={data.filter((key) => key.id === selectedItem)}
+                setData={setData}
+                isOpen={editModalOpen}
+                toggle={() => setEditModalOpen(!editModalOpen)}
+                selectedItem={selectedItem}
+                updateRecord={fetchData}
               />
-           
             </div>
           </Card>
         </Row>
@@ -181,6 +163,3 @@ const AllPlanner = () => {
 };
 
 export default AllPlanner;
-
-
-
