@@ -1,3 +1,4 @@
+
 import React, { Fragment, useState, useEffect } from "react";
 import {
   Table,
@@ -15,11 +16,10 @@ import { LocalApi, WebApi } from "../../api";
 import { toast } from "react-toastify";
 
 const FoodPlanner = () => {
-  const [month, setMonth] = useState("January"); // Initial month
+  const [month, setMonth] = useState("January");
   const [showDropdown, setShowDropdown] = useState(false);
   const [copyPrevMonthData, setCopyPrevMonthData] = useState(false);
   const [mealData, setMealData] = useState({
-    // Initialize meal data with empty values for each day
     Monday: { Breakfast: {}, Lunch: {}, Dinner: {} },
     Tuesday: { Breakfast: {}, Lunch: {}, Dinner: {} },
     Wednesday: { Breakfast: {}, Lunch: {}, Dinner: {} },
@@ -30,23 +30,39 @@ const FoodPlanner = () => {
   });
   const [prevMonthData, setPrevMonthData] = useState(null);
 
+  const branchId = localStorage.getItem("branchId");
+
   // Function to handle input changes
   const handleInputChange = (e, day, mealType, field) => {
     const updatedMealData = { ...mealData };
     updatedMealData[day][mealType][field] = e.target.value;
     setMealData(updatedMealData);
   };
-  const branchId  = localStorage.getItem("branchId");
-  console.log(branchId)
+
   // Function to handle form submission
   const handleSubmit = async () => {
+    // Validate input fields
+    for (const day of Object.keys(mealData)) {
+      for (const mealType of ["Breakfast", "Lunch", "Dinner"]) {
+        const description = mealData[day][mealType]?.Description || "";
+        const from = mealData[day][mealType]?.From || "";
+        const to = mealData[day][mealType]?.To || "";
+        const price = mealData[day][mealType]?.Price || "";
+
+        if (!description.trim() || !from.trim() || !to.trim() || !price.trim()) {
+          toast.warning("All fields are required");
+          return; // Stop submission if any field is empty
+        }
+      }
+    }
+
     // Display the updated meal data in the console
     const year = new Date().getFullYear();
     const data = {
       month: month,
       year: year,
       food_menu: mealData,
-      branch_id: branchId
+      branch_id: branchId,
     };
     data.food_menu = JSON.stringify(data.food_menu);
 
@@ -55,19 +71,19 @@ const FoodPlanner = () => {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(data),
     });
+
     const respdata = await response.json();
     if (respdata.status === "success") {
-      toast.success("Food Menu Created")
+      toast.success("Food Menu Created");
     } else {
-toast.error("Failed to create food menu")    }
+      toast.warning("Failed to create food menu");
+    }
   };
+
   // Function to handle month change
   const handleMonthChange = (selectedMonth) => {
     setMonth(selectedMonth);
     setShowDropdown(false);
-    // Logic to fetch data for the selected month
-    // You can fetch data from an API or other sources here
-    // For demonstration, I'm setting meal data as empty for simplicity
     setMealData({
       Monday: { Breakfast: {}, Lunch: {}, Dinner: {} },
       Tuesday: { Breakfast: {}, Lunch: {}, Dinner: {} },
@@ -82,9 +98,6 @@ toast.error("Failed to create food menu")    }
   // Function to handle copying previous month's data
   const handleCopyPrevMonthData = async () => {
     if (!copyPrevMonthData) {
-      // Logic to copy previous month's data here
-      // Replace this logic with your actual data retrieval mechanism
-
       const response = await fetch(`${WebApi}/get_last_menu`, {
         method: "GET",
         headers: { "Content-Type": "application/json" },
@@ -97,7 +110,6 @@ toast.error("Failed to create food menu")    }
         setCopyPrevMonthData(true);
       }
     } else {
-      // Reset meal data and previous month's data
       setMealData({
         Monday: { Breakfast: {}, Lunch: {}, Dinner: {} },
         Tuesday: { Breakfast: {}, Lunch: {}, Dinner: {} },
@@ -114,7 +126,6 @@ toast.error("Failed to create food menu")    }
 
   // Function to handle cancellation
   const handleCancel = () => {
-    // Reset meal data and copyPrevMonthData state to their initial values
     setMealData({
       Monday: { Breakfast: {}, Lunch: {}, Dinner: {} },
       Tuesday: { Breakfast: {}, Lunch: {}, Dinner: {} },
@@ -128,14 +139,15 @@ toast.error("Failed to create food menu")    }
   };
 
   const days = [
+    "Sunday",
     "Monday",
     "Tuesday",
     "Wednesday",
-    "Thursday",
+    "Thursday", 
     "Friday",
     "Saturday",
-    "Sunday",
   ];
+
   const months = [
     "January",
     "February",
@@ -151,7 +163,6 @@ toast.error("Failed to create food menu")    }
     "December",
   ];
 
-  // UseEffect to update the mealData when prevMonthData changes
   useEffect(() => {
     if (prevMonthData && copyPrevMonthData) {
       setMealData(prevMonthData);
@@ -160,12 +171,12 @@ toast.error("Failed to create food menu")    }
 
   return (
     <Fragment>
-    <Breadcrumbs
-    parent="Settings"
-    mainTitle="Create Food Planner "
-    subParent="Food Planner"
-    title="Create Food Planner"
-  />
+      <Breadcrumbs
+        parent="Settings"
+        mainTitle="Create Food Planner "
+        subParent="Food Planner"
+        title="Create Food Planner"
+      />
       <Card>
         <CardHeader>
           <H5>Create Food Planner</H5>
@@ -210,11 +221,6 @@ toast.error("Failed to create food menu")    }
             />
             <label>Copy the previous month data</label>
           </div>
-
-          {/* <label style={{ marginLeft: '20px' }}>
-              <Input type="checkbox" onChange={handleCopyPrevMonthData} checked={copyPrevMonthData} style={{color:"black"}}/>
-              Copy the previous month data
-            </label> */}
         </div>
         <Table bordered>
           <thead>
