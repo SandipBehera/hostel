@@ -147,7 +147,7 @@ const AllPlanner = () => {
                 </tbody>
               </Table>
               <EditFoodplanner
-                data={data}
+                data={data.filter((key) => key.id === selectedItem)}
                 setData={setData}
                 isOpen={editModalOpen}
                 toggle={() => setEditModalOpen(!editModalOpen)}
