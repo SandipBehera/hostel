@@ -19,21 +19,32 @@ const days = [
   "Saturday",
   "Sunday",
 ];
-const EditFoodplanner = ({ isOpen, toggle, data, setData, selectedItem }) => {
-  const initialMealData = data && data.length > 0 ? data[0]?.menu_data : {};
+const EditFoodplanner = ({
+  isOpen,
+  toggle,
+  data,
+  selectedItem,
+  updateRecord,
+}) => {
+  const initialMealData =
+    data && data.length > 0
+      ? data[0]?.menu_data
+      : {
+          Monday: { Breakfast: {}, Lunch: {}, Dinner: {} },
+          Tuesday: { Breakfast: {}, Lunch: {}, Dinner: {} },
+          Wednesday: { Breakfast: {}, Lunch: {}, Dinner: {} },
+          Thursday: { Breakfast: {}, Lunch: {}, Dinner: {} },
+          Friday: { Breakfast: {}, Lunch: {}, Dinner: {} },
+          Saturday: { Breakfast: {}, Lunch: {}, Dinner: {} },
+          Sunday: { Breakfast: {}, Lunch: {}, Dinner: {} },
+        };
   const [mealData, setMealData] = useState(initialMealData);
-
-  console.log("Hello Data:", data[0]?.menu_data);
-  console.log("meal data", mealData);
-  console.log("type is", typeof selectedItem);
   // const [editedData, setEditedData] = useState(data.menu_data);
 
   const handleInputChange = (e, day, mealType, field) => {
     mealData[day][mealType][field] = e?.target?.value;
     setMealData(mealData);
   };
-
-  console.log("Edit Food Selected ID", selectedItem);
 
   async function handleSubmit() {
     const updatedData = [...data];
@@ -59,6 +70,7 @@ const EditFoodplanner = ({ isOpen, toggle, data, setData, selectedItem }) => {
       });
       const resp = await response.json();
       if (resp.status === "success") {
+        updateRecord();
         toast.success(resp.message);
         // Handle state updates after a successful update
         //   setData((prevData) =>
