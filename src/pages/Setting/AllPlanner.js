@@ -42,9 +42,6 @@ const AllPlanner = () => {
   const editItem = async (itemId) => {
    
     try {
-       // Fetch the details of the item based on itemId
-      // const response = await fetch(`${WebApi}/get_menu_item/${itemId}`);
-      // const itemDetails = await response.json();
       setEditModalOpen(true);
       setSelectedItem(itemId)
      
@@ -165,7 +162,7 @@ const AllPlanner = () => {
                 </tbody>
               </Table>
               <EditFoodplanner 
-              data={data}
+              data={data.filter((key)=>key.id===selectedItem)}
               setData={setData}
               isOpen={editModalOpen}
               toggle={() => setEditModalOpen(!editModalOpen)}
