@@ -16,6 +16,7 @@ import StudentLeave from "./component/leave";
 import OutingComponent from "./component/outing";
 import { toast } from "react-toastify";
 import socketIOClient from "socket.io-client";
+import VacantRequest from "./component/Vacant";
 
 const Complaints = () => {
   const studentId = localStorage.getItem("userId");
@@ -94,7 +95,19 @@ const Complaints = () => {
       };
       formData.details = leaveData;
       formData.details = JSON.stringify(formData.details);
-    } else {
+    } 
+    else if(formData.issueType==="Vacant Hostel Request"){
+      const vacantData = {
+        leave_from:leaveFrom,
+        reason: leaveReason,
+        hostel_id:hostel,
+        floor_no:room
+      }
+      formData.details=vacantData;
+      formData.details=JSON.stringify(formData.details);
+
+    }
+    else {
       const outingData = {
         leave_from: leaveFrom,
         leave_to: leaveTo,
@@ -183,6 +196,7 @@ const Complaints = () => {
                     <option>Night Out Request</option>
                     <option>Outing Request</option>
                     <option>Leave Request</option>
+                    <option>Vacant Hostel Request</option>
                     <option>Complaint</option>
                   </Input>
                 </Col>
@@ -208,6 +222,16 @@ const Complaints = () => {
                   setLeaveTo={(e) => setLeaveTo(e.target.value)}
                 />
               )}
+              {formData.issueType === "Vacant Hostel Request" && (
+                <VacantRequest
+                  title={formData.issueType}
+                  setLeave={(e) => setLeaveReason(e.target.value)}
+                  setLeaveFrom={(e) => setLeaveFrom(e.target.value)}
+                  setHostel={(e)=>{setHostel(e.target.value)}}
+                  setRoom={(e)=>{setRoom(e.target.value)}}
+                />
+              )}
+
             </Col>
           </Row>
           <FormGroup row>

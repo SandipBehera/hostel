@@ -10,7 +10,7 @@ const OutingComponent = ({ title, setLeave, setLeaveFrom, setLeaveTo }) => {
         <Row>
           <Col sm="12" md="12" xxl="12">
             <FormGroup>
-              <label>From</label>
+              <label><strong>From:</strong></label>
               <Input
                 type="time"
                 name="from"
@@ -19,11 +19,11 @@ const OutingComponent = ({ title, setLeave, setLeaveFrom, setLeaveTo }) => {
               />
             </FormGroup>
             <FormGroup>
-              <label>To</label>
+              <label><strong>To:</strong></label>
               <Input type="time" name="to" id="time" onChange={setLeaveTo} />
             </FormGroup>
             <FormGroup>
-              <label>Reason</label>
+              <label><strong>Reason:</strong></label>
               <textarea className="form-control" onChange={setLeave} />
             </FormGroup>
           </Col>

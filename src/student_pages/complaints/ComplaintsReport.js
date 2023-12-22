@@ -32,9 +32,9 @@ const ComplaintsReport = () => {
           (item) =>
             item.branch_id ===
             parseInt(
-              localStorage.getItem("branchId") &&
+              localStorage.getItem("branchId")) &&
                 item.issued_by === localStorage.getItem("userId")
-            )
+            
         )
       );
     };
@@ -124,9 +124,9 @@ const ComplaintsReport = () => {
                   <p>
                     <strong>Stage:</strong> {rowData.status}
                   </p>
-                  <p>
-                    <strong>Details:</strong>{" "}
-                  </p>
+                  <Table className="text-center">
+                    <strong className="text-center">Request/Complain Details:</strong>{" "}
+                  </Table>
                   {rowData.issue_type === "Complaint" ? (
                     <ComplaintActivity complaint={rowData} />
                   ) : (
@@ -137,8 +137,11 @@ const ComplaintsReport = () => {
                         {rowData.details.leave_from}
                       </p>
                       <p>
-                        <strong>To:</strong> {rowData.details.leave_to}
+                      {rowData.issue_type === "Vacant Hostel Request" ? "":
+                    <><strong>To:</strong> {rowData.details.leave_to}
+                    </>}
                       </p>
+                     
                       <p>
                         <strong>Reason:</strong> {rowData.details.reason}
                       </p>

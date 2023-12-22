@@ -264,7 +264,7 @@ const Take_Attendence = () => {
                       <td>{index + 1}</td>
                       <td>
                         <img
-                          className="img-100 me-2"
+                        style={{height:"4rem", width:"4rem", borderRadius:"50%"}}
                           src={stud.image}
                           alt="image"
                         />
