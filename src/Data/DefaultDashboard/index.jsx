@@ -1,30 +1,30 @@
 import { Widgets2ChartData, Widgets2ChartData2, Widgets2ChartData2Widgets, Widgets2ChartDataWidgets } from './Chart';
 
 export const WidgetsData = {
-  title: 'Purchase',
+  title: 'Complaint',
   gros: 50,
-  total: 10_000,
+  total: 1,
   color: 'secondary',
-  icon: 'cart',
+  icon: 'fill-form',
 };
 export const WidgetsData2 = {
-  title: 'Sales return',
+  title: 'Night Out Request',
   gros: 20,
-  total: 7000,
+  total:3,
   color: 'warning',
-  icon: 'return-box',
+  icon: 'fill-task',
 };
 export const WidgetsData3 = {
-  title: 'Sales',
+  title: 'Leave Request',
   gros: 70,
-  total: 4_200,
+  total: 2,
   color: 'primary',
-  icon: 'tag',
+  icon: 'fill-calender',
 };
 export const WidgetsData4 = {
-  title: 'Purchase rate',
+  title: 'Outing Request',
   gros: 70,
-  total: 5700,
+  total: 0,
   color: 'success',
   icon: 'rate',
 };
@@ -60,13 +60,13 @@ export const WidgetsData1WidgetsPage = [
 ];
 
 export const Widgets2Data = {
-  title: 'Orders',
-  total: '1,80k',
+  title: 'Mess Entry',
+  total: 'Count',
   chart: Widgets2ChartData,
 };
 export const Widgets2Data2 = {
-  title: 'Profit',
-  total: '6,90k',
+  title: 'Health Consultancy',
+  total: 'Count',
   chart: Widgets2ChartData2,
 };
 export const Widgets2DataWidgets = {
@@ -123,24 +123,24 @@ export const LightCardData2 = [
 
 export const ActivityData = [
   {
-    title: 'Updated Product',
-    subTitle: '8th March, 2022',
-    time: '1 day ago',
-    dis: 'Quisque a consequat ante sit amet magna...',
+    title: 'Complaint',
+    subTitle: '08th December 2023',
+    time: '12 day ago',
+    dis: 'Water leakage problem in my room.',
     color: 'primary',
   },
   {
-    title: 'Tello just like your product',
-    subTitle: '15th Oct, 2022 ',
-    time: 'Today',
-    dis: 'Quisque a consequat ante sit amet magna...',
+    title: 'Outing Request',
+    subTitle: '15th Dec, 2023 ',
+    time: '7 day ago',
+    dis: 'Haveing some urgent work at office.',
     color: 'warning',
   },
   {
-    title: 'Tello just like your product',
-    subTitle: '20th Sep, 2022',
-    time: '12:00 PM',
-    dis: 'Quisque a consequat ante sit amet magna...',
+    title: 'Leave Request',
+    subTitle: '20th Dec, 2023',
+    time: '2 day ago',
+    dis: 'Need 7 days leave because of my friends marriage at my hometown',
     color: 'secondary',
   },
 ];

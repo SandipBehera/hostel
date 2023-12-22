@@ -115,12 +115,13 @@ const ComplaintsReport = () => {
                     <strong>Date:</strong>{" "}
                     {moment(rowData.created_at).format("YYYY-MM-DD HH:mm:ss")}
                   </p>
-                  <p>
-                    <strong>Assign to:</strong>{" "}
-                    {rowData.assigned_to === ""
-                      ? "Not Assigned"
-                      : rowData.emp_name}
-                  </p>
+                  {(rowData?.issue_type==="Outing Request" || rowData?.issue_type==="Leave Request" || rowData?.issue_type==="Night Out Request") ? 
+                "": <p>
+                <strong>Assign to:</strong>{" "}
+                {rowData.assigned_to === ""
+                  ? "Not Assigned"
+                  : rowData.emp_name}
+              </p>}
                   <p>
                     <strong>Stage:</strong> {rowData.status}
                   </p>

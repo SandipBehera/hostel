@@ -20,7 +20,7 @@ const RecentOrders = () => {
       <Card className="height-equal">
         <CardHeader className="card-no-border">
           <div className="header-top">
-            <H5>{RecentOrdersTitle}</H5>
+            <H5></H5>
             <div className="card-header-right-icon">
               <DropdownCommon
                 dropdownMain={{
