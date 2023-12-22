@@ -117,11 +117,11 @@ export default function ComplaintStatus() {
               Complaint Status
             </CardTitle>
             <CardText>
-              {data.map((complaint) => (
+              {data?.map((complaint) => (
                 <>
                   <div key={complaint.id} className="">
                     <p>
-                      Name: <b>{complaint.name}</b>
+                      Name: <b>{complaint.issued_by_name}</b>
                     </p>
                     {complaint.floor_no !== null && (
                       <p>Room: {complaint.floor_no}</p>
@@ -129,8 +129,8 @@ export default function ComplaintStatus() {
                     {complaint.hostel_name !== null && (
                       <p>Hostel: {complaint.hostel_name}</p>
                     )}
-                    {complaint.assignedEmployee !== null ? (
-                      <p>Assigned Employee: {complaint.emp_name}</p>
+                    {complaint.assigned_to_name !== null ? (
+                      <p>Assigned Employee: {complaint.assigned_to_name}</p>
                     ) : (
                       <Col sm="12" md="6">
                         <FormGroup>

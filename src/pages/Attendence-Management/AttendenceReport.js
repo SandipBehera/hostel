@@ -6,10 +6,6 @@ import {
   Card,
   CardHeader,
   Button,
-  Dropdown,
-  DropdownToggle,
-  DropdownMenu,
-  DropdownItem,
   Container,
   Label,
   Modal,
@@ -27,13 +23,11 @@ import {
 } from "reactstrap";
 import { Breadcrumbs, H5, P } from "../../AbstractElements";
 import Papa from "papaparse";
-import { Action, Hometxt, PillTabs } from "../../Constant";
 import Select from "react-select";
 import { WebApi } from "../../api";
 import { toast } from "react-toastify";
-import HeaderCard from "../../Components/Common/Component/HeaderCard";
+
 import MonthlyAttendanceReport from "./MonthlyAttendenceReport";
-import { Link } from "react-router-dom";
 
 const AttendenceReport = ({ attendanceData }) => {
   const [data, setData] = useState([]);
@@ -72,7 +66,6 @@ const AttendenceReport = ({ attendanceData }) => {
       setHostelData(
         resproom.data.filter((key) => key.branch_id === parseInt(branchId))
       );
-      console.log(resproom.data);
     };
     roomHostel();
   }, []);
@@ -91,7 +84,6 @@ const AttendenceReport = ({ attendanceData }) => {
     setData(
       resproom.data.filter((key) => key.branch_id === parseInt(branchId))
     );
-    console.log(resproom.data);
   };
 
   const handleActionSelect = async (action, comment) => {
@@ -101,7 +93,7 @@ const AttendenceReport = ({ attendanceData }) => {
       comments: comment,
     };
     datas.comments = JSON.stringify({ comments: datas.comments });
-    console.log(datas);
+
     try {
       const response = await fetch(`${WebApi}/update_attendence`, {
         method: "POST",
@@ -206,14 +198,34 @@ const AttendenceReport = ({ attendanceData }) => {
                                 data.map((item) => (
                                   <tr key={item.id}>
                                     <td>{item.id}</td>
-                                    <td>{item.username}</td>
-                                    <td>{item.name}</td>
-                                    <td>{item.hostel_name}</td>
-                                    <td>{item.room_id}</td>
                                     <td>
+                                      <img
+                                        className="img-100 me-2"
+                                        src={item.image}
+                                        alt="image"
+                                      />
+                                      {/* <Image
+                                        attrImage={{
+                                          className: "img-30 me-2",
+                                          src: require(item.image),
+                                          alt: "user",
+                                        }}
+                                      /> */}
+                                      {item.registration_no}
+                                    </td>
+                                    <td style={{ padding: "26px" }}>
+                                      {item.name}
+                                    </td>
+                                    <td style={{ padding: "26px" }}>
+                                      {item.hostel_name}
+                                    </td>
+                                    <td style={{ padding: "26px" }}>
+                                      {item.room_id}
+                                    </td>
+                                    <td style={{ padding: "26px" }}>
                                       {item.status === 1 ? "present" : "absent"}
                                     </td>
-                                    <td>
+                                    <td style={{ paddingTop: "26px" }}>
                                       {
                                         <Input
                                           type="select"
@@ -223,7 +235,6 @@ const AttendenceReport = ({ attendanceData }) => {
                                             toggleDropdown(item.id)
                                           }
                                         >
-                                       
                                           {item.status == 1 ? (
                                             <option value={0}>Absent</option>
                                           ) : (

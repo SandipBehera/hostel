@@ -1,8 +1,20 @@
 import React, { Fragment, useContext, useEffect, useState } from "react";
-import { Col, Card, CardHeader, Row, Button, Modal, ModalHeader, ModalBody, Label, Input, ModalFooter } from "reactstrap";
+import {
+  Col,
+  Card,
+  CardHeader,
+  Row,
+  Button,
+  Modal,
+  ModalHeader,
+  ModalBody,
+  Label,
+  Input,
+  ModalFooter,
+} from "reactstrap";
 import DataTable from "react-data-table-component";
 import { Breadcrumbs, H5 } from "../../AbstractElements";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { LocalApi, WebApi } from "../../api";
 import TableContext from "../../_helper/Table";
 import UpdateEmployee from "./UpdateEmployee";
@@ -38,7 +50,7 @@ const AllEmployee = () => {
           fetchedData
             ?.filter((key) => key.branch_id === parseInt(branchID))
             .map((item, index) => ({
-              id: index+1,
+              id: index + 1,
               name: item.emp_name,
               email: item.emp_email,
               contact: item.emp_phone,
@@ -48,11 +60,14 @@ const AllEmployee = () => {
               aadhar: item.aadhar_no,
               pan: item.pan_no,
               regNo: item.employee_reg_no,
-              bank:item.bank_ac_name,
+              bank: item.bank_ac_name,
               bankNo: item.bank_ac_no,
-              ifsc: item.bank_ifsc
+              ifsc: item.bank_ifsc,
+              empId: item.emp_id,
+              doj: item.emp_dob,
             }))
         );
+        console.log(empData);
       } catch (error) {
         console.error("Error fetching data:", error.message);
       }
@@ -61,14 +76,14 @@ const AllEmployee = () => {
     getAllEmployee();
   }, []);
 
-  const viewEditModal = (row) => {
-    setSelectedEmployee(row);
-    setEditModal(true);
-    console.log("Edit modal state:", editModal);
-  };
-  const CustomButton = ({ onClick, text, row }) => (
-    <Button color="primary" onClick={() => onClick(row)}>{text}</Button>
-  );
+  // const viewEditModal = (row) => {
+  //   setSelectedEmployee(row);
+  //   setEditModal(true);
+  //   console.log("Edit modal state:", editModal);
+  // };
+  // const CustomButton = ({ onClick, text, row }) => (
+  //   <Button color="primary" onClick={() => onClick(row)}>{text}</Button>
+  // );
 
   let colData = [
     {
@@ -112,15 +127,15 @@ const AllEmployee = () => {
     {
       name: "Action",
       cell: (row) => (
-        <CustomButton
-        onClick={() => viewEditModal(row)}
-          text="Edit"
-          row={row}
-        />
+        <Link
+          to={`/admin/2079/edit/${row.id}`}
+          state={{ employeeDetails: row }}
+        >
+          <Button color="primary">Edit</Button>
+        </Link>
       ),
       center: true,
     },
-    
   ];
 
   return (
@@ -150,17 +165,7 @@ const AllEmployee = () => {
                 pagination
               />
             </div>
-
-           
-            <UpdateEmployee
-          
-              isOpen={editModal}
-              toggle={() => setEditModal(!editModal)}
-              employeeDetails={selectedEmployee || {}}
-            
-          />
           </Card>
-         
         </Col>
       </div>
     </Fragment>
