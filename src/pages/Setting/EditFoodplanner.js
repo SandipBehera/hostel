@@ -12,41 +12,38 @@ const days = [
     "Sunday",
   ];
 const EditFoodplanner = ({isOpen, toggle,data,setData,selectedItem}) => {
-    // const[descript,setDescript]=useState("")
-    // const[to,setTo]=useState("")
-    // const[from,setFrom]=useState("")
-    // const[price,setPrice]=useState("")
+   
 
-    const [mealData, setMealData] = useState({
-      // Initialize meal data with empty values for each day
-      Monday: { Breakfast: {}, Lunch: {}, Dinner: {} },
-      Tuesday: { Breakfast: {}, Lunch: {}, Dinner: {} },
-      Wednesday: { Breakfast: {}, Lunch: {}, Dinner: {} },
-      Thursday: { Breakfast: {}, Lunch: {}, Dinner: {} },
-      Friday: { Breakfast: {}, Lunch: {}, Dinner: {} },
-      Saturday: { Breakfast: {}, Lunch: {}, Dinner: {} },
-      Sunday: { Breakfast: {}, Lunch: {}, Dinner: {} },
-    });
-    console.log("Hello Data:",data);
+    const [mealData, setMealData] = useState(data[0]?.menu_data)
+     
+    console.log("Hello Data:",data[0]?.menu_data);
+    console.log("meal data",mealData)
     console.log( "type is",typeof selectedItem)
     // const [editedData, setEditedData] = useState(data.menu_data);
 
   const handleInputChange = (e, day, mealType, field) => {
-    const updatedMealData = { ...mealData };
-    updatedMealData[day][mealType][field] = e.target.value;
-    setMealData(updatedMealData);
+    
+    mealData[day][mealType][field] = e?.target?.value;
+    setMealData(mealData);
   };
   
   
   
   console.log("Edit Food Selected ID", selectedItem)
+
   async function handleSubmit() {
+    const updatedData = [...data];
+    updatedData.forEach((item, index) => {
+      if (item.id === selectedItem) {
+        updatedData[index] = { ...item, menu_data: mealData };
+      }
+    });
     // Prepare the updated menu_data
     const updatedMenuData = {
       id: selectedItem,
      menu_data:mealData ,
     };
-
+  updatedMenuData.menu_data=JSON.stringify(updatedMenuData.menu_data)
     // Send the update request to the API
     try {
       const response = await fetch(`${WebApi}/update_menu`, {
@@ -57,15 +54,17 @@ const EditFoodplanner = ({isOpen, toggle,data,setData,selectedItem}) => {
         body: JSON.stringify(updatedMenuData),
        
       });
-      
-      if (response.ok) {
-        toast.success("Food Item Updated Successfully")
+      const  resp= await response.json();
+      if (resp.status==="success") {
+
+        toast.success(resp.message)
         // Handle state updates after a successful update
-      setData((prevData) =>
-      prevData.map((item) =>
-        item.id === selectedItem ? { ...item, menu_data: mealData } : item
-      )
-    );
+    //   setData((prevData) =>
+    //   prevData.map((item) =>
+    //     item.id === selectedItem ? { ...item, menu_data: mealData } : item
+    //   )
+    // );
+  
       } else {
           toast.error("Failed to uodate food menu")        // Handle errors or show an error message to the user
       }
@@ -76,7 +75,114 @@ const EditFoodplanner = ({isOpen, toggle,data,setData,selectedItem}) => {
    
     toggle();
   }
-     
+
+  // async function handleSubmit() {
+  //   // Find the index of the selected item in the data array
+  //   const selectedItemIndex = data.findIndex((item) => item.id === selectedItem);
+  
+  //   // If the selected item is found, update its menu_data
+  //   if (selectedItemIndex !== -1) {
+  //     const updatedData = data.map((item) =>
+  //       item.id === selectedItem
+  //         ? { ...item, menu_data: { ...item.menu_data, ...mealData } }
+  //         : item
+  //     );
+  
+  //     // Prepare the updated menu_data
+  //     const updatedMenuData = {
+  //       id: selectedItem,
+  //       menu_data: { ...data[selectedItemIndex].menu_data, ...mealData },
+  //     };
+  
+  //     // Send the update request to the API
+  //     try {
+  //       const response = await fetch(`${WebApi}/update_menu`, {
+  //         method: 'POST',
+  //         headers: {
+  //           'Content-Type': 'application/json',
+  //         },
+  //         body: JSON.stringify(updatedMenuData),
+  //       });
+  
+  //       if (response.ok) {
+  //         toast.success("Food Item Updated Successfully");
+  
+  //         // Handle state updates after a successful update
+  //         setData(updatedData);
+  //       } else {
+  //         toast.error("Failed to update food menu");
+  //       }
+  //     } catch (error) {
+  //       console.error('Error during update:', error);
+  //       // Handle network errors or other exceptions
+  //     }
+  //   } else {
+  //     // Handle case where selected item is not found
+  //     console.error("Selected item not found in the data array");
+  //   }
+  
+  //   toggle();
+  // }
+  
+  // async function handleSubmit() {
+  //   // Find the index of the selected item in the data array
+  //   const selectedItemIndex = data.findIndex((item) => item.id === selectedItem);
+  
+  //   // If the selected item is found, update its menu_data
+  //   if (selectedItemIndex !== -1) {
+  //     const updatedData = [];
+  
+  //     data.forEach((item, index) => {
+  //       if (index === selectedItemIndex) {
+  //         // Update the menu_data of the selected item
+  //         const updatedItem = {
+  //           ...item,
+  //           menu_data: { ...item.menu_data, ...mealData },
+  //         };
+  //         updatedData.push(updatedItem);
+  //       } else {
+  //         // Keep the other items unchanged
+  //         updatedData.push(item);
+  //       }
+  //     });
+  
+  //     // Prepare the updated menu_data
+  //     const updatedMenuData = {
+  //       id: selectedItem,
+  //       menu_data: { ...data[selectedItemIndex].menu_data, ...mealData },
+  //     };
+  
+  //     // Send the update request to the API
+  //     try {
+  //       const response = await fetch(`${WebApi}/update_menu`, {
+  //         method: 'POST',
+  //         headers: {
+  //           'Content-Type': 'application/json',
+  //         },
+  //         body: JSON.stringify(updatedMenuData),
+  //       });
+  
+  //       if (response.ok) {
+  //         toast.success("Food Item Updated Successfully");
+  
+  //         // Handle state updates after a successful update
+  //         setData(updatedData);
+  //       } else {
+  //         toast.error("Failed to update food menu");
+  //       }
+  //     } catch (error) {
+  //       console.error('Error during update:', error);
+  //       // Handle network errors or other exceptions
+  //     }
+  //   } else {
+  //     // Handle case where selected item is not found
+  //     console.error("Selected item not found in the data array");
+  //   }
+  
+  //   toggle();
+  // }
+  
+  
   return (
     <Fragment>
       <Modal isOpen={isOpen} toggle={toggle} size='lg'>
@@ -108,7 +214,7 @@ const EditFoodplanner = ({isOpen, toggle,data,setData,selectedItem}) => {
                         type="text"
                         placeholder="Food Menu Items"
                         defaultValue={item.menu_data[day][mealType]?.Description}
-                      // onChange={(e)=>setDescript(e.target.value)}
+                      
                       onChange={(e) =>
                         handleInputChange(e, day, mealType, "Description")
                       }
@@ -127,7 +233,7 @@ const EditFoodplanner = ({isOpen, toggle,data,setData,selectedItem}) => {
                       <Input
                         type="time"
                         defaultValue={item.menu_data[day][mealType]?.To}
-                        // onChange={(e)=>setTo(e.target.value)}
+                       
                         onChange={(e) =>
                           handleInputChange(e, day, mealType, "To")
                         }
@@ -137,7 +243,7 @@ const EditFoodplanner = ({isOpen, toggle,data,setData,selectedItem}) => {
                         type="text"
                         placeholder="Price"
                         defaultValue={item.menu_data[day][mealType]?.Price}
-                        // onChange={(e)=>setPrice(e.target.value)}
+                        
                         onChange={(e) =>
                           handleInputChange(e, day, mealType, "Price")
                         }
