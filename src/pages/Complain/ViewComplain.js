@@ -29,6 +29,7 @@ const ViewComplaint = () => {
   const [processModalOpen, setProcessModalOpen] = useState(false);
   const [viewModalOpen, setViewModalOpen] = useState(false);
   const [successMessage, setSuccessMessage] = useState("");
+  console.log(selectedComplaint);
   const fetchData = async () => {
     try {
       const response = await fetch(`${WebApi}/get_complaints`, {
@@ -219,21 +220,41 @@ const ViewComplaint = () => {
                   />
                 ) : (
                   <>
-                    {selectedComplaint.details && (
-                      <>
-                        {selectedComplaint.issue_type === "General Issue" ||
-                        selectedComplaint.issue_type === "Hostel Issue" ? (
-                          <div>
-                            <p>
-                              <strong>Complaint Details: </strong>
-                            </p>
-                            <p>{selectedComplaint.details.content}</p>
-                          </div>
+                    
+                  {selectedComplaint.details && (
+                    <>
+                      {selectedComplaint.issue_type === "General Issue" ||
+                      selectedComplaint.issue_type === "Hostel Issue" ? (
+                        <div>
+                          <p>
+                            <strong>Complaint Details: </strong>
+                          </p>
+                          <p>{selectedComplaint.details.content}</p>
+                        </div>
+                      ) : (
+                        selectedComplaint.issue_type === "Vacant Hostel Request" ? (
+                        <>
+                        <p><strong>Name:</strong>{" "}
+                        {selectedComplaint.Issued_by}
+                        </p>
+                        <p><strong>Hostel name: </strong> {" "}
+                        {selectedComplaint.details.hostel_id}
+                        </p>
+                        <p><strong>Room Number: </strong> {" "}
+                        {selectedComplaint.details.floor_no}
+                        </p>
+                        <p><strong>Vacating on: </strong> {" "}
+                        {selectedComplaint.details.leave_from}
+                        </p>
+                        <p><strong>Reason: </strong> {" "}
+                        {selectedComplaint.details.reason}
+                        </p>                
+                        </> 
                         ) : (
                           <div>
                             <p>
-                              <strong>Issue Type </strong>
-                              {selectedComplaint.details.leave_from}
+                              <strong>From:</strong>{" "}
+                               {selectedComplaint.details.leave_from}
                             </p>
                             <p>
                               <strong>To:</strong>{" "}
@@ -243,10 +264,17 @@ const ViewComplaint = () => {
                               <strong>Reason:</strong>{" "}
                               {selectedComplaint.details.reason}
                             </p>
+                            <p>
+                              <strong>Request Date:</strong>{" "}
+                              {`${new Date(selectedComplaint.created_at)}`.slice(4, 15)}
+                            </p>
+                           
                           </div>
-                        )}
-                      </>
-                    )}
+                        )
+                      )}
+                    </>
+                  )}
+                  
                   </>
                 )}
               </div>

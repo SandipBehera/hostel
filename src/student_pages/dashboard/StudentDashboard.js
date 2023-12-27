@@ -5,7 +5,6 @@ import ActivityCard from "../../pages/Dashboard/ActivityCard";
 import GreetingCard from "../../pages/Dashboard/GreetingCard";
 import { ActivityData } from "../../Data/DefaultDashboard";
 import WidgetsWrapper from "../../pages/Dashboard/WidgetsWraper";
-import RecentOrders from "../../pages/Dashboard/RecentOrders";
 
 const StudentDashboard = () => {
   // Simulated data (you'll fetch this data from API/backend)
@@ -66,13 +65,12 @@ const StudentDashboard = () => {
       />
       <Container className="mt-4">
         <Row className="widget-grid">
-          <GreetingCard name={localStorage.getItem("Name")} />
+          <GreetingCard name={localStorage.getItem("Name")}  college={"Vaagdevi"}/>
           <WidgetsWrapper />
           <ActivityCard
             ActivityData={ActivityData}
             columnHeadder={"Complaint Tracker"}
           />
-          <RecentOrders />
         </Row>
       </Container>
     </Fragment>

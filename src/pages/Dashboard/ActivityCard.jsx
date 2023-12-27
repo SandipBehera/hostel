@@ -15,11 +15,7 @@ const ActivityCard = (props) => {
           <div className="header-top">
             <H5 attrH5={{ className: "m-0" }}>{props.columnHeadder}</H5>
             <div className="card-header-right-icon">
-              <DropdownCommon
-                icon={false}
-                options={DailyDropdown}
-                btn={{ caret: true }}
-              />
+              
             </div>
           </div>
         </CardHeader>
