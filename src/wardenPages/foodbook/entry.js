@@ -1,6 +1,6 @@
 import React, { Fragment, useState, useEffect } from "react";
 import { Button, Table, Card, CardHeader, Row, Col, Input } from "reactstrap";
-import { Breadcrumbs, H5 } from "../../AbstractElements";
+import { Breadcrumbs, H5, P } from "../../AbstractElements";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { LocalApi, WebApi } from "../../api";
@@ -57,8 +57,11 @@ const FoodBookEntry = () => {
         title="Book Food"
       />
       <Card>
-        <Row>
+        <Row style={{ marginBottom: "10px" }}>
           <Col sm="3" className="mx-auto">
+            <p className="ml-3 mt-3" style={{ color: "red" }}>
+              Enter the Auth Code to avail food to Student
+            </p>
             <Input
               type="Text"
               value={authCode}
@@ -76,57 +79,59 @@ const FoodBookEntry = () => {
             </Button>
           </Col>
         </Row>
-        <div
-          style={{
-            textAlign: "center",
-            marginTop: "30px",
-            marginBottom: "20px",
-          }}
-        >
-          <H5>Student Info</H5>
-          {/* {studentData.length > 0 && ( */}
-          <Table>
-            <thead>
-              <tr>
-                <th>Image</th>
-                <th>Student Name</th>
-                <th>Regd No</th>
-                <th>User Type</th>
-                <th>Action</th>
-              </tr>
-            </thead>
-            <tbody>
-              {/* Render month's data fetched from the backend */}
+        {studentData.length > 0 && (
+          <div
+            style={{
+              textAlign: "center",
+              marginTop: "30px",
+              marginBottom: "20px",
+            }}
+          >
+            <H5>Student Info</H5>
+            {/* {studentData.length > 0 && ( */}
+            <Table>
+              <thead>
+                <tr>
+                  <th>Image</th>
+                  <th>Student Name</th>
+                  <th>Regd No</th>
+                  <th>User Type</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                {/* Render month's data fetched from the backend */}
 
-              <tr>
-                <td>
-                  <img src="" />
-                </td>
-                <td>{studentData?.name}</td>
-                <td>{studentData?.username}</td>
-                <td>{studentData?.user_from}</td>
-                <td>
-                  <Button
-                    className="btn-block btn-success"
-                    onClick={FoodStatus("approved")}
-                  >
-                    Approve
-                  </Button>
+                <tr>
+                  <td>
+                    <img src="" />
+                  </td>
+                  <td>{studentData?.name}</td>
+                  <td>{studentData?.username}</td>
+                  <td>{studentData?.user_from}</td>
+                  <td>
+                    <Button
+                      className="btn-block btn-success"
+                      onClick={FoodStatus("approved")}
+                    >
+                      Approve
+                    </Button>
 
-                  <Button
-                    className="btn-block btn-danger m-l-5"
-                    onClick={FoodStatus("rejected")}
-                  >
-                    Reject
-                  </Button>
-                </td>
-              </tr>
+                    <Button
+                      className="btn-block btn-danger m-l-5"
+                      onClick={FoodStatus("rejected")}
+                    >
+                      Reject
+                    </Button>
+                  </td>
+                </tr>
 
-              {/* Add more rows as needed */}
-            </tbody>
-          </Table>
-          {/* )} */}
-        </div>
+                {/* Add more rows as needed */}
+              </tbody>
+            </Table>
+            {/* )} */}
+          </div>
+        )}
       </Card>
     </Fragment>
   );
