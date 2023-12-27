@@ -16,7 +16,6 @@ import DataTable from "react-data-table-component";
 import { Breadcrumbs, H5 } from "../../AbstractElements";
 import { Link, useNavigate } from "react-router-dom";
 import { LocalApi, WebApi } from "../../api";
-import TableContext from "../../_helper/Table";
 import UpdateEmployee from "./UpdateEmployee";
 
 const AllEmployee = () => {

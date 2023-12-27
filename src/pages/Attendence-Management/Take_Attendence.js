@@ -35,6 +35,7 @@ const Take_Attendence = () => {
 
   const [studentData, setStudentData] = useState([]);
 
+
   const [presentButtonDisabled, setPresentButtonDisabled] = useState(false);
   const [absentButtonDisabled, setAbsentButtonDisabled] = useState(false);
   const [selectedId, setSelectedId] = useState("");
@@ -42,6 +43,8 @@ const Take_Attendence = () => {
   const [selectedComment, setSelectedComment] = useState(""); // Add new state for selected comment
 
   const [otherMessage, setOtherMessage] = useState("");
+
+  const [attendanceStatus, setAttendanceStatus] = useState({});
 
   const resetButtonStates = () => {
     setPresentButtonDisabled(false);
@@ -173,6 +176,10 @@ const Take_Attendence = () => {
         } else {
           toast.error("Something went wrong!!");
         }
+        setAttendanceStatus((prevStatus) => ({
+          ...prevStatus,
+          [studentregistration]: status,
+        }));
       } catch (error) {
         console.error("Error Making Attendance Request:", error.message);
       }

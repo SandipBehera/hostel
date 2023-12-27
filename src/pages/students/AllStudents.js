@@ -15,7 +15,7 @@ import {
   Row,
 } from "reactstrap";
 import Select from "react-select";
-import { options2 } from "../../Components/Forms/FormWidget/FormSelect2/OptionDatas";
+
 import {
   Col,
   Card,
@@ -42,16 +42,11 @@ import {
 } from "../../Constant";
 import { FaSearch } from "react-icons/fa";
 import { H5, Image, H1, Btn, Breadcrumbs } from "../../AbstractElements";
-import TableContext from "../../_helper/Table";
-import { BasicColorData } from "../../Components/Common/Data/Ui-kits/index";
-import CommonDropDown from "../../Components/UiKits/Dropdown/Common/CommonDropDown";
-import { useNavigate } from "react-router-dom";
 import PopUpButton from "./PopUpButton";
 import { LocalApi, LocalSocketAPI, WebApi, WebSocketAPI } from "../../api";
 import socketIOClient from "socket.io-client";
 import { toast } from "react-toastify";
-import { el } from "date-fns/locale";
-import { get } from "react-hook-form";
+
 
 const roomNumberOptions = [
   { value: "room1", label: "Room 1" },

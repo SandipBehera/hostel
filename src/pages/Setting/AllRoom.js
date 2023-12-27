@@ -31,7 +31,7 @@ const AllRoom = () => {
   const branchId = localStorage.getItem("branchId");
 
   const roomHostel = async () => {
-    const response = await fetch(`${WebApi}/get_rooms`, {
+    const response = await fetch(`${WebApi}/get_student_room/${branchId}`, {
       method: "GET",
     });
 
