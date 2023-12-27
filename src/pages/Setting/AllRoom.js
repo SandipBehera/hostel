@@ -28,17 +28,18 @@ const AllRoom = () => {
   const [modalOpen, setModalOpen] = useState(false);
   const [edit, setEdit] = useState(-1);
   const branchId = localStorage.getItem("branchId");
+  console.log(branchId)
   useEffect(() => {
     const roomHostel = async () => {
-      const response = await fetch(`${WebApi}/get_rooms`, {
+    
+        const response = await fetch(`${WebApi}/get_student_room/${branchId}`, {
         method: "GET",
       });
 
-      const resproom = await response.json();
-      console.log("resproom data is", resproom);
-      const fetchedData = resproom.data;
+      const resproom = await response.json();  
+     const fetchedData = resproom.data;
       setData(
-        fetchedData.filter((key) => key.branch_id === parseInt(branchId))
+        fetchedData
       );
       if (resproom && resproom.status) {
         console.log("data fetched");
@@ -48,10 +49,7 @@ const AllRoom = () => {
   }, []);
   console.log(data);
 
-  //    const toggleDropdown = (id) => {
-  //    setActiveDropdown(activeDropdown === id ? null : id);
-  //     setDropdownOpen(!dropdownOpen);
-  //   };
+ 
   const toggleDropdown = (id) => {
     setData((prevData) =>
       prevData.map((item) => ({
@@ -79,7 +77,7 @@ function handleDelete(id) {
   console.log(updated);
 }
 
-  console.log(data);
+  console.log("room data is",data);
   return (
     <Fragment>
       <Breadcrumbs
