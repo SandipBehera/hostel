@@ -6,7 +6,7 @@ import "react-toastify/dist/ReactToastify.css";
 import { LocalApi, WebApi } from "../../api";
 import { getMealTimings, getMealType } from "../../Hooks/getMealTimings";
 
-const StudentFoodBook = () => {
+const Book = () => {
   const [mealData, setMealData] = useState([]);
   const [selectedDay, setSelectedDay] = useState(""); // Default day
   const [generatedCode, setGeneratedCode] = useState("");
@@ -14,6 +14,7 @@ const StudentFoodBook = () => {
   const [gracePeriodExpired, setGracePeriodExpired] = useState(false);
   const [isButtonClicked, setIsButtonClicked] = useState(false);
   const branchId = localStorage.getItem("branchId");
+  
   //get this month name
   const date = new Date();
   const month = date.toLocaleString("default", { month: "long" });
@@ -26,6 +27,7 @@ const StudentFoodBook = () => {
     const fetched_data = respData.data.filter(
       (item) => item.month === monthName
     );
+    console.log('fetched',fetched_data);
     setMealData(fetched_data
       .filter(key=>key.branch_id===parseInt(branchId)));
   };
@@ -54,7 +56,6 @@ const StudentFoodBook = () => {
     // dinnerEnd.setHours(20, 0, 0); // Set dinner end time (8 pm)
 
     const day = now.toLocaleString("default", { weekday: "long" });
-    console.log(day);
     const mealTimings = getMealTimings(mealData[0].menu_data, day);
     const breakfastStart = mealTimings.breakfastStart;
     const breakfastEnd = mealTimings.breakfastEnd;
@@ -116,7 +117,7 @@ const StudentFoodBook = () => {
       toast.error("Mess is closed");
     }
   }, [gracePeriodExpired]);
-
+ console.log("mealdata is",mealData)
   return (
     <Fragment>
       <Breadcrumbs
@@ -162,6 +163,7 @@ const StudentFoodBook = () => {
           <tbody>
             {/* Render meal data fetched from the backend */}
             {mealData.map((meal, index) => (
+              
               <tr key={index}>
                 {/* Replace 'selectedDay' with the actual selected day */}
                 <td>{selectedDay}</td>
@@ -222,4 +224,4 @@ const StudentFoodBook = () => {
   );
 };
 
-export default StudentFoodBook;
+export default Book;

@@ -82,7 +82,7 @@ const AllStudents = () => {
   const [selectedRoom, setSelectedRoom] = useState(null);
   const [selectedRowId, setSelectedRowId] = useState(null);
   const [selectedStudent, setSelectedStudent] = useState(null);
-
+  const [reassignPopupOpen, setReassignPopupOpen] = useState(false);
   const toggleAssignRoomModal = (rowId) => {
     setAssignRoomModalOpen(!assignRoomModalOpen);
     setSelectedRowId(rowId);
@@ -127,6 +127,7 @@ const AllStudents = () => {
   });
 
   const handleAssignRoom = async () => {
+   
     const data = {
       user_id: userid,
       hostel_id: selectedHostel,
@@ -193,9 +194,25 @@ const AllStudents = () => {
     setDropdownOpen(!dropdownOpen);
   };
 
+  const toggleReassignPopup = () => {
+    setReassignPopupOpen(!reassignPopupOpen);
+  };
+  // const handleOptionSelect = (option, id) => {
+  //   if (option === "Assign Room") {
+  //     toggleAssignRoomModal(id);
+  //     setUserid(id);
+  //   } else if (option === "View") {
+  //     const student = tableData.find((item) => item.id === id);
+  //     setSelectedStudent(student);
+  //     toggleModal();
+  //   }
+  // };
   const handleOptionSelect = (option, id) => {
     if (option === "Assign Room") {
       toggleAssignRoomModal(id);
+      setUserid(id);
+    } else if (option === "Reassign Room") {
+      toggleReassignPopup();
       setUserid(id);
     } else if (option === "View") {
       const student = tableData.find((item) => item.id === id);
@@ -352,6 +369,7 @@ const AllStudents = () => {
                       </ModalBody>
                     </Modal>
                   )}
+     
                 </div>
               </Card>
             </Col>

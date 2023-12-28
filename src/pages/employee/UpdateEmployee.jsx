@@ -139,3 +139,133 @@ const UpdateEmployee = ({ isOpen, toggle, employeeDetails }) => {
 };
 
 export default UpdateEmployee;
+
+// UpdateEmployee.jsx
+
+
+//from chatgpt
+// import React, { useState, useEffect } from "react";
+// import { Modal, ModalHeader, ModalBody, Label, Input, ModalFooter, Button, Table, Row, Col } from "reactstrap";
+// import { H5 } from "../../AbstractElements";
+
+// const UpdateEmployee = ({ isOpen, toggle, employeeDetails, onUpdate }) => {
+//   const [formData, setFormData] = useState({
+//     name: "",
+//     email: "",
+//     regNo: "",
+//     designation: "",
+//     address: "",
+//     contact: "",
+//     pan: "",
+//     aadhar: "",
+//     bank: "",
+//     bankNo: "",
+//     ifsc: "",
+//   });
+
+//   const [image, setImage] = useState(null);
+
+//   useEffect(() => {
+//     setFormData({
+//       name: employeeDetails.name || "",
+//       email: employeeDetails.email || "",
+//       regNo: employeeDetails.regNo || "",
+//       designation: employeeDetails.designation || "",
+//       address: employeeDetails.address || "",
+//       contact: employeeDetails.contact || "",
+//       pan: employeeDetails.pan || "",
+//       aadhar: employeeDetails.aadhar || "",
+//       bank: employeeDetails.bank || "",
+//       bankNo: employeeDetails.bankNo || "",
+//       ifsc: employeeDetails.ifsc || "",
+//     });
+
+//     setImage(employeeDetails.image);
+//   }, [employeeDetails]);
+
+//   const handleInputChange = (e) => {
+//     const { name, value } = e.target;
+//     setFormData({
+//       ...formData,
+//       [name]: value,
+//     });
+//   };
+
+//   const handleImageChange = (e) => {
+//     const file = e.target.files[0];
+//     setImage(file);
+//   };
+
+//   const handleImageClick = () => {
+//     document.getElementById("fileInput").click();
+//   };
+
+//   const handleSubmit = () => {
+//     const combinedData = {
+//       ...formData,
+//       image: image,
+//     };
+
+//     // Simulate an asynchronous update operation using setTimeout
+//     setTimeout(() => {
+//       onUpdate(combinedData);
+//       setFormData({
+//         name: "",
+//         email: "",
+//         regNo: "",
+//         designation: "",
+//         address: "",
+//         contact: "",
+//         pan: "",
+//         aadhar: "",
+//         bank: "",
+//         bankNo: "",
+//         ifsc: "",
+//       });
+//       setImage(null);
+//       toggle();
+//     }, 1000); // Simulating a 1-second delay
+//   };
+
+//   return (
+//     <Modal isOpen={isOpen} toggle={toggle}>
+//       <ModalHeader toggle={toggle}>Edit Employee Details</ModalHeader>
+//       <ModalBody>
+//         <Table className="text-center">
+//           <tr onClick={handleImageClick} style={{ cursor: "pointer" }}>
+//             <img src={image} alt="image" />
+//           </tr>
+//         </Table>
+//         <Row>
+//           <Col>
+//             <Label>Employee Name</Label>
+//             <Input name="name" value={formData.name} onChange={handleInputChange} />
+//           </Col>
+//           <Col>
+//             <Label>Email</Label>
+//             <Input name="email" value={formData.email} onChange={handleInputChange} />
+//           </Col>
+//         </Row>
+//         {/* ... other input fields ... */}
+//         <Row>
+//           <Col>
+//             <Label for="fileInput" style={{ display: "none" }}>Upload Image</Label>
+//             <Input
+//               type="file"
+//               accept="image/*"
+//               id="fileInput"
+//               style={{ display: "none" }}
+//               onChange={handleImageChange}
+//             />
+//           </Col>
+//         </Row>
+//       </ModalBody>
+//       <ModalFooter>
+//         <Button onClick={handleSubmit}>Submit</Button>
+//       </ModalFooter>
+//     </Modal>
+//   );
+// };
+
+// export default UpdateEmployee;
+
