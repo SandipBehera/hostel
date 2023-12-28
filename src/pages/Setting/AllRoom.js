@@ -29,16 +29,20 @@ const AllRoom = () => {
   const [modalOpen, setModalOpen] = useState(false);
   const [edit, setEdit] = useState(-1);
   const branchId = localStorage.getItem("branchId");
-
+  console.log(branchId);
   const roomHostel = async () => {
-    const response = await fetch(`${WebApi}/get_rooms`, {
+    const response = await fetch(`${WebApi}/get_student_room/${branchId}`, {
       method: "GET",
     });
 
     const resproom = await response.json();
     const fetchedData = resproom.data;
-    setData(fetchedData.filter((key) => key.branch_id === parseInt(branchId)));
+    setData(fetchedData);
+    if (resproom && resproom.status) {
+      console.log("data fetched");
+    }
   };
+
   function handleDelete(id) {
     fetch(`${WebApi}/delete_rooms/${id}`, {
       method: "DELETE",
@@ -79,6 +83,7 @@ const AllRoom = () => {
     setModalOpen(!modalOpen);
   };
 
+  console.log("room data is", data);
   return (
     <Fragment>
       <Breadcrumbs
