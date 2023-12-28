@@ -33,22 +33,46 @@ const FoodBookEntry = () => {
       }),
     });
     const respData = await response.json();
-    setStudentData(respData.data.result[0]);
+    console.log(respData);
+    if (respData.status === "success") {
+      setStudentData(respData.data);
+      toast.success(respData.message);
+    } else {
+      toast.error(respData.message);
+    }
   };
+  console.log(typeof studentData);
   const FoodStatus = async (status) => {
-    const response = await fetch(`${WebApi}/foodstatus`, {
+    let meal_type;
+    if (studentData?.result[0].lunch === "1") {
+      meal_type = "lunch";
+    } else if (studentData?.result[0].break_fast === "1") {
+      meal_type = "breakfast";
+    } else {
+      meal_type = "dinner";
+    }
+    const response = await fetch(`${WebApi}/food_allocate`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
         auth_code: authCode,
+        regd_no: studentData?.result[0].registration_no,
+        meal_type: meal_type,
+        approved_by: localStorage.getItem("userId"),
+        branch_id: localStorage.getItem("branchId"),
         status: status,
       }),
     });
     const respData = await response.json();
-    console.log(respData);
+    if (respData.status === "success") {
+      toast.success(respData.message);
+    } else {
+      toast.error("Something went wrong");
+    }
   };
+  console.log(studentData);
   return (
     <Fragment>
       <Breadcrumbs
@@ -79,7 +103,7 @@ const FoodBookEntry = () => {
             </Button>
           </Col>
         </Row>
-        {studentData.length > 0 && (
+        {studentData?.result?.length > 0 && (
           <div
             style={{
               textAlign: "center",
@@ -104,22 +128,29 @@ const FoodBookEntry = () => {
 
                 <tr>
                   <td>
-                    <img src="" />
+                    <img
+                      src={studentData?.result[0].image}
+                      style={{
+                        height: "4rem",
+                        width: "4rem",
+                        borderRadius: "50%",
+                      }}
+                    />
                   </td>
-                  <td>{studentData?.name}</td>
-                  <td>{studentData?.username}</td>
-                  <td>{studentData?.user_from}</td>
+                  <td>{studentData?.result[0].name}</td>
+                  <td>{studentData?.result[0].registration_no}</td>
+                  <td>{studentData?.result[0].user_from}</td>
                   <td>
                     <Button
                       className="btn-block btn-success"
-                      onClick={FoodStatus("approved")}
+                      onClick={() => FoodStatus("approved")}
                     >
                       Approve
                     </Button>
 
                     <Button
                       className="btn-block btn-danger m-l-5"
-                      onClick={FoodStatus("rejected")}
+                      onClick={() => FoodStatus("rejected")}
                     >
                       Reject
                     </Button>
