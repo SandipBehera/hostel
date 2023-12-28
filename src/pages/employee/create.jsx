@@ -56,6 +56,13 @@ export default function CreateEmployee() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+   if(formData.name===""||formData.email===""||formData.contact===""||formData.employeeId===""||
+   formData.address===""||formData.designation===""||formData.aadhar===""||formData.pan===""
+   ||formData.account===""||formData.bank===""||formData.ifsc===""||formData.doj===""||formData.file===""){
+    toast.warning("All fields are required");
+
+   }
+   else{
     const data = new FormData();
     data.append("name", formData.name);
     data.append("email", formData.email);
@@ -88,6 +95,7 @@ export default function CreateEmployee() {
         }
       })
       .catch((err) => console.log(err));
+   }
   };
 
   return (
@@ -294,7 +302,7 @@ export default function CreateEmployee() {
                     <Input
                       className="form-control"
                       type="file"
-                      accept="image/jpg, image/png"
+                      accept="image/*"
                       onChange={(e) =>
                         setFormData((prevData) => ({
                           ...prevData,

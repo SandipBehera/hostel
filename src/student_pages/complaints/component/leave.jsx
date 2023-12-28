@@ -15,7 +15,7 @@ export default function StudentLeave({
           <Col sm="12" md="12" xxl="12">
             <H5>{title}</H5>
             <FormGroup>
-              <label>From</label>
+              <label><strong>From:</strong></label>
               <input
                 type="date"
                 className="form-control"
@@ -23,7 +23,7 @@ export default function StudentLeave({
               />
             </FormGroup>
             <FormGroup>
-              <label>To</label>
+              <label><strong>To:</strong></label>
               <input
                 type="date"
                 className="form-control"
@@ -31,7 +31,7 @@ export default function StudentLeave({
               />
             </FormGroup>
             <FormGroup>
-              <label>Reason</label>
+              <label><strong>Reason:</strong></label>
               <textarea className="form-control" onChange={setLeave} />
             </FormGroup>
           </Col>

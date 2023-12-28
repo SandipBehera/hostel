@@ -17,7 +17,6 @@ import { Selected } from "../../Constant";
 import ComplaintActivity from "../../Components/complaints/complaintActivity";
 import { toast } from "react-toastify";
 
-
 const ViewComplaint = () => {
   const socket = socketIOClient(WebSocketAPI);
   const branch_id = localStorage.getItem("branchId");
@@ -30,6 +29,7 @@ const ViewComplaint = () => {
   const [processModalOpen, setProcessModalOpen] = useState(false);
   const [viewModalOpen, setViewModalOpen] = useState(false);
   const [successMessage, setSuccessMessage] = useState("");
+  console.log(selectedComplaint);
   const fetchData = async () => {
     try {
       const response = await fetch(`${WebApi}/get_complaints`, {
@@ -38,13 +38,13 @@ const ViewComplaint = () => {
       const respData = await response.json();
       if (user === "admin") {
         setData(
-          respData.data
-          .filter(item =>
+          respData.data.filter(
+            (item) =>
               item.branch_id === parseInt(localStorage.getItem("branchId"))
           )
         );
 
-        console.log(respData.data);
+        console.log(respData);
       } else {
         setData(
           respData.data.filter(
@@ -77,7 +77,6 @@ const ViewComplaint = () => {
       setProcessModalOpen(false);
     }
   };
-  
 
   const handleStartProcess = (complaint) => {
     setSelectedComplaint(complaint);
@@ -131,8 +130,8 @@ const ViewComplaint = () => {
           {data !== undefined && data.length > 0 ? (
             data.map((complaint, index) => (
               <tr key={complaint.id}>
-                <td>{index+1}</td>
-                <td>{complaint.issued_by}</td>
+                <td>{index + 1}</td>
+                <td>{complaint.Issued_by}</td>
                 <td>{complaint.issue_type}</td>
                 <td>
                   <Button color="info" onClick={() => handleView(complaint.id)}>
@@ -140,7 +139,10 @@ const ViewComplaint = () => {
                   </Button>
                 </td>
                 <td>
-                  {complaint.issue_type === "Complaint" ? (
+                  {complaint.issue_type === "Complaint" ||
+                  complaint.issue_type === "Hostel Issue" ||
+                  complaint.issue_type === "Mess Issue" ||
+                  complaint.issue_type === "General Issue" ? (
                     <Button
                       color={complaint.status ? "success" : "primary"}
                       onClick={() => handleStartProcess(complaint)}
@@ -150,7 +152,7 @@ const ViewComplaint = () => {
                           className="link-text"
                           to={`complain-status/${complaint.id}`}
                         >
-                          Assigned to:{complaint.assigned_to} <br /> Status:
+                          Assigned to:{complaint.Assigned_to} <br /> Status:
                           {complaint.status === "" ? "NEW" : complaint.status}
                         </Link>
                       ) : (
@@ -205,45 +207,80 @@ const ViewComplaint = () => {
       <Modal isOpen={viewModalOpen}>
         <ModalHeader>{selectedComplaint?.issue_type} Details</ModalHeader>
         <ModalBody>
-  {selectedComplaint && (
-    <>
-      <div>
-        {selectedComplaint.issue_type === "Complaint" ? (
-          <ComplaintActivity
-            complaint={selectedComplaint}
-            displayTitle={true}
-          />
-        ) : (
-          <>
-            {selectedComplaint.details && (
-              <>
-               {(selectedComplaint.issue_type==="Mess Issue" || selectedComplaint.issue_type==="General Issue")?
+          {selectedComplaint && (
+            <>
               <div>
-              <p><strong>Complaint Details: </strong></p>
-              <p>{selectedComplaint.details.content}</p>
-
-              </div>:
-            <div>
-            <p>
-            <strong>Issue Type </strong>
-            {selectedComplaint.details.leave_from}
-          </p>
-          <p>
-            <strong>To:</strong> {selectedComplaint.details.leave_to}
-          </p>
-          <p>
-            <strong>Reason:</strong>{" "}
-            {selectedComplaint.details.reason}
-          </p>
-            </div>}
-              </>
-            )}
-          </>
-        )}
-      </div>
-    </>
-  )}
-</ModalBody>
+                {selectedComplaint.issue_type === "Complaint" ||
+                selectedComplaint.issue_type === "Hostel Issue" ||
+                selectedComplaint.issue_type === "Mess Issue" ||
+                selectedComplaint.issue_type === "General Issue" ? (
+                  <ComplaintActivity
+                    complaint={selectedComplaint}
+                    displayTitle={true}
+                  />
+                ) : (
+                  <>
+                    
+                  {selectedComplaint.details && (
+                    <>
+                      {selectedComplaint.issue_type === "General Issue" ||
+                      selectedComplaint.issue_type === "Hostel Issue" ? (
+                        <div>
+                          <p>
+                            <strong>Complaint Details: </strong>
+                          </p>
+                          <p>{selectedComplaint.details.content}</p>
+                        </div>
+                      ) : (
+                        selectedComplaint.issue_type === "Vacant Hostel Request" ? (
+                        <>
+                        <p><strong>Name:</strong>{" "}
+                        {selectedComplaint.Issued_by}
+                        </p>
+                        <p><strong>Hostel name: </strong> {" "}
+                        {selectedComplaint.details.hostel_id}
+                        </p>
+                        <p><strong>Room Number: </strong> {" "}
+                        {selectedComplaint.details.floor_no}
+                        </p>
+                        <p><strong>Vacating on: </strong> {" "}
+                        {selectedComplaint.details.leave_from}
+                        </p>
+                        <p><strong>Reason: </strong> {" "}
+                        {selectedComplaint.details.reason}
+                        </p>                
+                        </> 
+                        ) : (
+                          <div>
+                            <p>
+                              <strong>From:</strong>{" "}
+                               {selectedComplaint.details.leave_from}
+                            </p>
+                            <p>
+                              <strong>To:</strong>{" "}
+                              {selectedComplaint.details.leave_to}
+                            </p>
+                            <p>
+                              <strong>Reason:</strong>{" "}
+                              {selectedComplaint.details.reason}
+                            </p>
+                            <p>
+                              <strong>Request Date:</strong>{" "}
+                              {`${new Date(selectedComplaint.created_at)}`.slice(4, 15)}
+                            </p>
+                           
+                          </div>
+                        )
+                      )}
+                    </>
+                  )}
+                  
+                  </>
+                )}
+              </div>
+            </>
+          )}
+        </ModalBody>
 
         <ModalFooter>
           <Button color="secondary" onClick={() => setViewModalOpen(false)}>
@@ -251,8 +288,6 @@ const ViewComplaint = () => {
           </Button>
         </ModalFooter>
       </Modal>
-
-      
     </div>
   );
 };

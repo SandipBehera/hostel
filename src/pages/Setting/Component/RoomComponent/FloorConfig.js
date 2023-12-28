@@ -45,7 +45,7 @@ const FloorConfig = ({ setSteps, setFormdata, formdata }) => {
   }, []); // Empty dependency array means this useEffect runs once on mount
 
   const onSubmit = async () => {
-    const rooms = [];
+    const updatedRooms = [];
 
     for (let floor = 1; floor <= formdata.floor_count; floor++) {
       for (let room = 1; room <= formdata.room_count; room++) {
@@ -65,22 +65,27 @@ const FloorConfig = ({ setSteps, setFormdata, formdata }) => {
           branch_id: branchId,
         };
 
-        rooms.push(roomData);
+        updatedRooms.push(roomData);
       }
     }
 
-    setFormdata((prev) => ({ ...prev, rooms: rooms }));
+    // setFormdata((prev) => ({ ...prev, rooms: rooms }));
+    const updatedFormdata = {
+      ...formdata,
+      rooms: updatedRooms,
+    };
+
+    setFormdata(updatedFormdata);
 
     const sendData = {
-      hostel_name: formdata.hostel_name,
-      floor_count: parseInt(formdata.floor_count) || 0,
-      room_count: parseInt(formdata.room_count) || 0,
-      rooms: formdata.rooms,
+      hostel_name: updatedFormdata.hostel_name,
+      floor_count: parseInt(updatedFormdata.floor_count) || 0,
+      room_count: parseInt(updatedFormdata.room_count) || 0,
+      rooms: updatedFormdata.rooms,
       branch_id: branchId,
     };
 
     sendData.rooms = JSON.stringify(sendData.rooms);
-    console.log(sendData);
     try {
       const response = await fetch(`${WebApi}/create_rooms`, {
         method: "POST",
