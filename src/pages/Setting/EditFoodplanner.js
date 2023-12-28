@@ -1,4 +1,4 @@
-import React, { Fragment, useState } from "react";
+import React, { Fragment, useEffect, useState } from "react";
 import { WebApi } from "../../api";
 import {
   Modal,
@@ -26,26 +26,28 @@ const EditFoodplanner = ({
   selectedItem,
   updateRecord,
 }) => {
-  const initialMealData =
-    data && data.length > 0
-      ? data[0]?.menu_data
-      : {
-          Monday: { Breakfast: {}, Lunch: {}, Dinner: {} },
-          Tuesday: { Breakfast: {}, Lunch: {}, Dinner: {} },
-          Wednesday: { Breakfast: {}, Lunch: {}, Dinner: {} },
-          Thursday: { Breakfast: {}, Lunch: {}, Dinner: {} },
-          Friday: { Breakfast: {}, Lunch: {}, Dinner: {} },
-          Saturday: { Breakfast: {}, Lunch: {}, Dinner: {} },
-          Sunday: { Breakfast: {}, Lunch: {}, Dinner: {} },
-        };
-  const [mealData, setMealData] = useState(initialMealData);
-  // const [editedData, setEditedData] = useState(data.menu_data);
+  console.log("data", data.length);
+  const [mealData, setMealData] = useState();
+  useEffect(() => {
+    if (data.length > 0) {
+      setMealData(data[0]?.menu_data);
+    } else {
+      setMealData({
+        Monday: { Breakfast: {}, Lunch: {}, Dinner: {} },
+        Tuesday: { Breakfast: {}, Lunch: {}, Dinner: {} },
+        Wednesday: { Breakfast: {}, Lunch: {}, Dinner: {} },
+        Thursday: { Breakfast: {}, Lunch: {}, Dinner: {} },
+        Friday: { Breakfast: {}, Lunch: {}, Dinner: {} },
+        Saturday: { Breakfast: {}, Lunch: {}, Dinner: {} },
+        Sunday: { Breakfast: {}, Lunch: {}, Dinner: {} },
+      });
+    }
+  }, [data]);
 
   const handleInputChange = (e, day, mealType, field) => {
     mealData[day][mealType][field] = e?.target?.value;
     setMealData(mealData);
   };
-
   async function handleSubmit() {
     const updatedData = [...data];
     updatedData.forEach((item, index) => {
@@ -88,112 +90,6 @@ const EditFoodplanner = ({
 
     toggle();
   }
-
-  // async function handleSubmit() {
-  //   // Find the index of the selected item in the data array
-  //   const selectedItemIndex = data.findIndex((item) => item.id === selectedItem);
-
-  //   // If the selected item is found, update its menu_data
-  //   if (selectedItemIndex !== -1) {
-  //     const updatedData = data.map((item) =>
-  //       item.id === selectedItem
-  //         ? { ...item, menu_data: { ...item.menu_data, ...mealData } }
-  //         : item
-  //     );
-
-  //     // Prepare the updated menu_data
-  //     const updatedMenuData = {
-  //       id: selectedItem,
-  //       menu_data: { ...data[selectedItemIndex].menu_data, ...mealData },
-  //     };
-
-  //     // Send the update request to the API
-  //     try {
-  //       const response = await fetch(`${WebApi}/update_menu`, {
-  //         method: 'POST',
-  //         headers: {
-  //           'Content-Type': 'application/json',
-  //         },
-  //         body: JSON.stringify(updatedMenuData),
-  //       });
-
-  //       if (response.ok) {
-  //         toast.success("Food Item Updated Successfully");
-
-  //         // Handle state updates after a successful update
-  //         setData(updatedData);
-  //       } else {
-  //         toast.error("Failed to update food menu");
-  //       }
-  //     } catch (error) {
-  //       console.error('Error during update:', error);
-  //       // Handle network errors or other exceptions
-  //     }
-  //   } else {
-  //     // Handle case where selected item is not found
-  //     console.error("Selected item not found in the data array");
-  //   }
-
-  //   toggle();
-  // }
-
-  // async function handleSubmit() {
-  //   // Find the index of the selected item in the data array
-  //   const selectedItemIndex = data.findIndex((item) => item.id === selectedItem);
-
-  //   // If the selected item is found, update its menu_data
-  //   if (selectedItemIndex !== -1) {
-  //     const updatedData = [];
-
-  //     data.forEach((item, index) => {
-  //       if (index === selectedItemIndex) {
-  //         // Update the menu_data of the selected item
-  //         const updatedItem = {
-  //           ...item,
-  //           menu_data: { ...item.menu_data, ...mealData },
-  //         };
-  //         updatedData.push(updatedItem);
-  //       } else {
-  //         // Keep the other items unchanged
-  //         updatedData.push(item);
-  //       }
-  //     });
-
-  //     // Prepare the updated menu_data
-  //     const updatedMenuData = {
-  //       id: selectedItem,
-  //       menu_data: { ...data[selectedItemIndex].menu_data, ...mealData },
-  //     };
-
-  //     // Send the update request to the API
-  //     try {
-  //       const response = await fetch(`${WebApi}/update_menu`, {
-  //         method: 'POST',
-  //         headers: {
-  //           'Content-Type': 'application/json',
-  //         },
-  //         body: JSON.stringify(updatedMenuData),
-  //       });
-
-  //       if (response.ok) {
-  //         toast.success("Food Item Updated Successfully");
-
-  //         // Handle state updates after a successful update
-  //         setData(updatedData);
-  //       } else {
-  //         toast.error("Failed to update food menu");
-  //       }
-  //     } catch (error) {
-  //       console.error('Error during update:', error);
-  //       // Handle network errors or other exceptions
-  //     }
-  //   } else {
-  //     // Handle case where selected item is not found
-  //     console.error("Selected item not found in the data array");
-  //   }
-
-  //   toggle();
-  // }
 
   return (
     <Fragment>

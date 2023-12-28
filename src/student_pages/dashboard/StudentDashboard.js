@@ -65,7 +65,10 @@ const StudentDashboard = () => {
       />
       <Container className="mt-4">
         <Row className="widget-grid">
-          <GreetingCard name={localStorage.getItem("Name")}  college={"Vaagdevi"}/>
+          <GreetingCard
+            name={localStorage.getItem("Name")}
+            college={"Vaagdevi"}
+          />
           <WidgetsWrapper />
           <ActivityCard
             ActivityData={ActivityData}
