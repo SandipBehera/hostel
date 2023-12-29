@@ -34,7 +34,7 @@ const FoodCalendar = () => {
               <H5>Food Calendar</H5>
             </CardHeader>
             <div>
-              <Table>
+              <Table className="text-center">
                 <thead>
                   <tr>
                     <th>S.No.</th>

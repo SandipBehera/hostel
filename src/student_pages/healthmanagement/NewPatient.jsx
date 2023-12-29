@@ -1,17 +1,5 @@
 import React, { Fragment, useState, useEffect } from "react";
-import {
-  Card,
-  Col,
-  Form,
-  FormGroup,
-  Label,
-  Input,
-  Button,
-  Dropdown,
-  DropdownToggle,
-  DropdownMenu,
-  DropdownItem,
-} from "reactstrap";
+import { Card, Col, Form, FormGroup, Label, Input, Button } from "reactstrap";
 import { Breadcrumbs } from "../../AbstractElements";
 import Select from "react-select";
 import { LocalApi, WebApi } from "../../api";
@@ -27,6 +15,7 @@ const NewPatient = () => {
     time: "",
     reason: "",
     doctor: "",
+    regdNo: "",
     file: null,
   });
   const branch_id = localStorage.getItem("branchId");
@@ -106,71 +95,74 @@ const NewPatient = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-if(studentName==="" ||selectedFloor=== "" || selectedHostel===""||selectedRoom===""||formData.date===""||formData.time===""||formData.reason===""||
-doctor===""||file===null)
-{
-toast.warning("Please Fill All The Required Fields")
-}
-else{
-   // Prepare form data for submission
-   const formDataForSubmission = new FormData();
-   formDataForSubmission.append("patientname", formData.studentName);
-   formDataForSubmission.append("patient_regdno", "110101csr025");
-   formDataForSubmission.append("hostelid", selectedHostel);
-   formDataForSubmission.append("floorid", selectedFloor);
-   formDataForSubmission.append("roomno", selectedRoom);
-   formDataForSubmission.append("date", formData.date);
-   formDataForSubmission.append("time", formData.time);
-   formDataForSubmission.append("reason", formData.reason);
-   formDataForSubmission.append("doctorname", formData.doctor);
-   formDataForSubmission.append("file", formData.file);
-   formDataForSubmission.append("branch_id", branch_id);
+    if (
+      studentName === "" ||
+      selectedFloor === "" ||
+      selectedHostel === "" ||
+      selectedRoom === "" ||
+      formData.date === "" ||
+      formData.time === "" ||
+      formData.reason === "" ||
+      doctor === "" ||
+      file === null ||
+      formData.regdNo === ""
+    ) {
+      toast.warning("Please Fill All The Required Fields");
+    } else {
+      // Prepare form data for submission
+      const formDataForSubmission = new FormData();
+      formDataForSubmission.append("patientname", formData.studentName);
+      formDataForSubmission.append("patient_regdno", formData.regdNo);
+      formDataForSubmission.append("hostelid", selectedHostel);
+      formDataForSubmission.append("floorid", selectedFloor);
+      formDataForSubmission.append("roomno", selectedRoom);
+      formDataForSubmission.append("date", formData.date);
+      formDataForSubmission.append("time", formData.time);
+      formDataForSubmission.append("reason", formData.reason);
+      formDataForSubmission.append("doctorname", formData.doctor);
+      formDataForSubmission.append("file", formData.file);
+      formDataForSubmission.append("branch_id", branch_id);
 
-   console.log([...formDataForSubmission.entries()]);
-   try {
-     // Make the API call
-     const response = await fetch(`${WebApi}/add_patient`, {
-       method: "POST",
-       body: formDataForSubmission,
-     });
+      console.log([...formDataForSubmission.entries()]);
+      try {
+        // Make the API call
+        const response = await fetch(`${WebApi}/add_patient`, {
+          method: "POST",
+          body: formDataForSubmission,
+        });
 
-     if (!response.ok) {
-       throw new Error("Failed to add patient");
-     }
+        if (!response.ok) {
+          throw new Error("Failed to add patient");
+        }
 
-     const result = await response.json();
-     toast.success(result.message);
-     // Handle the result as needed
-     console.log(result);
+        const result = await response.json();
+        toast.success(result.message);
+        // Handle the result as needed
+        console.log(result);
 
-     // Reset form after successful submission
-     setFormData({
-       studentName: "",
-       date: "",
-       time: "",
-       reason: "",
-       doctor: "",
-       file: null,
-       branch_id: parseInt(localStorage.getItem("branchId")),
-     });
+        // Reset form after successful submission
+        setFormData({
+          studentName: "",
+          date: "",
+          time: "",
+          reason: "",
+          doctor: "",
+          regdNo: "",
+          file: null,
+          branch_id: parseInt(localStorage.getItem("branchId")),
+        });
 
-     setSelectedHostel(null);
-     setSelectedFloor(null);
-     setSelectedRoom(null);
+        setSelectedHostel(null);
+        setSelectedFloor(null);
+        setSelectedRoom(null);
 
-     // Optionally, you can redirect the user or show a success message
-   } catch (error) {
-     console.error(error);
-     // Handle errors (e.g., show an error message)
-   }
-
-}
-   
+        // Optionally, you can redirect the user or show a success message
+      } catch (error) {
+        console.error(error);
+        // Handle errors (e.g., show an error message)
+      }
+    }
   };
-
-  const [dropdownOpen, setDropdownOpen] = useState(false);
-  const toggleDropdown = () => setDropdownOpen((prevState) => !prevState);
-
   return (
     <Fragment>
       <Breadcrumbs
@@ -197,6 +189,16 @@ else{
                 name="studentName"
                 id="studentName"
                 value={formData.studentName}
+                onChange={handleChange}
+              />
+            </Col>
+            <Col sm={6} style={{ marginBottom: "15px" }}>
+              <Label for="time">Registration Number</Label>
+              <Input
+                type="text"
+                name="regdNo"
+                id="regdNo"
+                value={formData.regdNo}
                 onChange={handleChange}
               />
             </Col>
@@ -245,6 +247,17 @@ else{
                 onChange={handleChange}
               />
             </Col>
+
+            <Col sm={6} style={{ marginBottom: "15px" }}>
+              <Label for="reason">Reason for Consultation</Label>
+              <Input
+                type="textarea"
+                name="reason"
+                id="reason"
+                value={formData.reason}
+                onChange={handleChange}
+              />
+            </Col>
             <Col sm={6} style={{ marginBottom: "15px" }}>
               <Label for="time">Time</Label>
               <Input
@@ -252,17 +265,6 @@ else{
                 name="time"
                 id="time"
                 value={formData.time}
-                onChange={handleChange}
-              />
-            </Col>
-
-            <Col sm={12} style={{ marginBottom: "15px" }}>
-              <Label for="reason">Reason for Consultation</Label>
-              <Input
-                type="textarea"
-                name="reason"
-                id="reason"
-                value={formData.reason}
                 onChange={handleChange}
               />
             </Col>

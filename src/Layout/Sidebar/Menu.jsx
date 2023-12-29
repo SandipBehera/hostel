@@ -816,37 +816,23 @@ export const StudentMenu = [
         title: "My Profile",
         type: "link",
         badge: "badge badge-light-primary",
+        
         active: false,
       },
+      
+    
       {
-        path: `/health-management`,
-        icon: "widget",
-        title: "Health Management",
-        type: "sub",
-        active: false,
-        children: [
-          { path: `/new-patient`, title: "New Patient", type: "link" },
-          { path: `/all-patient`, title: "All Patient", type: "link" },
-        ],
-      },
-      // {
-      //   path: `/outing-management`,
-      //   icon: "widget",
-      //   title: "Outing Management",
-      //   type: "sub",
-      //   active: false,
-      //   children: [
-      //     { path: `/create-request`, title: "New Request", type: "link" },
-      //     { path: `/my-outings`, title: "My Outings", type: "link" },
-      //   ],
-      // },
-      {
-        path: `/student-foodbook`,
+       
         icon: "widget",
         title: "Student FoodBook",
-        type: "link",
+        type: "sub",
         badge: "badge badge-light-primary",
         active: false,
+        children:[
+          { path: `/student-foodbook`, title: "Book Food", type: "link" },
+          { path: `/food-calendar`, title: "Food Calender", type: "link" },
+
+        ]
       },
 
       {
@@ -865,13 +851,15 @@ export const StudentMenu = [
         ],
       },
       {
-        path: `/food-calendar`,
+        path: `/all-patient`,
         icon: "widget",
-        title: "Food Calendar",
+        title: "Health Report",
         type: "link",
         badge: "badge badge-light-primary",
         active: false,
+       
       },
+    
     ],
   },
 ];

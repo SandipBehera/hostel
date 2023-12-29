@@ -251,7 +251,9 @@ const AllStudents = () => {
                           <td>{item.semesterYear}</td>
                           <td>{item.branch}</td>
                           <td>
-                            {item.room_id !== null ? (
+                            {
+                            
+                            item.hostel_name !== null ? (
                               <>
                                 <p>Hostel Name: {item?.hostel_name}</p>
                                 <p>Room No: {item?.room_id}</p>
