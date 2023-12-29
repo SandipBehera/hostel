@@ -13,6 +13,7 @@ import CustomizerContext from "../_helper/Customizer";
 import AnimationThemeContext from "../_helper/AnimationTheme";
 import ConfigDB from "../Config/ThemeConfig";
 import Loader from "./Loader";
+import ErrorBoundary from "../_helper/errorBoundary";
 const AppLayout = ({ children, classNames, ...rest }) => {
   const { layout } = useContext(CustomizerContext);
   const { sidebarIconType } = useContext(CustomizerContext);
@@ -49,7 +50,9 @@ const AppLayout = ({ children, classNames, ...rest }) => {
               <div className="page-body">
                 <div>
                   <div>
-                    <Outlet />
+                    <ErrorBoundary>
+                      <Outlet />
+                    </ErrorBoundary>
                   </div>
                 </div>
               </div>
