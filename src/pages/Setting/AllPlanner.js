@@ -7,11 +7,6 @@ import {
   DropdownToggle,
   DropdownMenu,
   DropdownItem,
-  Button,
-  Modal,
-  ModalHeader,
-  ModalBody,
-  ModalFooter,
   Container,
   Row,
 } from "reactstrap";
@@ -27,12 +22,10 @@ const AllPlanner = () => {
   const [selectedItem, setSelectedItem] = useState(null);
   // Function to fetch data from the API
   const branchID = localStorage.getItem("branchId");
-  console.log(branchID);
 
   const fetchData = async () => {
     const response = await fetch(`${WebApi}/get_all_menu`);
     const respData = await response.json();
-    console.log(respData);
 
     setData(
       respData.data?.filter((key) => key.branch_id === parseInt(branchID))
@@ -89,11 +82,7 @@ const AllPlanner = () => {
   // Modal State for Edit/Delete confirmation
   const [modalOpen, setModalOpen] = useState(false);
   const toggleModal = () => setModalOpen(!modalOpen);
-  const [selectedAction, setSelectedAction] = useState("");
-  const [selectedItemId, setSelectedItemId] = useState(null);
 
-  console.log("food data is", data);
-  console.log("selected id is", selectedItem);
   return (
     <Fragment>
       <Breadcrumbs

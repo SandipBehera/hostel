@@ -5,6 +5,7 @@ import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { LocalApi, WebApi } from "../../api";
 import { getMealTimings, getMealType } from "../../Hooks/getMealTimings";
+import { set } from "date-fns";
 
 const StudentFoodBook = () => {
   const [mealData, setMealData] = useState([]);
@@ -24,29 +25,24 @@ const StudentFoodBook = () => {
   const fetchedData = async () => {
     const response = await fetch(`${WebApi}/get_all_menu`);
     const respData = await response.json();
-    const fetched_data = respData.data.filter(
-      (item) =>
-        item.month === monthName && item.branch_id === parseInt(branchId)
-    );
-    if (fetchedData.length > 0) {
-      setMealData(fetched_data);
-    } else {
-      setDisabledBtn(true);
-      setMealData([]);
-    }
+    const fetched_data = respData.data;
+    return fetched_data;
   };
 
-  useEffect(() => {
-    fetchedData(); // Set fetched data to state (Replace this with actual API fetch)
+  useEffect(async () => {
+    const data = await fetchedData(); // Set fetched data to state (Replace this with actual API fetch)
+    console.log(data);
+    const filteredData = data.filter(
+      (key) => key.branch_id === parseInt(branchId) && key.month === monthName
+    );
+    setMealData(filteredData);
     setSelectedDay(now.toLocaleString("default", { weekday: "long" }));
   }, []);
 
-  console.log(mealData);
-
   const handleBookButtonClick = async () => {
     const day = now.toLocaleString("default", { weekday: "long" });
-    console.log(day);
     const mealTimings = getMealTimings(mealData[0]?.menu_data, day);
+    console.log(mealTimings);
     const breakfastStart = mealTimings.breakfastStart;
     const breakfastEnd = mealTimings.breakfastEnd;
 
@@ -73,17 +69,25 @@ const StudentFoodBook = () => {
         setIsCodeValid(false);
         setGracePeriodExpired(true);
       }, expirationTime - now);
-      const currentMeal = getMealType(now);
-      const response = await fetch(`${WebApi}/bookFood`, {
+      const currentMeal = getMealType(
+        now,
+        breakfastStart,
+        breakfastEnd,
+        lunchStart,
+        lunchEnd,
+        dinnerStart,
+        dinnerEnd
+      );
+      const response = await fetch(`${WebApi}/food_booking`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          auth_code: generatedCode,
+          auth_code: code,
           regd_no: localStorage.getItem("userId"),
           meal_type: currentMeal,
-          branch_Id: branchId,
+          branch_id: branchId,
         }),
       });
       const respData = await response.json();

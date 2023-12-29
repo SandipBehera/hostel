@@ -27,6 +27,7 @@ const AllEmployee = () => {
   const branchID = localStorage.getItem("branchId");
   const [editModal, setEditModal] = useState(false);
   const [selectedEmployee, setSelectedEmployee] = useState(null);
+  const userId = localStorage.getItem("userId");
   useEffect(() => {
     const getAllEmployee = async () => {
       try {
@@ -127,7 +128,7 @@ const AllEmployee = () => {
       name: "Action",
       cell: (row) => (
         <Link
-          to={`/admin/2079/edit/${row.id}`}
+          to={`/admin/${userId}/edit/${row.id}`}
           state={{ employeeDetails: row }}
         >
           <Button color="primary">Edit</Button>

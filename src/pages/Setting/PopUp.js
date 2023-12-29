@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from "react";
 import {
   Button,
@@ -9,7 +10,7 @@ import {
   Label,
   Tooltip,
 } from "reactstrap";
-import StudentTooltip from "./StudentToolTip";
+import CommonTooltip from "./Hostel-Config/CommonTooltip";
 
 const PopUp = ({ data, id }) => {
   const [modalOpen, setModalOpen] = useState(false);
@@ -121,7 +122,7 @@ const PopUp = ({ data, id }) => {
                               ></div>
                        
                                 
-                             <StudentTooltip item={stu}/>
+                             <CommonTooltip item={stu}/>
                             
                                
                               

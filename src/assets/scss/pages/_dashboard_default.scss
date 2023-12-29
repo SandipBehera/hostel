@@ -34,7 +34,11 @@
   }
 }
 
-@each $badge-light-name, $badge-light-color in (primary, $primary-color), (secondary, $secondary-color), (success, $success-color), (danger, $danger-color), (info, $info-color), (light, $badge-light-color), (dark, $dark-color), (warning, $warning-color) {
+@each $badge-light-name, $badge-light-color in (primary, $primary-color),
+  (secondary, $secondary-color), (success, $success-color),
+  (danger, $danger-color), (info, $info-color), (light, $badge-light-color),
+  (dark, $dark-color), (warning, $warning-color)
+{
   .badge-light-#{$badge-light-name} {
     background-color: lighten($badge-light-color, 38%);
     color: $badge-light-color;
@@ -290,6 +294,15 @@
     }
     &.warning {
       border-color: $warning-color;
+    }
+    &.purple {
+      border-color: #845ec2;
+    }
+    &.darkYellow {
+      border-color: #f9f871;
+    }
+    &.orange {
+      border-color: #ffc75f;
     }
   }
   .widget-content {
@@ -882,7 +895,11 @@
     width: 43px;
     height: 43px;
     background: $white;
-    box-shadow: 0px 71.2527px 51.5055px rgba(229, 229, 245, 0.189815), 0px 42.3445px 28.0125px rgba(229, 229, 245, 0.151852), 0px 21.9866px 14.2913px rgba(229, 229, 245, 0.125), 0px 8.95749px 7.16599px rgba(229, 229, 245, 0.0981481), 0px 2.03579px 3.46085px rgba(229, 229, 245, 0.0601852);
+    box-shadow: 0px 71.2527px 51.5055px rgba(229, 229, 245, 0.189815),
+      0px 42.3445px 28.0125px rgba(229, 229, 245, 0.151852),
+      0px 21.9866px 14.2913px rgba(229, 229, 245, 0.125),
+      0px 8.95749px 7.16599px rgba(229, 229, 245, 0.0981481),
+      0px 2.03579px 3.46085px rgba(229, 229, 245, 0.0601852);
     border-radius: 10px;
     display: flex;
     align-items: center;
@@ -1033,7 +1050,13 @@
   justify-content: center;
   font-size: 25px;
   margin: 0 auto;
-  background-image: linear-gradient(90deg, $light-color 50%, transparent 50%, transparent), linear-gradient(90deg, $light-gray 50%, $light-color 50%, $light-color);
+  background-image: linear-gradient(
+      90deg,
+      $light-color 50%,
+      transparent 50%,
+      transparent
+    ),
+    linear-gradient(90deg, $light-gray 50%, $light-color 50%, $light-color);
 
   i {
     background-color: $white;
@@ -1047,7 +1070,18 @@
   }
 
   &.radial-bar-70 {
-    background-image: linear-gradient(342deg, var(--theme-default) 50%, transparent 50%, transparent), linear-gradient(270deg, var(--theme-default) 50%, $light-color 50%, $light-color);
+    background-image: linear-gradient(
+        342deg,
+        var(--theme-default) 50%,
+        transparent 50%,
+        transparent
+      ),
+      linear-gradient(
+        270deg,
+        var(--theme-default) 50%,
+        $light-color 50%,
+        $light-color
+      );
   }
 }
 
@@ -1794,7 +1828,13 @@ span.twitter-typeahead {
   &::after {
     position: absolute;
     content: "";
-    background: linear-gradient(0deg, #ffffff 0.05%, #f4f4f4 19.91%, #f5f6f9 55.02%, #eaecf4 100%);
+    background: linear-gradient(
+      0deg,
+      #ffffff 0.05%,
+      #f4f4f4 19.91%,
+      #f5f6f9 55.02%,
+      #eaecf4 100%
+    );
     width: calc(100% + 10px);
     height: calc(100% + 10px);
     top: 0;
