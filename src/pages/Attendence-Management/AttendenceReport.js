@@ -48,7 +48,7 @@ const AttendenceReport = ({ attendanceData }) => {
     const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
     const link = document.createElement("a");
     link.href = window.URL.createObjectURL(blob);
-    link.download = "food_book.csv";
+    link.download = `Hostel_Attendance_${new Date().toLocaleDateString()}.csv`;
     link.click();
   };
 
@@ -226,29 +226,36 @@ const AttendenceReport = ({ attendanceData }) => {
                                       {item.room_id}
                                     </td>
                                     <td style={{ paddingTop: "26px" }}>
-                                    {item.status === 1 ? "present" : "absent"}
-                                  </td>
-                                  <td style={{ paddingTop: "26px" }}>
-                                    {item.status===0 && 
-                                      <Button size="sm"
-                                      color="success"
-                                      style={{padding:"5px"}}
-                                      onClick={() => handleMarkAttendance(item.id, 1)}
-                                      disabled={item.status === 1}
-                                    >
-                                      Present
-                                    </Button>}
-                                    {item.status===1 &&
-                                      <Button
-                                      size="sm"
-                                      color="danger"
-                                      style={{padding:"5px"}}
-                                      onClick={() => handleMarkAttendance(item.id, 0)}
-                                      disabled={item.status === 0}
-                                    >
-                                      Absent
-                                    </Button>}
-                                  </td>
+                                      {item.status === 1 ? "present" : "absent"}
+                                    </td>
+                                    <td style={{ paddingTop: "26px" }}>
+                                      {item.status === 0 && (
+                                        <Button
+                                          size="sm"
+                                          color="success"
+                                          style={{ padding: "5px" }}
+                                          onClick={() =>
+                                            handleMarkAttendance(item.id, 1)
+                                          }
+                                          disabled={item.status === 1}
+                                        >
+                                          Present
+                                        </Button>
+                                      )}
+                                      {item.status === 1 && (
+                                        <Button
+                                          size="sm"
+                                          color="danger"
+                                          style={{ padding: "5px" }}
+                                          onClick={() =>
+                                            handleMarkAttendance(item.id, 0)
+                                          }
+                                          disabled={item.status === 0}
+                                        >
+                                          Absent
+                                        </Button>
+                                      )}
+                                    </td>
                                   </tr>
                                 ))
                               ) : (
@@ -283,22 +290,22 @@ const AttendenceReport = ({ attendanceData }) => {
                 Change Attendance Status
               </ModalHeader>
               <ModalBody>
-               {selectedItem?.status===1 &&
-                <FormGroup>
-                <Label for="exampleText">
-                  Reason for marking{" "}
-                  {selectedItem?.status === 0 ? "present" : "absent"}
-                </Label>
-                <Input
-                  type="textarea"
-                  name="text"
-                  id="exampleText"
-                  rows="5"
-                  value={msg}
-                  onChange={(e) => setMsg(e.target.value)}
-                />
-              </FormGroup>
-              }
+                {selectedItem?.status === 1 && (
+                  <FormGroup>
+                    <Label for="exampleText">
+                      Reason for marking{" "}
+                      {selectedItem?.status === 0 ? "present" : "absent"}
+                    </Label>
+                    <Input
+                      type="textarea"
+                      name="text"
+                      id="exampleText"
+                      rows="5"
+                      value={msg}
+                      onChange={(e) => setMsg(e.target.value)}
+                    />
+                  </FormGroup>
+                )}
 
                 <FormGroup tag="fieldset">
                   <legend>Status</legend>
