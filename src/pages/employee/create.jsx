@@ -1,6 +1,6 @@
 import React, { Fragment, useEffect } from "react";
 
-import FooterCard from "../../Components/Forms/FormControl/Common/FooterCard";
+// import FooterCard from "../../Components/Forms/FormControl/Common/FooterCard";
 import {
   Col,
   Card,
@@ -10,6 +10,7 @@ import {
   Label,
   Input,
   CardHeader,
+  Button,
 } from "reactstrap";
 import { Breadcrumbs, H6 } from "../../AbstractElements";
 import { AccountInformation, UploadFile } from "../../Constant";
@@ -312,7 +313,7 @@ export default function CreateEmployee() {
                     />
                   </Col>
                 </FormGroup>
-                <FooterCard />
+                <Button type="submit" color="primary">Create</Button>
               </Form>
             </CardBody>
           </Card>

@@ -103,12 +103,18 @@ const UpdateEmployee = ({ isOpen, toggle }) => {
       <Table className="text-center">
         <tr style={{ height: "40px", width: "40px" }}>
           <label htmlFor="upload-input">
+            {(employeeDetails.image==="")?
             <img
-              src={preview ? URL.createObjectURL(preview) : 
-                `http://13.58.217.203:3001/upload/employee/${employeeDetails?.image}`}
-              alt="Profile"
-              style={{ height: "10rem", width: "10rem", borderRadius: "50%" }}
-            />
+            src="https://cdn.pixabay.com/photo/2016/08/08/09/17/avatar-1577909_1280.png"
+            alt="Profile"
+            style={{ height: "10rem", width: "10rem", borderRadius: "50%" }}
+          />:<img
+          src={preview ? URL.createObjectURL(preview) : 
+            `http://13.58.217.203:3001/upload/employee/${employeeDetails?.image}`}
+          alt="Profile"
+          style={{ height: "10rem", width: "10rem", borderRadius: "50%" }}
+        />}
+            
             <input
               id="upload-input"
               type="file"

@@ -101,8 +101,9 @@ const PopUp = ({ data, id }) => {
                               Room no: {room.details?.room_no}
                             </p>
                             <p className="text-center">
-                              Capacity {room.details?.capacity}
+                              Capacity: {room.details?.capacity-filterData.length}/{room.details?.capacity}
                             </p>
+
                            
 
                             <div className="d-flex justify-content-center">
