@@ -1,4 +1,4 @@
-import React, { Fragment, useContext, useEffect, useState } from "react";
+import React, { Fragment, useEffect, useState } from "react";
 import {
   Col,
   Card,
@@ -14,20 +14,13 @@ import {
 } from "reactstrap";
 import DataTable from "react-data-table-component";
 import { Breadcrumbs, H5 } from "../../AbstractElements";
-import { Link, useNavigate } from "react-router-dom";
-import { LocalApi, WebApi } from "../../api";
-import UpdateEmployee from "./UpdateEmployee";
+import { Link } from "react-router-dom";
+import { WebApi } from "../../api";
 
 const AllEmployee = () => {
-  const navigate = useNavigate();
-
-  // const { data } = useContext(TableContext);
-
   const [empData, setEmpData] = useState([]);
-  const branchID = localStorage.getItem("branchId");
-  const [editModal, setEditModal] = useState(false);
-  const [selectedEmployee, setSelectedEmployee] = useState(null);
-  const userId = localStorage.getItem("userId");
+  const [modal, setModal] = useState(false);
+
   useEffect(() => {
     const getAllEmployee = async () => {
       try {
@@ -47,27 +40,24 @@ const AllEmployee = () => {
         const res = await response.json();
         const fetchedData = res.data;
         setEmpData(
-          fetchedData
-            ?.filter((key) => key.branch_id === parseInt(branchID))
-            .map((item, index) => ({
-              id: index + 1,
-              name: item.emp_name,
-              email: item.emp_email,
-              contact: item.emp_phone,
-              address: item.address,
-              designation: item.emp_designation,
-              image: item.emp_pic,
-              aadhar: item.aadhar_no,
-              pan: item.pan_no,
-              regNo: item.employee_reg_no,
-              bank: item.bank_ac_name,
-              bankNo: item.bank_ac_no,
-              ifsc: item.bank_ifsc,
-              empId: item.emp_id,
-              doj: item.emp_dob,
-            }))
+          fetchedData.map((item, index) => ({
+            id: index + 1,
+            name: item.emp_name,
+            email: item.emp_email,
+            contact: item.emp_phone,
+            address: item.address,
+            designation: item.emp_designation,
+            image: item.emp_pic,
+            aadhar: item.aadhar_no,
+            pan: item.pan_no,
+            regNo: item.employee_reg_no,
+            bank: item.bank_ac_name,
+            bankNo: item.bank_ac_no,
+            ifsc: item.bank_ifsc,
+            empId: item.emp_id,
+            doj: item.emp_dob,
+          }))
         );
-        console.log(empData);
       } catch (error) {
         console.error("Error fetching data:", error.message);
       }
@@ -76,23 +66,17 @@ const AllEmployee = () => {
     getAllEmployee();
   }, []);
 
-  // const viewEditModal = (row) => {
-  //   setSelectedEmployee(row);
-  //   setEditModal(true);
-  //   console.log("Edit modal state:", editModal);
-  // };
-  // const CustomButton = ({ onClick, text, row }) => (
-  //   <Button color="primary" onClick={() => onClick(row)}>{text}</Button>
-  // );
+  const handleAssignHostel = () => {
+    setModal(!modal);
+  };
 
-  let colData = [
+  const colData = [
     {
       name: "Id",
       selector: (row) => row.id,
       sortable: true,
       center: false,
     },
-
     {
       name: "Name",
       selector: (row) => row.name,
@@ -123,18 +107,38 @@ const AllEmployee = () => {
       sortable: true,
       center: false,
     },
-
     {
       name: "Action",
       cell: (row) => (
-        <Link
-          to={`/admin/${userId}/edit/${row.id}`}
-          state={{ employeeDetails: row }}
-        >
-          <Button color="primary">Edit</Button>
-        </Link>
+        <Fragment>
+          <div>
+            <Link
+              to={`/admin/${row.empId}/edit/${row.id}`}
+              state={{ employeeDetails: row }}
+            >
+              <Button
+                size="sm"
+                style={{ padding: ".1rem .5rem", marginRight: ".2rem" }}
+                color="primary"
+              >
+                Edit
+              </Button>
+            </Link>
+          </div>
+          <div>
+            <Button
+              size="sm"
+              style={{ padding: ".1rem .5rem" }}
+              onClick={handleAssignHostel}
+              color="success"
+            >
+              Assign
+            </Button>
+          </div>
+        </Fragment>
       ),
       center: true,
+      sortable: true,
     },
   ];
 
@@ -167,6 +171,16 @@ const AllEmployee = () => {
             </div>
           </Card>
         </Col>
+        <Modal isOpen={modal} toggle={handleAssignHostel}>
+          <ModalHeader toggle={handleAssignHostel}>
+            Assign Hostel to Employee
+          </ModalHeader>
+          <ModalBody>
+            <Label>Hostel Name</Label>
+            <Input type="text"></Input>
+          </ModalBody>
+          <ModalFooter></ModalFooter>
+        </Modal>
       </div>
     </Fragment>
   );

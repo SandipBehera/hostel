@@ -106,7 +106,7 @@ const AllStudents = () => {
 
   useEffect(() => {
     const roomHostel = async () => {
-      const response = await fetch(`${WebApi}/get_rooms`, {
+      const response = await fetch(`${WebApi}/get_student_room/${branchId}`, {
         method: "GET",
       });
       const resproom = await response.json();

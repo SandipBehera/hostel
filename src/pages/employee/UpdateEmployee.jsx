@@ -27,9 +27,8 @@ const UpdateEmployee = ({ isOpen, toggle }) => {
   const [name, setName] = useState(employeeDetails?.name || "");
   const [email, setEmail] = useState(employeeDetails?.email || "");
   const [regNo, setRegNo] = useState(employeeDetails?.regNo || "");
-  const [designation, setDesignation] = useState(
-    employeeDetails?.designation || ""
-  );
+ 
+  const [currentDes, setCurrentDes] = useState("")
   const [address, setAddress] = useState(employeeDetails?.address || "");
   const [contact, setContact] = useState(employeeDetails?.contact || "");
   const [pan, setPan] = useState(employeeDetails?.pan || "");
@@ -40,7 +39,29 @@ const UpdateEmployee = ({ isOpen, toggle }) => {
   const [image, setImage] = useState(employeeDetails?.image || "");
   const [doj, setDoj] = useState(employeeDetails.doj || "");
   const [preview, setPreview] = useState("");
-  console.log(image)
+  const [designation, setDesignation] = useState([]);
+  console.log(designation)
+
+
+  const fetchDesignation = async (type) => {
+    try {
+      const response = await fetch(`${WebApi}/get_config_by_type/${type}`);
+      const respData = await response.json();
+      console.log(respData.data);
+      return respData.data;
+    } catch (error) {
+      console.error("Error fetching room config:", error);
+      throw error; // Re-throw the error to handle it outside this function if needed
+    }
+  };
+  useEffect(() => {
+    fetchDesignation("designation").then((data) => {
+      setDesignation(data[0].config_type_name.data);
+    });
+    console.log( userType);
+  }, []);
+
+console.log(currentDes)
 
   const handleSave = async () => {
     try {
@@ -53,7 +74,7 @@ const UpdateEmployee = ({ isOpen, toggle }) => {
       formData.append("employeeId", employeeDetails?.empId);
       formData.append("address", address);
       formData.append("employee_reg_no", regNo);
-      formData.append("designation", designation);
+      formData.append("designation",currentDes);
       formData.append("pan", pan);
       formData.append("aadhar", aadhar);
       formData.append("bank", bank);
@@ -152,11 +173,24 @@ const UpdateEmployee = ({ isOpen, toggle }) => {
           />
         </Col>
         <Col>
-          <Label className="mt-1">Designation</Label>
+          <Label className="col-form-label">Employee Designation</Label> <span color="secondary">{currentDes}</span>
           <Input
-            defaultValue={designation}
-            onChange={(e) => setDesignation(e.target.value)}
-          />
+                    className="form-control"
+                    type="select"
+                    placeholder="Designation"
+                    onChange={(e) =>
+                      setCurrentDes(
+                        e.target.value,
+                      )
+                    }
+                  >
+                    <option value="">Select Designation</option>
+                    {designation?.map((item) => (
+                      <option key={item} value={item}>
+                        {item}
+                      </option>
+                    ))}
+                  </Input>
         </Col>
       </Row>
       <Row>
