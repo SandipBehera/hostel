@@ -16,6 +16,7 @@ import { useLocation } from "react-router-dom";
 import { WebApi } from "../../api";
 import { toast } from "react-toastify";
 import Select from "react-select";
+import { el } from "date-fns/locale";
 
 const UpdateEmployee = ({ isOpen, toggle }) => {
   const location = useLocation();
@@ -87,7 +88,9 @@ const UpdateEmployee = ({ isOpen, toggle }) => {
       formData.append("userType", "employee");
       formData.append("branch_id", branch);
       formData.append("doj", doj);
-      if (image) {
+      if (image === undefined || image === null || image === "") {
+        formData.append("file", employeeDetails?.image);
+      } else {
         formData.append("file", image);
       }
 
