@@ -13,7 +13,7 @@ import {
 } from "reactstrap";
 import { Breadcrumbs, H5 } from "../../AbstractElements";
 import { useLocation } from "react-router-dom";
-import { WebApi } from "../../api";
+import { LocalApi, WebApi } from "../../api";
 import { toast } from "react-toastify";
 import Select from "react-select";
 import { el } from "date-fns/locale";
@@ -79,7 +79,6 @@ const UpdateEmployee = ({ isOpen, toggle }) => {
       formData.append("employeeId", employeeDetails?.empId);
       formData.append("address", address);
       formData.append("employee_reg_no", regNo);
-      formData.append("designation", currentDes);
       formData.append("pan", pan);
       formData.append("aadhar", aadhar);
       formData.append("bank", bank);
@@ -88,7 +87,17 @@ const UpdateEmployee = ({ isOpen, toggle }) => {
       formData.append("userType", "employee");
       formData.append("branch_id", branch);
       formData.append("doj", doj);
-      if (image === undefined || image === null || image === "") {
+      if (currentDes === "") {
+        formData.append("designation", employeeDetails?.designation);
+      } else {
+        formData.append("designation", currentDes);
+      }
+      if (
+        image === undefined ||
+        image === null ||
+        image === "" ||
+        image === "undefined"
+      ) {
         formData.append("file", employeeDetails?.image);
       } else {
         formData.append("file", image);
@@ -239,6 +248,7 @@ const UpdateEmployee = ({ isOpen, toggle }) => {
           <Input
             defaultValue={doj}
             type="date"
+            value={employeeDetails.doj}
             onChange={(e) => setDoj(e.target.value)}
           />
         </Col>
