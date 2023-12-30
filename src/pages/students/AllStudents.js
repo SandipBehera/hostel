@@ -150,6 +150,7 @@ const AllStudents = () => {
       if (resproom.status === "success") {
         getData();
         setAssignRoomModalOpen(false);
+        setRoomData([]);
         toast.success(resproom.message);
       } else {
         toast.error(resproom.message);
@@ -171,6 +172,7 @@ const AllStudents = () => {
     const floorOptions = floors.map((floor) => {
       return { value: floor, label: `floor ${floor}` };
     });
+    setFloorData(floorOptions);
   };
 
   const handleFloorSelect = (floor) => {
@@ -205,7 +207,6 @@ const AllStudents = () => {
   const toggleModal = () => {
     setModalOpen(!modalOpen);
   };
-  console.log(roomData);
 
   return (
     <Fragment>
