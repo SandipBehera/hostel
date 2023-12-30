@@ -84,7 +84,7 @@ const UpdateEmployee = ({ isOpen, toggle }) => {
       formData.append("bank", bank);
       formData.append("account", bankNo);
       formData.append("ifsc", ifsc);
-      formData.append("userType", userType);
+      formData.append("userType", "employee");
       formData.append("branch_id", branch);
       formData.append("doj", doj);
       if (image) {
