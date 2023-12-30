@@ -4,7 +4,7 @@ import { Card, CardBody } from "reactstrap";
 import { H4 } from "../../../AbstractElements";
 
 import SvgIcon from "../Component/SvgIcon";
-import SquareGroupUi from "../../Dashboard/OnlineCourse/SquareGroupUi";
+
 
 const CourseBox = ({ data, mainClass }) => {
   return (
@@ -29,7 +29,7 @@ const CourseBox = ({ data, mainClass }) => {
           </div>
         </div>
       </CardBody>
-      <SquareGroupUi />
+     
     </Card>
   );
 };

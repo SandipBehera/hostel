@@ -17,7 +17,7 @@ import { LocalApi, WebApi, WebSocketAPI } from "../../api";
 import socketIOClient from "socket.io-client";
 import { toast } from "react-toastify";
 import SimpleMDE from "react-simplemde-editor";
-import { set } from "date-fns";
+import Select from "react-select";
 
 export default function CreateComplain() {
   const [content, setContent] = useState("");
@@ -31,13 +31,12 @@ export default function CreateComplain() {
   const [hostelNumber, setHostelNumber] = useState("");
   const [roomNumber, setRoomNumber] = useState("");
   const [assignTo, setAssignTo] = useState("");
-  const [selectedEmployee, setSelectedEmployee] = useState("");
-  const [complaint, setComplaint] = useState("");
   const [status, setStatus] = useState("");
   const userid = localStorage.getItem("userId");
   const socket = socketIOClient(WebSocketAPI);
   const [hostels, setHostels] = useState([]);
   const [employees, setEmployees] = useState([]);
+  const [filteredEmployee, setFilteredEmployee] = useState([]);
   const issueTypes = ["Hostel Issue", "Mess Issue", "General Issue"];
 
   const complaint_stages = [
@@ -54,10 +53,6 @@ export default function CreateComplain() {
       value: "Resolved",
     },
   ];
-
-  const handleHostelNumberChange = (value) => {
-    setHostelNumber(value);
-  };
 
   const getHostelNames = async () => {
     fetch(`${WebApi}/get_rooms`, {
@@ -91,8 +86,20 @@ export default function CreateComplain() {
     getHostelNames();
     getEmployeeNames();
   }, []);
-  console.log("employees", employees);
+  console.log(employees);
   const branchId = localStorage.getItem("branchId");
+  const handleHostelNumberChange = (value) => {
+    setHostelNumber(value);
+    console.log("value", value);
+    setFilteredEmployee(
+      employees
+        .filter((item) => item.assigned_hostel_id === parseInt(value))
+        .map((item) => {
+          return { value: item.emp_id, label: item.emp_name };
+        })
+    );
+  };
+  console.log(filteredEmployee);
 
   const handleSubmit = async () => {
     if (
@@ -203,20 +210,15 @@ export default function CreateComplain() {
             {role === "employee" || role === "admin" ? (
               <FormGroup>
                 <label>Assign To:</label>
-                <Input
+                <Select
+                  id="hostelSelect"
                   className="form-control form-control-secondary-fill btn-square w-50"
-                  name="select"
-                  type="select"
-                  value={assignTo}
-                  onChange={(e) => setAssignTo(e.target.value)}
-                >
-                  <option value="">Select a person to assign</option>
-                  {employees.map((warden) => (
-                    <option key={warden.emp_id} value={warden.emp_id}>
-                      {warden.emp_name}
-                    </option>
-                  ))}
-                </Input>
+                  style={{ borderStyle: "none" }}
+                  options={filteredEmployee}
+                  onChange={(selectedOption) =>
+                    setAssignTo(selectedOption.value)
+                  }
+                />
               </FormGroup>
             ) : (
               ""

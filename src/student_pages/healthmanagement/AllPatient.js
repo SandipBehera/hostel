@@ -11,32 +11,10 @@ import {
 import { Breadcrumbs } from "../../AbstractElements";
 import Papa from "papaparse";
 import { LocalApi, LocalStore, WebApi, WebStore } from "../../api";
+import DataTable from "react-data-table-component";
 
 const AllPatient = () => {
-  // Sample data (you can replace this with your own data)
-  // const data = [
-  //   {
-  //     id: 1,
-  //     studentName: 'Dhananjaya Patnaik',
-  //     doctorName:'Dr. Sandeep',
-  //     hostelName: 'Hostel A',
-  //     floorNo: 2,
-  //     roomNo: 'A12',
-  //     date: '2023-12-01',
-  //     time: '10:00 AM'
-  //   },
-  //   {
-  //       id: 2,
-  //       studentName: 'Sanu ',
-  //       doctorName:'Dr. Siddharth',
-  //       hostelName: 'Hostel B',
-  //       floorNo: 2,
-  //       roomNo: 'B1',
-  //       date: '2023-12-05',
-  //       time: '01:00 pM'
-  //     },
-  //   // Add more data as needed...
-  // ];
+  
 
   const [modal, setModal] = useState(false);
   const [selectedData, setSelectedData] = useState([]);
@@ -45,14 +23,96 @@ const AllPatient = () => {
   useEffect(() => {
     // Fetch data from API
     const fetchData = async () => {
-      const response = await fetch(`${WebApi}/getAllPatient`);
-      const respData = await response.json();
-      setData(respData.data
-        .filter(key=>key.branch_id===parseInt(branchId)));
+      try {
+        const response = await fetch(`${WebApi}/getAllPatient`);
+        const respData = await response.json();
+        console.log(respData.data)
+  
+        setData(
+          respData.data
+            ?.filter((key) => key.branch_id === parseInt(branchId))
+            .map((item) => ({
+              date: item.date,
+              doc: item.doctorname,
+              hostel: item.hostelid,
+              floor:item.floorid,
+              room: item.roomno,
+              time: item.time,
+              name:item.patientname,
+              pres: item.upload_preception,
+
+              // Add other properties as needed
+            }))
+        );
+      } catch (error) {
+        console.error('Error fetching data:', error.message);
+      }
     };
+  
     fetchData();
   }, []);
+  
 
+  let colData = [
+    {
+      name: "Student Name",
+      selector: (row) => row.name,
+      sortable: true,
+      center: false,
+    },
+
+    {
+      name: "Doctor Name",
+      selector: (row) => row.doc,
+      sortable: true,
+      center: false,
+    },
+    {
+      name: "Hostel Name",
+      selector: (row) => row.hostel,
+      sortable: true,
+      center: true,
+    },
+    {
+      name: "Floor No.",
+      selector: (row) => row.floor,
+      sortable: true,
+      center: false,
+    },
+    {
+      name: "Room No.",
+      selector: (row) => row.room,
+      sortable: true,
+      center: false,
+    },
+    {
+      name: "Date",
+      selector: (row) => {
+        const dateObject = new Date(row.date);
+        const formattedDate = dateObject.toLocaleDateString('en-GB', {
+          year: 'numeric',
+          month: 'numeric',
+          day: 'numeric',
+        });
+        return formattedDate;
+      },
+      sortable: true,
+      center: false,
+    },
+
+    {
+      name: "Action",
+      cell: (row) => (
+        <Button color="primary" onClick={() => toggleModal(row)}>
+          View
+        </Button>
+      ),
+      center: true,
+    },
+  ];
+  
+
+  console.log(data)
   const toggleModal = (rowData) => {
     setSelectedData(rowData);
     setModal(!modal);
@@ -78,6 +138,8 @@ const AllPatient = () => {
       }
     }
   };
+  const userType = localStorage.getItem("userType");
+  console.log(userType)
   const dataByUType =
     localStorage.getItem("userType") === "admin" ||
     localStorage.getItem("userType") === "employee"
@@ -87,60 +149,43 @@ const AllPatient = () => {
         );
   return (
     <Fragment>
+    {(userType==="admin" || userType==="employee") &&
       <Breadcrumbs
-        parent="Health Management"
-        mainTitle="All Patient"
-        title="All Patient"
-      />
+      parent="Health Management"
+      mainTitle="All Patient"
+      title="All Patient"
+    />}
+      {userType==="student" && 
+        <Breadcrumbs
+        parent="Health Report"
+        mainTitle="My Report"
+        title="My Report"
+      />}
+     
       <Card>
         <div>
-          <Table>
-            <thead>
-              <tr>
-                <th>Student Name</th>
-                <th>Doctor Name</th>
-                <th>Hostel Name</th>
-                <th>Floor No.</th>
-                <th>Room No.</th>
-                <th>Date</th>
-                <th>Time</th>
-                <th>Action</th>
-              </tr>
-            </thead>
-            <tbody>
-              {dataByUType.map((item) => (
-                <tr key={item.id}>
-                  <td>{item.patientname}</td>
-                  <td>{item.doctorname}</td>
-                  <td>{item.hostelid}</td>
-                  <td>{item.floorid}</td>
-                  <td>{item.roomno}</td>
-                  <td>{`${new Date(item.date)}`.slice(4, 15)}</td>
-                  <td>{item.time}</td>
-                  <td>
-                    <Button color="primary" onClick={() => toggleModal(item)}>
-                      View
-                    </Button>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </Table>
-
+        <DataTable
+                data={data}
+                columns={colData}
+                striped={true}
+                center={true}
+                pagination
+                className="text-center"
+              />
           <Modal isOpen={modal} toggle={toggleModal}>
             <ModalHeader toggle={toggleModal}>Details</ModalHeader>
             <ModalBody>
               {selectedData && (
                 <div>
                   {/* Display details of selected data in the modal */}
-                  <p>Student Name: {selectedData.patientname}</p>
-                  <p>Doctor Name: {selectedData.doctorname}</p>
+                  <p>Student Name: {selectedData.name}</p>
+                  <p>Doctor Name: {selectedData.doc}</p>
                   
                   <p>Date: {`${new Date(selectedData.date)}`.slice(4, 15)}</p>
                   <p>Time: {selectedData.time}</p>
                   <p>Preception Copy</p>
                   <img
-                    src={`${WebStore}${selectedData.upload_preception}`}
+                    src={`${WebStore}${selectedData.pres}`}
                     alt="prescription"
                     style={{ width: "-webkit-fill-available" }}
                   />
@@ -164,3 +209,38 @@ const AllPatient = () => {
 };
 
 export default AllPatient;
+
+
+
+{/* <Table className="text-center">
+<thead>
+  <tr>
+    <th>Student Name</th>
+    <th>Doctor Name</th>
+    <th>Hostel Name</th>
+    <th>Floor No.</th>
+    <th>Room No.</th>
+    <th>Date</th>
+    <th>Time</th>
+    <th>Action</th>
+  </tr>
+</thead>
+<tbody>
+  {dataByUType?.map((item) => (
+    <tr key={item.id}>
+      <td>{item.patientname}</td>
+      <td>{item.doctorname}</td>
+      <td>{item.hostelid}</td>
+      <td>{item.floorid}</td>
+      <td>{item.roomno}</td>
+      <td>{`${new Date(item.date)}`.slice(4, 15)}</td>
+      <td>{item.time}</td>
+      <td>
+        <Button color="primary" onClick={() => toggleModal(item)}>
+          View
+        </Button>
+      </td>
+    </tr>
+  ))}
+</tbody>
+</Table> */}
