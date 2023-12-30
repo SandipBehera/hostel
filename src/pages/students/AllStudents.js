@@ -82,6 +82,7 @@ const AllStudents = () => {
   const toggleAssignRoomModal = (rowId) => {
     setAssignRoomModalOpen(!assignRoomModalOpen);
     setSelectedRowId(rowId);
+    setRoomData([]);
   };
   const branchId = localStorage.getItem("branchId");
   const getData = async () => {
@@ -104,17 +105,17 @@ const AllStudents = () => {
       socket.off("newUserOnBoard", getData());
     };
   }, []);
+  const roomHostel = async () => {
+    const response = await fetch(`${WebApi}/get_student_room/${branchId}`, {
+      method: "GET",
+    });
+    const resproom = await response.json();
+    sethostelData(
+      resproom.data.filter((key) => key.branch_id === parseInt(branchId))
+    );
+  };
 
   useEffect(() => {
-    const roomHostel = async () => {
-      const response = await fetch(`${WebApi}/get_student_room/${branchId}`, {
-        method: "GET",
-      });
-      const resproom = await response.json();
-      sethostelData(
-        resproom.data.filter((key) => key.branch_id === parseInt(branchId))
-      );
-    };
     roomHostel();
   }, []);
 
@@ -149,6 +150,7 @@ const AllStudents = () => {
 
       if (resproom.status === "success") {
         getData();
+        roomHostel();
         setAssignRoomModalOpen(false);
         setRoomData([]);
         toast.success(resproom.message);
