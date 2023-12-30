@@ -16,6 +16,7 @@ import { Breadcrumbs, H6 } from "../../AbstractElements";
 import { AccountInformation, UploadFile } from "../../Constant";
 import { LocalApi, WebApi } from "../../api";
 import { toast } from "react-toastify";
+import { set } from "date-fns";
 
 export default function CreateEmployee() {
   const userType = localStorage.getItem("userType");
@@ -57,46 +58,70 @@ export default function CreateEmployee() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-   if(formData.name===""||formData.email===""||formData.contact===""||formData.employeeId===""||
-   formData.address===""||formData.designation===""||formData.aadhar===""||formData.pan===""
-   ||formData.account===""||formData.bank===""||formData.ifsc===""||formData.doj===""||formData.file===""){
-    toast.warning("All fields are required");
+    if (
+      formData.name === "" ||
+      formData.email === "" ||
+      formData.contact === "" ||
+      formData.employeeId === "" ||
+      formData.address === "" ||
+      formData.designation === "" ||
+      formData.aadhar === "" ||
+      formData.pan === "" ||
+      formData.account === "" ||
+      formData.bank === "" ||
+      formData.ifsc === "" ||
+      formData.doj === "" ||
+      formData.file === ""
+    ) {
+      toast.warning("All fields are required");
+    } else {
+      const data = new FormData();
+      data.append("name", formData.name);
+      data.append("email", formData.email);
+      data.append("contact", formData.contact);
+      data.append("employeeId", formData.employeeId);
+      data.append("address", formData.address);
+      data.append("employee_reg_no", formData.employeeId);
+      data.append("designation", formData.designation);
+      data.append("aadhar", formData.aadhar);
+      data.append("pan", formData.pan);
+      data.append("account", formData.account);
+      data.append("bank", formData.bank);
+      data.append("ifsc", formData.ifsc);
+      data.append("doj", formData.doj);
+      data.append("file", formData.file);
+      data.append("userType", "employee");
+      data.append("branch_id", branch_id);
 
-   }
-   else{
-    const data = new FormData();
-    data.append("name", formData.name);
-    data.append("email", formData.email);
-    data.append("contact", formData.contact);
-    data.append("employeeId", formData.employeeId);
-    data.append("address", formData.address);
-    data.append("employee_reg_no", formData.employeeId);
-    data.append("designation", formData.designation);
-    data.append("aadhar", formData.aadhar);
-    data.append("pan", formData.pan);
-    data.append("account", formData.account);
-    data.append("bank", formData.bank);
-    data.append("ifsc", formData.ifsc);
-    data.append("doj", formData.doj);
-    data.append("file", formData.file);
-    data.append("userType", "employee");
-    data.append("branch_id", branch_id);
-
-    await fetch(`${WebApi}/addEmployee`, {
-      method: "POST",
-      body: data,
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        if (data.status === "success") {
-          toast.success(data.message);
-          console.log(data);
-        } else {
-          toast.error(data.message);
-        }
+      await fetch(`${WebApi}/addEmployee`, {
+        method: "POST",
+        body: data,
       })
-      .catch((err) => console.log(err));
-   }
+        .then((res) => res.json())
+        .then((data) => {
+          if (data.status === "success") {
+            toast.success(data.message);
+            setFormData({
+              name: "",
+              email: "",
+              contact: "",
+              employeeId: "",
+              address: "",
+              designation: "",
+              aadhar: "",
+              pan: "",
+              account: "",
+              bank: "",
+              ifsc: "",
+              doj: "",
+              file: "",
+            });
+          } else {
+            toast.error(data.message);
+          }
+        })
+        .catch((err) => console.log(err));
+    }
   };
 
   return (
@@ -122,6 +147,7 @@ export default function CreateEmployee() {
                     className="form-control"
                     type="text"
                     placeholder="Employee Name"
+                    value={formData.name}
                     onChange={(e) =>
                       setFormData((prevData) => ({
                         ...prevData,
@@ -136,6 +162,7 @@ export default function CreateEmployee() {
                     className="form-control"
                     type="email"
                     placeholder="Enter email"
+                    value={formData.email}
                     onChange={(e) =>
                       setFormData((prevData) => ({
                         ...prevData,
@@ -150,6 +177,7 @@ export default function CreateEmployee() {
                     className="form-control"
                     type="Number"
                     placeholder="Enter contact number"
+                    value={formData.contact}
                     onChange={(e) =>
                       setFormData((prevData) => ({
                         ...prevData,
@@ -166,7 +194,8 @@ export default function CreateEmployee() {
                   <Input
                     className="form-control"
                     type="text"
-                    placeholder="Address"
+                    placeholder="Employee Id"
+                    value={formData.employeeId}
                     onChange={(e) =>
                       setFormData((prevData) => ({
                         ...prevData,
@@ -196,6 +225,7 @@ export default function CreateEmployee() {
                     className="form-control"
                     type="select"
                     placeholder="Designation"
+                    value={formData.designation}
                     onChange={(e) =>
                       setFormData((prevData) => ({
                         ...prevData,
@@ -217,6 +247,7 @@ export default function CreateEmployee() {
                     className="form-control"
                     type="text"
                     placeholder="Aadhar Number"
+                    value={formData.aadhar}
                     onChange={(e) =>
                       setFormData((prevData) => ({
                         ...prevData,
@@ -245,6 +276,7 @@ export default function CreateEmployee() {
                     className="form-control"
                     type="text"
                     placeholder="Enter Your Account Number"
+                    value={formData.account}
                     onChange={(e) =>
                       setFormData((prevData) => ({
                         ...prevData,
@@ -259,6 +291,7 @@ export default function CreateEmployee() {
                     className="form-control"
                     type="text"
                     placeholder="Bank Name"
+                    value={formData.bank}
                     onChange={(e) =>
                       setFormData((prevData) => ({
                         ...prevData,
@@ -287,6 +320,7 @@ export default function CreateEmployee() {
                     className="form-control"
                     type="date"
                     placeholder="Date Of Joining"
+                    value={formData.doj}
                     onChange={(e) =>
                       setFormData((prevData) => ({
                         ...prevData,
@@ -304,6 +338,7 @@ export default function CreateEmployee() {
                       className="form-control"
                       type="file"
                       accept="image/*"
+                      value={formData.file}
                       onChange={(e) =>
                         setFormData((prevData) => ({
                           ...prevData,
@@ -313,7 +348,9 @@ export default function CreateEmployee() {
                     />
                   </Col>
                 </FormGroup>
-                <Button type="submit" color="primary">Create</Button>
+                <Button type="submit" color="primary">
+                  Create
+                </Button>
               </Form>
             </CardBody>
           </Card>

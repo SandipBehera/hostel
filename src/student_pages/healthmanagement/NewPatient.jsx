@@ -4,8 +4,10 @@ import { Breadcrumbs } from "../../AbstractElements";
 import Select from "react-select";
 import { LocalApi, WebApi } from "../../api";
 import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
 
 const NewPatient = () => {
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     studentName: "",
     hostelName: "",
@@ -93,6 +95,8 @@ const NewPatient = () => {
     });
   };
 
+const userId = localStorage.getItem("userId")
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (
@@ -104,7 +108,7 @@ const NewPatient = () => {
       formData.time === "" ||
       formData.reason === "" ||
       doctor === "" ||
-      file === null ||
+      formData.file === (null) ||
       formData.regdNo === ""
     ) {
       toast.warning("Please Fill All The Required Fields");
@@ -148,13 +152,17 @@ const NewPatient = () => {
           reason: "",
           doctor: "",
           regdNo: "",
-          file: null,
+          file: "",
           branch_id: parseInt(localStorage.getItem("branchId")),
+        
         });
 
         setSelectedHostel(null);
         setSelectedFloor(null);
         setSelectedRoom(null);
+        navigate(`/admin/${userId}/all-patient`);
+
+       
 
         // Optionally, you can redirect the user or show a success message
       } catch (error) {

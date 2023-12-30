@@ -15,6 +15,7 @@ import { Breadcrumbs, H5 } from "../../AbstractElements";
 import { useLocation } from "react-router-dom";
 import { WebApi } from "../../api";
 import { toast } from "react-toastify";
+import Select from "react-select";
 
 const UpdateEmployee = ({ isOpen, toggle }) => {
   const location = useLocation();
@@ -27,9 +28,8 @@ const UpdateEmployee = ({ isOpen, toggle }) => {
   const [name, setName] = useState(employeeDetails?.name || "");
   const [email, setEmail] = useState(employeeDetails?.email || "");
   const [regNo, setRegNo] = useState(employeeDetails?.regNo || "");
-  const [designation, setDesignation] = useState(
-    employeeDetails?.designation || ""
-  );
+
+  const [currentDes, setCurrentDes] = useState("");
   const [address, setAddress] = useState(employeeDetails?.address || "");
   const [contact, setContact] = useState(employeeDetails?.contact || "");
   const [pan, setPan] = useState(employeeDetails?.pan || "");
@@ -40,7 +40,32 @@ const UpdateEmployee = ({ isOpen, toggle }) => {
   const [image, setImage] = useState(employeeDetails?.image || "");
   const [doj, setDoj] = useState(employeeDetails.doj || "");
   const [preview, setPreview] = useState("");
-  console.log(image)
+  const [designation, setDesignation] = useState([]);
+  console.log(employeeDetails);
+
+  const fetchDesignation = async (type) => {
+    try {
+      const response = await fetch(`${WebApi}/get_config_by_type/${type}`);
+      const respData = await response.json();
+      console.log(respData.data);
+      return respData.data;
+    } catch (error) {
+      console.error("Error fetching room config:", error);
+      throw error; // Re-throw the error to handle it outside this function if needed
+    }
+  };
+  useEffect(() => {
+    fetchDesignation("designation").then((data) => {
+      setDesignation(
+        data[0].config_type_name.data.map((item) => {
+          return { value: item, label: item };
+        })
+      );
+    });
+    console.log(userType);
+  }, []);
+
+  console.log(currentDes);
 
   const handleSave = async () => {
     try {
@@ -53,7 +78,7 @@ const UpdateEmployee = ({ isOpen, toggle }) => {
       formData.append("employeeId", employeeDetails?.empId);
       formData.append("address", address);
       formData.append("employee_reg_no", regNo);
-      formData.append("designation", designation);
+      formData.append("designation", currentDes);
       formData.append("pan", pan);
       formData.append("aadhar", aadhar);
       formData.append("bank", bank);
@@ -87,11 +112,11 @@ const UpdateEmployee = ({ isOpen, toggle }) => {
       toast.error("Faild to update employee details");
     }
   };
-  useEffect(()=>{
-    if(preview){
-        setImage(preview)
+  useEffect(() => {
+    if (preview) {
+      setImage(preview);
     }
-  },[preview])
+  }, [preview]);
 
   return (
     <Fragment>
@@ -103,18 +128,26 @@ const UpdateEmployee = ({ isOpen, toggle }) => {
       <Table className="text-center">
         <tr style={{ height: "40px", width: "40px" }}>
           <label htmlFor="upload-input">
-            {(employeeDetails.image==="")?
-            <img
-            src="https://cdn.pixabay.com/photo/2016/08/08/09/17/avatar-1577909_1280.png"
-            alt="Profile"
-            style={{ height: "10rem", width: "10rem", borderRadius: "50%" }}
-          />:<img
-          src={preview ? URL.createObjectURL(preview) : 
-            `http://13.58.217.203:3001/upload/employee/${employeeDetails?.image}`}
-          alt="Profile"
-          style={{ height: "10rem", width: "10rem", borderRadius: "50%" }}
-        />}
-            
+            {employeeDetails.image === "" ||
+            employeeDetails.image === "undefined" ||
+            employeeDetails.image === null ? (
+              <img
+                src="https://cdn.pixabay.com/photo/2016/08/08/09/17/avatar-1577909_1280.png"
+                alt="Profile"
+                style={{ height: "10rem", width: "10rem", borderRadius: "50%" }}
+              />
+            ) : (
+              <img
+                src={
+                  preview
+                    ? URL.createObjectURL(preview)
+                    : `http://13.58.217.203:3001/upload/employee/${employeeDetails?.image}`
+                }
+                alt="Profile"
+                style={{ height: "10rem", width: "10rem", borderRadius: "50%" }}
+              />
+            )}
+
             <input
               id="upload-input"
               type="file"
@@ -152,10 +185,16 @@ const UpdateEmployee = ({ isOpen, toggle }) => {
           />
         </Col>
         <Col>
-          <Label className="mt-1">Designation</Label>
-          <Input
-            defaultValue={designation}
-            onChange={(e) => setDesignation(e.target.value)}
+          <Label className="col-form-label">Employee Designation</Label>{" "}
+          <Select
+            onChange={(value) => setCurrentDes(value.value)}
+            defaultValue={
+              {
+                label: employeeDetails?.designation,
+                value: employeeDetails?.designation,
+              } || "Select Designation"
+            }
+            options={designation}
           />
         </Col>
       </Row>
@@ -200,10 +239,7 @@ const UpdateEmployee = ({ isOpen, toggle }) => {
             onChange={(e) => setDoj(e.target.value)}
           />
         </Col>
-        <Col>
-        
-        
-        </Col>
+        <Col></Col>
       </Row>
 
       <div className="mt-3 text-center">
