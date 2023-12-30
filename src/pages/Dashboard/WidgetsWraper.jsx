@@ -37,10 +37,10 @@ const WidgetsWrapper = () => {
       <Col xxl="auto" xl="12" sm="6" className="box-col-6">
         <Row>
           <Col xxl="12" xl="6" className="box-col-12">
-            <Widgets2 data={Widgets2Data} />
+            <Widgets1 data={Widgets2Data} />
           </Col>
           <Col xxl="12" xl="6" className="box-col-12">
-            <Widgets2 chartClass="profit-chart " data={Widgets2Data2} />
+            <Widgets1 chartClass="profit-chart " data={Widgets2Data2} />
           </Col>
         </Row>
       </Col>

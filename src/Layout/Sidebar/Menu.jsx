@@ -134,15 +134,26 @@ export const EmployeeMenu = [
           { path: `/all-item-purchases`, title: "All Item List", type: "link" },
         ],
       },
-
       {
-        path: "/hostel-config",
         title: "Hostel Config",
         icon: "widget",
-        type: "link",
-        badge: "badge badge-light-primary",
+        type: "sub",
         active: false,
+        children: [
+          { path: `/hostel-config`, title: "Hostel Config", type: "link" },
+          { path: `/config`, title: "Config", type: "link" },
+        ],
       },
+
+      // {
+      //   path: "/hostel-config",
+      //   title: "Hostel Config",
+      //   icon: "widget",
+      //   type: "link",
+      //   badge: "badge badge-light-primary",
+      //   active: false,
+      // },
+    
     ],
   },
 

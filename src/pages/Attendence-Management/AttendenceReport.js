@@ -6,10 +6,6 @@ import {
   Card,
   CardHeader,
   Button,
-  Dropdown,
-  DropdownToggle,
-  DropdownMenu,
-  DropdownItem,
   Container,
   Label,
   Modal,
@@ -27,13 +23,11 @@ import {
 } from "reactstrap";
 import { Breadcrumbs, H5, P } from "../../AbstractElements";
 import Papa from "papaparse";
-import { Action, Hometxt, PillTabs } from "../../Constant";
 import Select from "react-select";
 import { WebApi } from "../../api";
 import { toast } from "react-toastify";
-import HeaderCard from "../../Components/Common/Component/HeaderCard";
+
 import MonthlyAttendanceReport from "./MonthlyAttendenceReport";
-import { Link } from "react-router-dom";
 
 const AttendenceReport = ({ attendanceData }) => {
   const [data, setData] = useState([]);
@@ -45,6 +39,7 @@ const AttendenceReport = ({ attendanceData }) => {
   const [status, setStatus] = useState("");
   const [pillTab, setPillTab] = useState("1");
   const [hostelId, setHostelId] = useState("");
+  const [selectedItem, setSelectedItem] = useState(null);
 
   const branchId = localStorage.getItem("branchId");
 
@@ -58,10 +53,11 @@ const AttendenceReport = ({ attendanceData }) => {
   };
 
   const toggleDropdown = (id) => {
-    // setDropdownOpen(!dropdownOpen);
+    console.log(id);
     setID(id);
     setModalOpen(!modalOpen);
   };
+  console.log(ID);
 
   useEffect(() => {
     const roomHostel = async () => {
@@ -72,7 +68,6 @@ const AttendenceReport = ({ attendanceData }) => {
       setHostelData(
         resproom.data.filter((key) => key.branch_id === parseInt(branchId))
       );
-      console.log(resproom.data);
     };
     roomHostel();
   }, []);
@@ -91,40 +86,32 @@ const AttendenceReport = ({ attendanceData }) => {
     setData(
       resproom.data.filter((key) => key.branch_id === parseInt(branchId))
     );
-    console.log(resproom.data);
   };
 
-  const handleActionSelect = async (action, comment) => {
-    const datas = {
-      id: ID,
-      status: action,
-      comments: comment,
-    };
-    datas.comments = JSON.stringify({ comments: datas.comments });
-    console.log(datas);
+  const handleMarkAttendance = async (itemId, newStatus) => {
     try {
       const response = await fetch(`${WebApi}/update_attendence`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(datas),
+        body: JSON.stringify({
+          id: itemId,
+          status: newStatus,
+          comments: JSON.stringify({ comments: "" }),
+        }),
       });
 
       const respData = await response.json();
       if (respData.status === "success") {
-        setModalOpen(!modalOpen);
-        setDropdownOpen(!dropdownOpen);
         handleHostelSelect(hostelId);
         toast.success("Attendance Updated Successfully");
       } else {
         toast.error("Something went wrong");
-        setModalOpen(!modalOpen);
-        setDropdownOpen(!dropdownOpen);
       }
     } catch (error) {
       console.error("Error fetching:", error);
     }
   };
-
+  console.log(data);
   return (
     <Fragment>
       <Breadcrumbs
@@ -188,10 +175,11 @@ const AttendenceReport = ({ attendanceData }) => {
                           </Row>
                         </CardHeader>
                         <div>
-                          <Table>
+                          <Table className="table-responsive text-center">
                             <thead>
                               <tr>
                                 <th>S.No.</th>
+                                <th>Image</th>
                                 <th>St. Reg. No.</th>
                                 <th>St. Name</th>
                                 <th>H-Name</th>
@@ -203,35 +191,64 @@ const AttendenceReport = ({ attendanceData }) => {
 
                             <tbody>
                               {data.length > 0 ? (
-                                data.map((item) => (
-                                  <tr key={item.id}>
-                                    <td>{item.id}</td>
-                                    <td>{item.username}</td>
-                                    <td>{item.name}</td>
-                                    <td>{item.hostel_name}</td>
-                                    <td>{item.room_id}</td>
+                                data.map((item, index) => (
+                                  <tr
+                                    key={item.id}
+                                    onClick={() => setSelectedItem(item)}
+                                  >
+                                    <td>{index + 1}</td>
                                     <td>
-                                      {item.status === 1 ? "present" : "absent"}
+                                      <img
+                                        src={item.image}
+                                        alt="image"
+                                        style={{
+                                          height: "4rem",
+                                          width: "4rem",
+                                          borderRadius: "50%",
+                                        }}
+                                      />
+                                      {/* <Image
+                                        attrImage={{
+                                          className: "img-30 me-2",
+                                          src: require(item.image),
+                                          alt: "user",
+                                        }}
+                                      /> */}
                                     </td>
-                                    <td>
-                                      {
-                                        <Input
-                                          type="select"
-                                          className="w-75 bg-primary"
-                                          onChange={(e) =>
-                                            e.target.value !== "" &&
-                                            toggleDropdown(item.id)
-                                          }
-                                        >
-                                       
-                                          {item.status == 1 ? (
-                                            <option value={0}>Absent</option>
-                                          ) : (
-                                            <option value={1}>Present</option>
-                                          )}
-                                        </Input>
-                                      }
+                                    <td>{item.registration_no}</td>
+                                    <td style={{ padding: "26px" }}>
+                                      {item.name}
                                     </td>
+                                    <td style={{ padding: "26px" }}>
+                                      {item.hostel_name}
+                                    </td>
+                                    <td style={{ padding: "26px" }}>
+                                      {item.room_id}
+                                    </td>
+                                    <td style={{ paddingTop: "26px" }}>
+                                    {item.status === 1 ? "present" : "absent"}
+                                  </td>
+                                  <td style={{ paddingTop: "26px" }}>
+                                    {item.status===0 && 
+                                      <Button size="sm"
+                                      color="success"
+                                      style={{padding:"5px"}}
+                                      onClick={() => handleMarkAttendance(item.id, 1)}
+                                      disabled={item.status === 1}
+                                    >
+                                      Present
+                                    </Button>}
+                                    {item.status===1 &&
+                                      <Button
+                                      size="sm"
+                                      color="danger"
+                                      style={{padding:"5px"}}
+                                      onClick={() => handleMarkAttendance(item.id, 0)}
+                                      disabled={item.status === 0}
+                                    >
+                                      Absent
+                                    </Button>}
+                                  </td>
                                   </tr>
                                 ))
                               ) : (
@@ -263,47 +280,56 @@ const AttendenceReport = ({ attendanceData }) => {
             {/* Modal outside the loop */}
             <Modal isOpen={modalOpen} toggle={() => setModalOpen(!modalOpen)}>
               <ModalHeader toggle={() => setModalOpen(!modalOpen)}>
-                Where are you....
+                Change Attendance Status
               </ModalHeader>
               <ModalBody>
+               {selectedItem?.status===1 &&
                 <FormGroup>
-                  <Label for="exampleText">Write here</Label>
-                  <Input
-                    type="textarea"
-                    name="text"
-                    id="exampleText"
-                    rows="5"
-                    value={msg}
-                    onChange={(e) => setMsg(e.target.value)}
-                  />
-                </FormGroup>
+                <Label for="exampleText">
+                  Reason for marking{" "}
+                  {selectedItem?.status === 0 ? "present" : "absent"}
+                </Label>
+                <Input
+                  type="textarea"
+                  name="text"
+                  id="exampleText"
+                  rows="5"
+                  value={msg}
+                  onChange={(e) => setMsg(e.target.value)}
+                />
+              </FormGroup>
+              }
 
                 <FormGroup tag="fieldset">
                   <legend>Status</legend>
-                  <FormGroup check>
-                    <Label check>
-                      <Input
-                        type="radio"
-                        name="status"
-                        value="1"
-                        checked={status === 1}
-                        onChange={() => setStatus(1)}
-                      />{" "}
-                      Mark Present
-                    </Label>
-                  </FormGroup>
-                  <FormGroup check>
-                    <Label check>
-                      <Input
-                        type="radio"
-                        name="status"
-                        value="0"
-                        checked={status === 0}
-                        onChange={() => setStatus(0)}
-                      />{" "}
-                      Mark Absent
-                    </Label>
-                  </FormGroup>
+                  {selectedItem?.status === 0 && (
+                    <FormGroup check>
+                      <Label check>
+                        <Input
+                          type="radio"
+                          name="status"
+                          value="1"
+                          checked={status === 1}
+                          onChange={() => setStatus(1)}
+                        />{" "}
+                        Mark Present
+                      </Label>
+                    </FormGroup>
+                  )}
+                  {selectedItem?.status === 1 && (
+                    <FormGroup check>
+                      <Label check>
+                        <Input
+                          type="radio"
+                          name="status"
+                          value="0"
+                          checked={status === 0}
+                          onChange={() => setStatus(0)}
+                        />{" "}
+                        Mark Absent
+                      </Label>
+                    </FormGroup>
+                  )}
                 </FormGroup>
               </ModalBody>
               <ModalFooter>

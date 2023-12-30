@@ -237,8 +237,6 @@ const AllStudents = () => {
       <Container fluid={true}>
         <Card>
           <CardBody>
-            
-
             <Col sm="12">
               <Card className="h-auto">
                 <div className="table-responsive">
@@ -260,7 +258,7 @@ const AllStudents = () => {
                           key={item.id}
                           className={`border-bottom-${item.color}`}
                         >
-                          <th scope="row">{index+1}</th>
+                          <th scope="row">{index + 1}</th>
                           <td>
                             {/* <Image
                               attrImage={{

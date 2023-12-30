@@ -62,17 +62,30 @@ const FoodBook = () => {
                 </tr>
               </thead>
               <tbody>
-                {data.length < 0 ? (
+                {data.length > 0 ? (
                   data.map((item, index) => (
                     <tr key={index}>
                       <td>{item.id}</td>
                       <td>{item.regd_no}</td>
-                      {/* <td>{item.studentName}</td>
-              <td>{item.type}</td>
-              <td>{item.breakfast}</td>
-              <td>{item.lunch}</td>
-              <td>{item.dinner}</td>
-              <td > {item.type==="hostler"?"paid":item.payment}</td> */}
+                      <td>{item.name}</td>
+                      <td>{item.user_from}</td>
+                      <td>
+                        {item.break_fast === "1"
+                          ? "Food Taken"
+                          : "Food Not Taken"}
+                      </td>
+                      <td>
+                        {item.lunch === "1" ? "Food Taken" : "Food Not Taken"}
+                      </td>
+                      <td>
+                        {item.dinner === "1" ? "Food Taken" : "Food Not Taken"}
+                      </td>
+                      <td>
+                        {" "}
+                        {item.user_from === "hostel"
+                          ? "Not Required"
+                          : item.payment}
+                      </td>
                     </tr>
                   ))
                 ) : (

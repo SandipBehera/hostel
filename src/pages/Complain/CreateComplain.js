@@ -1,4 +1,4 @@
-import React, { Fragment, useState } from "react";
+import React, { Fragment, useState, useEffect } from "react";
 import { Breadcrumbs, H5 } from "../../AbstractElements";
 import {
   Button,
@@ -17,6 +17,7 @@ import { LocalApi, WebApi, WebSocketAPI } from "../../api";
 import socketIOClient from "socket.io-client";
 import { toast } from "react-toastify";
 import SimpleMDE from "react-simplemde-editor";
+import { set } from "date-fns";
 
 export default function CreateComplain() {
   const [content, setContent] = useState("");
@@ -29,23 +30,15 @@ export default function CreateComplain() {
   const [issueType, setIssueType] = useState("");
   const [hostelNumber, setHostelNumber] = useState("");
   const [roomNumber, setRoomNumber] = useState("");
-  const [assignTo, setAssignTo] = useState(""); // Updated state for Assign To dropdown
+  const [assignTo, setAssignTo] = useState("");
   const [selectedEmployee, setSelectedEmployee] = useState("");
   const [complaint, setComplaint] = useState("");
   const [status, setStatus] = useState("");
   const userid = localStorage.getItem("userId");
   const socket = socketIOClient(WebSocketAPI);
-
+  const [hostels, setHostels] = useState([]);
+  const [employees, setEmployees] = useState([]);
   const issueTypes = ["Hostel Issue", "Mess Issue", "General Issue"];
-  const hostels = ["Hostel 1", "Hostel 2", "Hostel 3"]; // Replace with your actual hostel numbers
-  const rooms = ["Room 101", "Room 102", "Room 103"]; // Replace with your actual room numbers
-  const employees = ["Employee 1", "Employee 2", "Employee 3"]; // Replace with your actual employee list
-
-  const wardenNames = {
-    "Hostel 1": "Warden A",
-    "Hostel 2": "Warden B",
-    "Hostel 3": "Warden C",
-  };
 
   const complaint_stages = [
     {
@@ -64,43 +57,101 @@ export default function CreateComplain() {
 
   const handleHostelNumberChange = (value) => {
     setHostelNumber(value);
-    setAssignTo(wardenNames[value] || "");
   };
-  const branchId= localStorage.getItem("branchId")
-  const handleSubmit = async () => {
-    const data = {
-      issue_type: issueType,
-      issued_by: userid,
-      hostel_id: hostelNumber,
-      floor_no: roomNumber,
-      assigned_to: assignTo,
-      details: { content: content.replace(/\n/g, "\\n").replace(/\t/g, "\\t") },
-      status: status,
-      branch_id: branchId
-    };
-    data.details = JSON.stringify(data.details);
-    try {
-      const response = await fetch(`${WebApi}/create_complaint`, {
-        method: "POST",
-        body: JSON.stringify(data),
-        headers: {
-          "Content-Type": "application/json",
-          "Access-Control-Allow-Origin": "*",
-        },
-      });
-      console.log("response", response);
-      if (response.status === 200) {
-        // Emit the "newComplaint" event directly without wrapping in an extra object
-        socket.emit("newComplaint", data);
 
-        toast.success("Complaint Created Successfully");
-      } else {
-        toast.error("Something went wrong");
+  const getHostelNames = async () => {
+    fetch(`${WebApi}/get_rooms`, {
+      method: "GET",
+    })
+      .then((res) => res.json())
+      .then((res) => {
+        const fetchedData = res.data.filter(
+          (item) =>
+            item.branch_id === parseInt(localStorage.getItem("branchId"))
+        );
+        setHostels(fetchedData);
+      });
+  };
+  const getEmployeeNames = async () => {
+    fetch(`${WebApi}/getEmployee`, {
+      method: "GET",
+    })
+      .then((res) => res.json())
+      .then((res) => {
+        const fetchedData = res.data.filter(
+          (item) =>
+            item.branch_id === parseInt(localStorage.getItem("branchId")) &&
+            item.user_type === "employee"
+        );
+        setEmployees(fetchedData);
+      });
+  };
+
+  useEffect(() => {
+    getHostelNames();
+    getEmployeeNames();
+  }, []);
+  console.log("employees", employees);
+  const branchId = localStorage.getItem("branchId");
+
+  const handleSubmit = async () => {
+    if (
+      issueType === "Hostel Issue" &&
+      (content === "" || hostelNumber === "" || assignTo === "")
+    ) {
+      toast.warning("All fields required");
+    } else if (
+      (issueType === "Mess Issue" || issueType === "General Issue") &&
+      content === ""
+    ) {
+      toast.warning("All fields required");
+    } else {
+      const data = {
+        issue_type: issueType,
+        issued_by: userid,
+        hostel_id: hostelNumber,
+        floor_no: roomNumber,
+        assigned_to: assignTo,
+        details: [
+          { content: content.replace(/\n/g, "\\n").replace(/\t/g, "\\t") },
+        ],
+        status: status,
+        branch_id: branchId,
+      };
+      data.details = JSON.stringify(data.details);
+      try {
+        const response = await fetch(`${WebApi}/create_complaint`, {
+          method: "POST",
+          body: JSON.stringify(data),
+          headers: {
+            "Content-Type": "application/json",
+            "Access-Control-Allow-Origin": "*",
+          },
+        });
+        console.log("response", response);
+        if (response.status === 200) {
+          socket.emit("newComplaint", data);
+          toast.success("Complaint Created Successfully");
+          resetForm();
+        } else {
+          toast.error("Something went wrong");
+        }
+      } catch (err) {
+        console.error("Error:", err);
       }
-    } catch (err) {
-      console.error("Error:", err);
     }
   };
+ // Function to reset form fields
+ const resetForm = () => {
+  setIssueType("");
+  setHostelNumber("");
+  setRoomNumber("");
+  setAssignTo("");
+  setSelectedEmployee("");
+  setComplaint("");
+  setStatus("");
+  setContent("");
+};
 
   return (
     <Fragment>
@@ -142,32 +193,14 @@ export default function CreateComplain() {
               >
                 <option value="">Select a hostel number</option>
                 {hostels.map((hostel) => (
-                  <option key={hostel} value={hostel}>
-                    {hostel}
+                  <option key={hostel.id} value={hostel.id}>
+                    {hostel.hostel_name}
                   </option>
                 ))}
               </Input>
             </FormGroup>
 
-            <FormGroup>
-              <label>Room Number:</label>
-              <Input
-                className="form-control form-control-secondary-fill btn-square w-50"
-                name="select"
-                type="select"
-                value={roomNumber}
-                onChange={(e) => setRoomNumber(e.target.value)}
-              >
-                <option value="">Select a room number</option>
-                {rooms.map((room) => (
-                  <option key={room} value={room}>
-                    {room}
-                  </option>
-                ))}
-              </Input>
-            </FormGroup>
-
-            {role === "employee" ? (
+            {role === "employee" || role === "admin" ? (
               <FormGroup>
                 <label>Assign To:</label>
                 <Input
@@ -178,9 +211,9 @@ export default function CreateComplain() {
                   onChange={(e) => setAssignTo(e.target.value)}
                 >
                   <option value="">Select a person to assign</option>
-                  {Object.values(wardenNames).map((warden) => (
-                    <option key={warden} value={warden}>
-                      {warden}
+                  {employees.map((warden) => (
+                    <option key={warden.emp_id} value={warden.emp_id}>
+                      {warden.emp_name}
                     </option>
                   ))}
                 </Input>
@@ -247,13 +280,6 @@ export default function CreateComplain() {
                   spellChecker: false,
                 }}
               />
-              {/* <CKEditors
-                  activeclassName="p10"
-                  content={content}
-                  events={{
-                    change: onChange,
-                  }}
-                /> */}
             </Col>
           </Row>
         </Container>
@@ -265,3 +291,5 @@ export default function CreateComplain() {
     </Fragment>
   );
 }
+
+

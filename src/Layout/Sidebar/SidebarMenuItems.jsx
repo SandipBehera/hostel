@@ -25,8 +25,7 @@ const SidebarMenuItems = ({
     setUserType(localStorage.getItem("userType"));
     setUserId(localStorage.getItem("userId"));
     setUserRoles(localStorage.getItem("roles"));
-    console.log(userType);
-    console.log(userRoles);
+
     if (userType === "admin") {
       setMenuitem(EmployeeMenu);
     } else if (userType === "employee") {
@@ -35,7 +34,7 @@ const SidebarMenuItems = ({
       setMenuitem(StudentMenu);
     }
   }, []);
-  console.log(MENUITEMS);
+
   const id = window.location.pathname.split("/").pop();
   const layoutId = id;
   const CurrentPath = window.location.pathname;

@@ -5,6 +5,7 @@ import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { LocalApi, WebApi } from "../../api";
 import { getMealTimings, getMealType } from "../../Hooks/getMealTimings";
+import { set } from "date-fns";
 
 const Book = () => {
   const [mealData, setMealData] = useState([]);
@@ -14,7 +15,7 @@ const Book = () => {
   const [gracePeriodExpired, setGracePeriodExpired] = useState(false);
   const [isButtonClicked, setIsButtonClicked] = useState(false);
   const branchId = localStorage.getItem("branchId");
-  
+  const [disabledBtn, setDisabledBtn] = useState(false);
   //get this month name
   const date = new Date();
   const month = date.toLocaleString("default", { month: "long" });
@@ -24,39 +25,24 @@ const Book = () => {
   const fetchedData = async () => {
     const response = await fetch(`${WebApi}/get_all_menu`);
     const respData = await response.json();
-    const fetched_data = respData.data.filter(
-      (item) => item.month === monthName
-    );
-    console.log('fetched',fetched_data);
-    setMealData(fetched_data
-      .filter(key=>key.branch_id===parseInt(branchId)));
+    const fetched_data = respData.data;
+    return fetched_data;
   };
 
-  useEffect(() => {
-    fetchedData(); // Set fetched data to state (Replace this with actual API fetch)
+  useEffect(async () => {
+    const data = await fetchedData(); // Set fetched data to state (Replace this with actual API fetch)
+    console.log(data);
+    const filteredData = data.filter(
+      (key) => key.branch_id === parseInt(branchId) && key.month === monthName
+    );
+    setMealData(filteredData);
     setSelectedDay(now.toLocaleString("default", { weekday: "long" }));
   }, []);
 
-  console.log(mealData);
-
   const handleBookButtonClick = async () => {
-    // const breakfastStart = new Date();
-    // breakfastStart.setHours(7, 0, 0); // Set breakfast start time (7 am)
-    // const breakfastEnd = new Date();
-    // breakfastEnd.setHours(9, 0, 0); // Set breakfast end time (9 am)
-
-    // const lunchStart = new Date();
-    // lunchStart.setHours(12, 0, 0); // Set lunch start time (12 pm)
-    // const lunchEnd = new Date();
-    // lunchEnd.setHours(14, 0, 0); // Set lunch end time (1 pm)
-
-    // const dinnerStart = new Date();
-    // dinnerStart.setHours(18, 0, 0); // Set dinner start time (6 pm)
-    // const dinnerEnd = new Date();
-    // dinnerEnd.setHours(20, 0, 0); // Set dinner end time (8 pm)
-
     const day = now.toLocaleString("default", { weekday: "long" });
-    const mealTimings = getMealTimings(mealData[0].menu_data, day);
+    const mealTimings = getMealTimings(mealData[0]?.menu_data, day);
+    console.log(mealTimings);
     const breakfastStart = mealTimings.breakfastStart;
     const breakfastEnd = mealTimings.breakfastEnd;
 
@@ -83,18 +69,25 @@ const Book = () => {
         setIsCodeValid(false);
         setGracePeriodExpired(true);
       }, expirationTime - now);
-      const currentMeal = getMealType(now);
-      const response = await fetch(`${WebApi}/bookFood`, {
+      const currentMeal = getMealType(
+        now,
+        breakfastStart,
+        breakfastEnd,
+        lunchStart,
+        lunchEnd,
+        dinnerStart,
+        dinnerEnd
+      );
+      const response = await fetch(`${WebApi}/food_booking`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          auth_code: generatedCode,
+          auth_code: code,
           regd_no: localStorage.getItem("userId"),
           meal_type: currentMeal,
-          branch_Id: branchId
-
+          branch_id: branchId,
         }),
       });
       const respData = await response.json();
@@ -138,13 +131,18 @@ const Book = () => {
                   block
                   style={{ marginTop: "20px", marginBottom: "20px" }}
                   onClick={handleBookButtonClick}
-                  disabled={isCodeValid || gracePeriodExpired}
+                  disabled={isCodeValid || gracePeriodExpired || disabledBtn}
                 >
                   {isCodeValid ? "Code Generated" : "Book Food"}
                 </Button>
                 {isCodeValid && (
                   <p style={{ textAlign: "center" }}>
                     Generated Code: {generatedCode}
+                  </p>
+                )}
+                {disabledBtn && (
+                  <p style={{ textAlign: "center" }}>
+                    No Menu Available for this month
                   </p>
                 )}
               </Fragment>

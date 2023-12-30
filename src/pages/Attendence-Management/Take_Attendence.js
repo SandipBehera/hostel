@@ -2,45 +2,30 @@ import React, { useState, useEffect, Fragment } from "react";
 import {
   Row,
   Col,
-  Dropdown,
-  DropdownToggle,
-  DropdownMenu,
-  DropdownItem,
   Card,
   Input,
-  CardTitle,
   Label,
   Button,
   Container,
   CardBody,
-  CardSubtitle,
-  CardText,
   Modal,
   ModalHeader,
   ModalBody,
   ModalFooter,
   FormGroup,
-  Toast,
 } from "reactstrap";
 import Select from "react-select";
 import { Breadcrumbs, H5 } from "../../AbstractElements";
 import "../styles/take_attendence.css";
-import { data } from "./data";
-import AttendenceReport from "./AttendenceReport";
 import { LocalApi, WebApi } from "../../api";
 import { toast } from "react-toastify";
-import { json } from "react-router";
+import { tr } from "date-fns/locale";
 
 const Take_Attendence = () => {
   const [modalOpen, setModalOpen] = useState(false);
-  const [student, setStudent] = useState(data);
-  const [absentDetails, setAbsentDetails] = useState(null);
-  const [presentDetails, setPresentDetails] = useState(null);
   const [msg, setMsg] = useState("");
-  const [attendanceData, setAttendanceData] = useState([]);
 
   const [hostelData, sethostelData] = useState([]);
-  const [tableData, setTableData] = useState([]);
   const [floorData, setFloorData] = useState([]);
   const [roomData, setRoomData] = useState([]);
 
@@ -56,14 +41,7 @@ const Take_Attendence = () => {
   const [reasonModal, setReasonModal] = useState(false);
   const [selectedComment, setSelectedComment] = useState(""); // Add new state for selected comment
 
-
-  const [commentt, setComment] = useState("");
-
   const [otherMessage, setOtherMessage] = useState("");
-
-  const reasons = ["Reason 1", "Reason 2", "Reason 3", "Other"];
-
-  
 
   const resetButtonStates = () => {
     setPresentButtonDisabled(false);
@@ -119,20 +97,16 @@ const Take_Attendence = () => {
     setRoomData(rooms);
   };
 
-  const currentDate = new Date();
-  const time = currentDate.toTimeString();
-
   const openModal = () => {
     setModalOpen(!modalOpen);
     resetButtonStates();
   };
 
   const viewReason = (comment) => {
-    
-    const commentText = typeof comment === 'object' ? comment.comment : comment;
+    const commentText = typeof comment === "object" ? comment.comment : comment;
     setSelectedComment(commentText);
     setReasonModal(!reasonModal);
-  }
+  };
 
   const handleSubmit = async () => {
     const response = await fetch(`${WebApi}/get_student_by_room`, {
@@ -148,13 +122,11 @@ const Take_Attendence = () => {
       }),
     });
     const result = await response.json();
-    console.log(result);
     if (result.data.length === 0) {
       toast.error("Room is not assigned to any person");
     } else {
       toast.success("Room is data fetched Successfully");
       setStudentData(result.data);
-      console.log(result.data);
     }
   };
 
@@ -164,28 +136,17 @@ const Take_Attendence = () => {
       setAbsentButtonDisabled(false);
     } else if (status === 0) {
       setPresentButtonDisabled(false);
-      // setAbsentButtonDisabled(true);
+      setAbsentButtonDisabled(true);
     }
-
-    console.log(status);
     const processAttendance = async () => {
       let comment = "";
       if (comments === null) {
         comment = "{}";
+      } else if (comments === "Others") {
+        comment = JSON.stringify({ comment: otherMessage });
       } else {
-       
         comment = JSON.stringify({ comment: comments });
-    
       }
-    
-     
-      // console.log({
-      //   user_id: studentregistration,
-      //   hostel_id: selectedHostel,
-      //   room_id: selectedRoom,
-      //   status: status,
-      //   comments: comment,
-      // })
       try {
         const response = await fetch(`${WebApi}/mark_attendance`, {
           method: "POST",
@@ -197,7 +158,7 @@ const Take_Attendence = () => {
             hostel_id: selectedHostel,
             room_id: selectedRoom,
             status: status,
-            comments: comment,
+            comments: comment === "Others" ? otherMessage : comment,
             branch_id: localStorage.getItem("branchId"),
           }),
         });
@@ -208,13 +169,6 @@ const Take_Attendence = () => {
             ...prevData,
             { ...responseData.data, type: status === 1 ? "present" : "absent" },
           ]);
-
-          console.log(
-            `Response Data: ${JSON.stringify(responseData)}, i am ${
-              status === 1 ? "Present" : "Absent"
-            } `
-          );
-          console.log("Response Data:", responseData);
           toast.success("Attendance marked successfully");
         } else {
           toast.error("Something went wrong!!");
@@ -227,7 +181,6 @@ const Take_Attendence = () => {
     // Call the async function
     await processAttendance();
   };
-  // console.log(absentButtonDisabled);
 
   return (
     <Fragment>
@@ -298,6 +251,7 @@ const Take_Attendence = () => {
                 <thead>
                   <tr>
                     <th>ID</th>
+                    <th>Image</th>
                     <th>Name</th>
                     <th>Regd No</th>
                     <th>Room No</th>
@@ -308,10 +262,17 @@ const Take_Attendence = () => {
                   {studentData.map((stud, index) => (
                     <tr key={index}>
                       <td>{index + 1}</td>
-                      <td>{stud.name}</td>
-                      <td>{stud.userId}</td>
-                      <td>{selectedRoom}</td>
                       <td>
+                        <img
+                        style={{height:"4rem", width:"4rem", borderRadius:"50%"}}
+                          src={stud.image}
+                          alt="image"
+                        />
+                      </td>
+                      <td style={{ padding: "26px" }}>{stud.name}</td>
+                      <td style={{ padding: "26px" }}>{stud.userId}</td>
+                      <td style={{ padding: "26px" }}>{selectedRoom}</td>
+                      <td style={{ padding: "26px" }}>
                         <div>
                           <Modal
                             isOpen={modalOpen}
@@ -391,14 +352,16 @@ const Take_Attendence = () => {
                               Absent Reason
                             </ModalHeader>
                             <ModalBody>
-                            <p>{selectedComment}</p>
+                              <p>{selectedComment}</p>
                             </ModalBody>
                           </Modal>
                         </div>
                         {absentButtonDisabled && selectedId === stud.userId ? (
                           <Button
                             color="primary"
-                            onClick={() => viewReason(stud.comments.comment)}
+                            onClick={() =>
+                              viewReason(JSON.parse(stud.comments))
+                            }
                           >
                             View
                           </Button>
@@ -410,7 +373,10 @@ const Take_Attendence = () => {
                                 setSelectedId(stud.userId);
                             }}
                             disabled={
-                              stud.userId === "1" ? presentButtonDisabled : ""
+                              stud.attendance_taken === "taken" ||
+                              stud.userId === selectedId
+                                ? true
+                                : false
                             }
                           >
                             Present
@@ -427,9 +393,10 @@ const Take_Attendence = () => {
                               setSelectedId(stud.userId);
                             }}
                             disabled={
-                              selectedId === stud.userId
-                                ? absentButtonDisabled
-                                : ""
+                              stud.attendance_taken === "taken" ||
+                              stud.userId === selectedId
+                                ? true
+                                : false
                             }
                           >
                             Absent

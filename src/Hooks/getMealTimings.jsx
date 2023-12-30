@@ -58,28 +58,21 @@ function getMealTimings(schedule, day) {
   };
 }
 
-function getMealType(currentTime) {
-  const breakfastStart = new Date();
-  breakfastStart.setHours(6, 0, 0); // Set breakfast start time (6 am)
-  const breakfastEnd = new Date();
-  breakfastEnd.setHours(10, 0, 0); // Set breakfast end time (10 am)
-
-  const lunchStart = new Date();
-  lunchStart.setHours(12, 0, 0); // Set lunch start time (12 pm)
-  const lunchEnd = new Date();
-  lunchEnd.setHours(15, 0, 0); // Set lunch end time (3 pm)
-
-  const dinnerStart = new Date();
-  dinnerStart.setHours(18, 0, 0); // Set dinner start time (6 pm)
-  const dinnerEnd = new Date();
-  dinnerEnd.setHours(22, 0, 0); // Set dinner end time (10 pm)
-
+function getMealType(
+  currentTime,
+  breakfastStart,
+  breakfastEnd,
+  lunchStart,
+  lunchEnd,
+  dinnerStart,
+  dinnerEnd
+) {
   if (currentTime >= breakfastStart && currentTime <= breakfastEnd) {
-    return "Breakfast";
+    return "break_fast";
   } else if (currentTime >= lunchStart && currentTime <= lunchEnd) {
-    return "Lunch";
+    return "lunch";
   } else if (currentTime >= dinnerStart && currentTime <= dinnerEnd) {
-    return "Dinner";
+    return "dinner";
   } else {
     return "No meal";
   }
