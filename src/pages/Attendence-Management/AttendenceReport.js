@@ -357,28 +357,3 @@ const AttendenceReport = ({ attendanceData }) => {
 
 export default AttendenceReport;
 
-// <Dropdown
-//   isOpen={dropdownOpen && ID === item.id}
-//   toggle={() => toggleDropdown(item.id)}
-// >
-//   <DropdownToggle caret>{Action}</DropdownToggle>
-//   <DropdownMenu>
-//     {item.status === 1 ? (
-//       <DropdownItem
-//         onClick={() => {
-//           setStatus(item.status);
-//         }}
-//       >
-//         Make Absent
-//       </DropdownItem>
-//     ) : (
-//       <DropdownItem
-//         onClick={() => {
-//           setStatus(item.status);
-//         }}
-//       >
-//         Make Present
-//       </DropdownItem>
-//     )}
-//   </DropdownMenu>
-// </Dropdown>

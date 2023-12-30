@@ -36,6 +36,7 @@ import FoodBookEntry from "../wardenPages/foodbook/entry";
 import MonthlyAttendanceReport from "../pages/Attendence-Management/MonthlyAttendenceReport";
 import HostelConfig from "../pages/Setting/HostelConfig";
 import UpdateEmployee from "../pages/employee/UpdateEmployee";
+import Config from "../pages/Setting/Hostel-Config/Config";
 
 export const routes = [
   { path: `/dashboard`, Component: <Dashboard /> },
@@ -83,6 +84,7 @@ export const routes = [
 
   //Hostel Config
   { path: `/hostel-config`, Component: <HostelConfig /> },
+  { path: `/config`, Component: <Config /> },
 
   // Stock Item Management
   { path: `/item-purchases`, Component: <Purchases /> },

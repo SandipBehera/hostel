@@ -7,7 +7,7 @@ import { LocalApi, WebApi } from "../../api";
 import { getMealTimings, getMealType } from "../../Hooks/getMealTimings";
 import { set } from "date-fns";
 
-const StudentFoodBook = () => {
+const Book = () => {
   const [mealData, setMealData] = useState([]);
   const [selectedDay, setSelectedDay] = useState(""); // Default day
   const [generatedCode, setGeneratedCode] = useState("");
@@ -110,7 +110,7 @@ const StudentFoodBook = () => {
       toast.error("Mess is closed");
     }
   }, [gracePeriodExpired]);
-
+ console.log("mealdata is",mealData)
   return (
     <Fragment>
       <Breadcrumbs
@@ -161,6 +161,7 @@ const StudentFoodBook = () => {
           <tbody>
             {/* Render meal data fetched from the backend */}
             {mealData.map((meal, index) => (
+              
               <tr key={index}>
                 {/* Replace 'selectedDay' with the actual selected day */}
                 <td>{selectedDay}</td>
@@ -221,4 +222,4 @@ const StudentFoodBook = () => {
   );
 };
 
-export default StudentFoodBook;
+export default Book;

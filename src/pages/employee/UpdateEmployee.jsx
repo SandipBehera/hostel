@@ -12,14 +12,14 @@ import {
   Col,
 } from "reactstrap";
 import { Breadcrumbs, H5 } from "../../AbstractElements";
-import { useLocation } from "react-router-dom";
-import { LocalApi, WebApi } from "../../api";
+import { useLocation, useNavigate } from "react-router-dom";
+import { WebApi } from "../../api";
 import { toast } from "react-toastify";
 import Select from "react-select";
-import { el } from "date-fns/locale";
 
 const UpdateEmployee = ({ isOpen, toggle }) => {
   const location = useLocation();
+  const navigate = useNavigate();
   const { employeeDetails } = location.state || {};
   console.log(location.state);
   const userType = localStorage.getItem("userType");
@@ -41,6 +41,8 @@ const UpdateEmployee = ({ isOpen, toggle }) => {
   const [image, setImage] = useState(employeeDetails?.image || "");
   const [doj, setDoj] = useState(employeeDetails.doj || "");
   const [preview, setPreview] = useState("");
+
+  const userId = localStorage.getItem("userId");
   const [designation, setDesignation] = useState([]);
   console.log(employeeDetails);
 
@@ -102,20 +104,16 @@ const UpdateEmployee = ({ isOpen, toggle }) => {
       } else {
         formData.append("file", image);
       }
-
-      console.log("Request Payload:", formData);
-
       const response = await fetch(`${WebApi}/updateEmployee`, {
         method: "POST",
         body: formData,
       });
 
       const data = await response.json();
-      console.log(data);
 
       if (data.status === "success") {
         toast.success("Employee Details Updated Successfully");
-        console.log(data);
+        navigate(`/admin/${userId}/allemployee`);
       } else {
         toast.error(data.message);
       }
@@ -242,13 +240,13 @@ const UpdateEmployee = ({ isOpen, toggle }) => {
       <Row>
         <Col>
           <Label className="mt-1">Date of Join</Label>
-          <span className="text-secondary px-2">
-            {`${new Date(employeeDetails.doj)}`.slice(4, 15)}
-          </span>
           <Input
-            defaultValue={doj}
+            defaultValue={
+              employeeDetails.doj
+                ? new Date(employeeDetails.doj).toISOString().split("T")[0]
+                : ""
+            }
             type="date"
-            value={employeeDetails.doj}
             onChange={(e) => setDoj(e.target.value)}
           />
         </Col>
@@ -288,7 +286,7 @@ const UpdateEmployee = ({ isOpen, toggle }) => {
         className="mt-4 mb-4 d-flex justify-end flex-end"
         onClick={handleSave}
       >
-        Save
+        Update
       </Button>
     </Fragment>
   );

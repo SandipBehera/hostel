@@ -46,7 +46,8 @@ import PopUpButton from "./PopUpButton";
 import { LocalApi, LocalSocketAPI, WebApi, WebSocketAPI } from "../../api";
 import socketIOClient from "socket.io-client";
 import { toast } from "react-toastify";
-
+import RoomDetails from "./component/roomDetails";
+import { ro } from "date-fns/locale";
 
 const roomNumberOptions = [
   { value: "room1", label: "Room 1" },
@@ -77,7 +78,7 @@ const AllStudents = () => {
   const [selectedRoom, setSelectedRoom] = useState(null);
   const [selectedRowId, setSelectedRowId] = useState(null);
   const [selectedStudent, setSelectedStudent] = useState(null);
-
+  const [reassignPopupOpen, setReassignPopupOpen] = useState(false);
   const toggleAssignRoomModal = (rowId) => {
     setAssignRoomModalOpen(!assignRoomModalOpen);
     setSelectedRowId(rowId);
@@ -120,31 +121,39 @@ const AllStudents = () => {
   const hostel_name = hostelData?.map((key) => {
     return { value: key.id, label: key.hostel_name };
   });
-
   const handleAssignRoom = async () => {
-    const data = {
-      user_id: userid,
-      hostel_id: selectedHostel,
-      floor_id: selectedFloor,
-      room_id: selectedRoom,
-      branch_id: branchId,
-    };
-
-    const response = await fetch(`${WebApi}/assign_rooms`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(data),
-    });
-    const resproom = await response.json();
-
-    if (resproom.status === "success") {
-      getData();
-      setAssignRoomModalOpen(false);
-      toast.success(resproom.message);
+    if (
+      selectedHostel === null ||
+      selectedFloor === null ||
+      selectedRoom === null
+    ) {
+      toast.error("Please select all fields");
+      return;
     } else {
-      toast.error(resproom.message);
+      const data = {
+        user_id: userid,
+        hostel_id: selectedHostel,
+        floor_id: selectedFloor,
+        room_id: selectedRoom,
+        branch_id: branchId,
+      };
+
+      const response = await fetch(`${WebApi}/assign_rooms`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+      });
+      const resproom = await response.json();
+
+      if (resproom.status === "success") {
+        getData();
+        setAssignRoomModalOpen(false);
+        toast.success(resproom.message);
+      } else {
+        toast.error(resproom.message);
+      }
     }
   };
 
@@ -162,25 +171,13 @@ const AllStudents = () => {
     const floorOptions = floors.map((floor) => {
       return { value: floor, label: `floor ${floor}` };
     });
-    setFloorData(floorOptions);
   };
 
   const handleFloorSelect = (floor) => {
     setSelectedFloor(floor);
-    const rooms = hostelData
-      .find((hostel) => hostel.id === selectedHostel)
-      .room_details.filter((room) => room.floor === floor)
-      .map((room) => {
-        return {
-          value: room.details.room_no,
-          label: `Room ${room.details.room_no}`,
-        };
-      });
-    setRoomData(rooms);
-  };
-
-  const handleChange = (e) => {
-    setSearchTerm(e.target.value);
+    const rooms = hostelData.find((hostel) => hostel.id === selectedHostel);
+    console.log("rooms", rooms);
+    setRoomData([rooms]);
   };
 
   const toggleDropdown = (id) => {
@@ -188,9 +185,15 @@ const AllStudents = () => {
     setDropdownOpen(!dropdownOpen);
   };
 
+  const toggleReassignPopup = () => {
+    setReassignPopupOpen(!reassignPopupOpen);
+  };
   const handleOptionSelect = (option, id) => {
     if (option === "Assign Room") {
       toggleAssignRoomModal(id);
+      setUserid(id);
+    } else if (option === "Reassign Room") {
+      toggleReassignPopup();
       setUserid(id);
     } else if (option === "View") {
       const student = tableData.find((item) => item.id === id);
@@ -202,7 +205,7 @@ const AllStudents = () => {
   const toggleModal = () => {
     setModalOpen(!modalOpen);
   };
-  console.log(userid);
+  console.log(roomData);
 
   return (
     <Fragment>
@@ -251,9 +254,7 @@ const AllStudents = () => {
                           <td>{item.semesterYear}</td>
                           <td>{item.branch}</td>
                           <td>
-                            {
-                            
-                            item.hostel_name !== null ? (
+                            {item.hostel_name !== null ? (
                               <>
                                 <p>Hostel Name: {item?.hostel_name}</p>
                                 <p>Room No: {item?.room_id}</p>
@@ -331,7 +332,7 @@ const AllStudents = () => {
                             }
                           />
                         </FormGroup>
-                        <FormGroup>
+                        {/* <FormGroup>
                           <Label for="roomNumberSelect">Room Number</Label>
                           <Select
                             id="roomNumberSelect"
@@ -340,7 +341,14 @@ const AllStudents = () => {
                               setSelectedRoom(selectedOption.value)
                             }
                           />
-                        </FormGroup>
+                        </FormGroup> */}
+                        {roomData.length > 0 && (
+                          <RoomDetails
+                            data={roomData}
+                            selectedFloor={selectedFloor}
+                            setSelectedRoom={setSelectedRoom}
+                          />
+                        )}
                         <Button color="primary" onClick={handleAssignRoom}>
                           Assign Room
                         </Button>

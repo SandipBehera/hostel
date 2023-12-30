@@ -1,6 +1,5 @@
 import React, { Fragment, useEffect } from "react";
 
-// import FooterCard from "../../Components/Forms/FormControl/Common/FooterCard";
 import {
   Col,
   Card,
@@ -16,9 +15,11 @@ import { Breadcrumbs, H6 } from "../../AbstractElements";
 import { AccountInformation, UploadFile } from "../../Constant";
 import { LocalApi, WebApi } from "../../api";
 import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
 import { set } from "date-fns";
 
 export default function CreateEmployee() {
+  const navigate = useNavigate();
   const userType = localStorage.getItem("userType");
   const branch_id = localStorage.getItem("branchId");
   const [formData, setFormData] = React.useState({
@@ -45,7 +46,7 @@ export default function CreateEmployee() {
       return respData.data;
     } catch (error) {
       console.error("Error fetching room config:", error);
-      throw error; // Re-throw the error to handle it outside this function if needed
+      throw error;
     }
   };
 
@@ -56,8 +57,44 @@ export default function CreateEmployee() {
     console.log(branch_id, userType);
   }, []);
 
+  const validateEmail = (email) => {
+    const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return regex.test(email);
+  };
+
+  const validateContactNumber = (contact) => {
+    const regex = /^\d{10}$/;
+    return regex.test(contact);
+  };
+
+  const validateAadharNumber = (aadhar) => {
+    const regex = /^\d{12}$/;
+    return regex.test(aadhar);
+  };
+
+  const validateBankAccountNumber = (account) => {
+    const regex = /^\d+$/;
+    return regex.test(account);
+  };
+
+  const validateBankName = (bank) => {
+    const regex = /^[A-Za-z\s]+$/;
+    return regex.test(bank);
+  };
+
+  const validateIFSCCode = (ifsc) => {
+    const regex = /^[A-Za-z0-9]+$/;
+    return regex.test(ifsc);
+  };
+
+  const validatePanCard = (pan) => {
+    const regex = /^[A-Za-z0-9]+$/;
+    return regex.test(pan);
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
+
     if (
       formData.name === "" ||
       formData.email === "" ||
@@ -74,6 +111,20 @@ export default function CreateEmployee() {
       formData.file === ""
     ) {
       toast.warning("All fields are required");
+    } else if (!validateEmail(formData.email)) {
+      toast.warning("Invalid email address");
+    } else if (!validateContactNumber(formData.contact)) {
+      toast.warning("Contact number should be 10 digits");
+    } else if (!validateAadharNumber(formData.aadhar)) {
+      toast.warning("Aadhar number should be 12 digits");
+    } else if (!validateBankAccountNumber(formData.account)) {
+      toast.warning("Invalid bank account number");
+    } else if (!validateBankName(formData.bank)) {
+      toast.warning("Invalid bank name");
+    } else if (!validateIFSCCode(formData.ifsc)) {
+      toast.warning("Invalid IFSC code");
+    } else if (!validatePanCard(formData.pan)) {
+      toast.warning("Invalid PAN card");
     } else {
       const data = new FormData();
       data.append("name", formData.name);
@@ -93,34 +144,42 @@ export default function CreateEmployee() {
       data.append("userType", "employee");
       data.append("branch_id", branch_id);
 
-      await fetch(`${WebApi}/addEmployee`, {
-        method: "POST",
-        body: data,
-      })
-        .then((res) => res.json())
-        .then((data) => {
-          if (data.status === "success") {
-            toast.success(data.message);
-            setFormData({
-              name: "",
-              email: "",
-              contact: "",
-              employeeId: "",
-              address: "",
-              designation: "",
-              aadhar: "",
-              pan: "",
-              account: "",
-              bank: "",
-              ifsc: "",
-              doj: "",
-              file: "",
-            });
-          } else {
-            toast.error(data.message);
-          }
-        })
-        .catch((err) => console.log(err));
+      const userId = localStorage.getItem("userId");
+      try {
+        const response = await fetch(`${WebApi}/addEmployee`, {
+          method: "POST",
+          body: data,
+        });
+
+        const result = await response.json();
+
+        if (result.status === "success") {
+          toast.success(result.message);
+          console.log(result);
+          navigate(`/admin/${userId}/allemployee`);
+          // Reset the form after successful submission
+          setFormData({
+            name: "",
+            email: "",
+            contact: "",
+            employeeId: "",
+            address: "",
+            designation: "",
+            aadhar: "",
+            pan: "",
+            account: "",
+            bank: "",
+            ifsc: "",
+            doj: "",
+            file: "",
+          });
+        } else {
+          toast.error(result.message);
+        }
+      } catch (error) {
+        console.log(error);
+        toast.error("An error occurred while processing your request");
+      }
     }
   };
 

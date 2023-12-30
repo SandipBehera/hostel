@@ -139,6 +139,7 @@ export default function CreateComplain() {
         if (response.status === 200) {
           socket.emit("newComplaint", data);
           toast.success("Complaint Created Successfully");
+          resetForm();
         } else {
           toast.error("Something went wrong");
         }
@@ -147,6 +148,17 @@ export default function CreateComplain() {
       }
     }
   };
+ // Function to reset form fields
+ const resetForm = () => {
+  setIssueType("");
+  setHostelNumber("");
+  setRoomNumber("");
+  setAssignTo("");
+  setSelectedEmployee("");
+  setComplaint("");
+  setStatus("");
+  setContent("");
+};
 
   return (
     <Fragment>
@@ -281,3 +293,5 @@ export default function CreateComplain() {
     </Fragment>
   );
 }
+
+
