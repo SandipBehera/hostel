@@ -1,3 +1,5 @@
+
+
 import React, { Fragment, useContext, useEffect, useState } from "react";
 import { Box } from "react-feather/dist";
 import {
@@ -64,6 +66,8 @@ const AllStudents = () => {
   const [tableData, setTableData] = useState([]);
   const socket = socketIOClient(WebSocketAPI);
 
+  const [getId, setGetId] = useState(0);
+  const [floorId, setFloorId] = useState(0);
   // const { data } = useContext(tableData);
   const [searchTerm, setSearchTerm] = useState("");
   const [dropdownOpen, setDropdownOpen] = useState(false);
@@ -83,6 +87,9 @@ const AllStudents = () => {
   const [selectedRowId, setSelectedRowId] = useState(null);
   const [selectedStudent, setSelectedStudent] = useState(null);
   const [reassignPopupOpen, setReassignPopupOpen] = useState(false);
+
+   const[hostelSelect,setHostelSelect]=useState(null)
+   const[floorSelect,setFloorSelect]=useState(null)
   const toggleAssignRoomModal = (rowId) => {
     setAssignRoomModalOpen(!assignRoomModalOpen);
     setSelectedRowId(rowId);
@@ -111,17 +118,19 @@ const AllStudents = () => {
 
   useEffect(() => {
     const roomHostel = async () => {
-      const response = await fetch(`${WebApi}/get_rooms`, {
+      // const response = await fetch(`${WebApi}/get_rooms`, {
+        const response =await fetch(`${WebApi}/get_student_room/${branchId}`,{
         method: "GET",
       });
       const resproom = await response.json();
+      console.log("get response room",resproom)
       sethostelData(
         resproom.data.filter((key) => key.branch_id === parseInt(branchId))
       );
     };
     roomHostel();
   }, []);
-
+   
   const hostel_name = hostelData?.map((key) => {
     return { value: key.id, label: key.hostel_name };
   });
@@ -224,8 +233,46 @@ const AllStudents = () => {
   const toggleModal = () => {
     setModalOpen(!modalOpen);
   };
-  console.log(userid);
 
+    //  function handleOnHostel(e){
+    //   setHostelSelect(e.target.value)
+    //  }
+    //  function handleOnFloor(){
+      
+    //  }
+    const fetchHostel=()=>{
+      const extractedHostels = hostelData.room_details.map(room => ({
+        id: room.branch_id,
+        name: hostelData.hostel_name
+      }));
+  
+      setHostelSelect(extractedHostels);
+    }
+    console.log((hostelSelect))
+
+    const fetchFloors = (selectedHostelId) => {
+      const selectedHostelFloors = [...new Set(hostelData.room_details
+        .filter(room => room.branch_id === selectedHostelId)
+        .map(room => room.floor)
+      )];
+  
+      setFloorSelect(selectedHostelFloors);
+      };
+
+  const getRoomColor = (room) => {
+    const assignedRoom = tableData.filter((item) => item.room_id === room.details?.room_no);
+  
+    if (!assignedRoom) {
+      return "green"; // Room not assigned to anyone
+    } else if (assignedRoom && assignedRoom.room_id === room.details?.room_no && assignedRoom.hostel_name === room.hostel_name) {
+      return "blue"; // Room is not full and assigned to the current user
+    } else {
+      return "red"; // Room is full or assigned to someone else
+    }
+  };
+console.log("room data is",roomData)
+console.log("hostel data is",hostelData)
+console.log("table data is",tableData)
   return (
     <Fragment>
       <Breadcrumbs
@@ -321,53 +368,75 @@ const AllStudents = () => {
                       ))}
                     </tbody>
                   </Table>
-
-                  {assignRoomModalOpen && (
-                    <Modal
-                      isOpen={assignRoomModalOpen}
-                      toggle={() => toggleAssignRoomModal(null)}
-                    >
-                      <ModalHeader toggle={() => toggleAssignRoomModal(null)}>
-                        Assign Room
-                      </ModalHeader>
-                      <ModalBody>
-                        <FormGroup>
-                          <Label for="hostelSelect">Hostel Name</Label>
-                          <Select
-                            id="hostelSelect"
-                            options={hostel_name}
-                            onChange={(selectedOption) =>
-                              handleHostelSelect(selectedOption.value)
-                            }
-                          />
-                        </FormGroup>
-                        <FormGroup>
-                          <Label for="floorSelect">Floor</Label>
-                          <Select
-                            id="floorSelect"
-                            options={floorData}
-                            onChange={(selectedOption) =>
-                              handleFloorSelect(selectedOption.value)
-                            }
-                          />
-                        </FormGroup>
-                        <FormGroup>
-                          <Label for="roomNumberSelect">Room Number</Label>
-                          <Select
-                            id="roomNumberSelect"
-                            options={roomData}
-                            onChange={(selectedOption) =>
-                              setSelectedRoom(selectedOption.value)
-                            }
-                          />
-                        </FormGroup>
-                        <Button color="primary" onClick={handleAssignRoom}>
-                          Assign Room
-                        </Button>
-                      </ModalBody>
-                    </Modal>
-                  )}
-     
+                  <Modal
+                    isOpen={assignRoomModalOpen}
+                    toggle={() => toggleAssignRoomModal(null)}
+                  >
+                    <ModalHeader toggle={() => toggleAssignRoomModal(null)}>
+                      Assign Room
+                    </ModalHeader>
+                    <ModalBody>
+                      <FormGroup>
+                        <Label for="selectHostel">Select Hostel:</Label>
+                        <Input
+                          type="select"
+                          id="selectHostel"
+                          onChange={(e) => setGetId(e.target.value)}
+                        >
+                          <option value="" disabled>
+                            Select Hostel
+                          </option>
+                          {/* {hostelSelect?.map((hostel)=>(
+                            <option>
+                              {hostel.name}
+                            </option>
+                          ))} */}
+                          {[
+                            ...new Set(
+                              hostelData.map((hostel) => hostel.hostel_name)
+                            ),
+                          ].map((uniqueHostelName, index) => (
+                            <option key={index} value={index}>
+                              {uniqueHostelName}
+                            </option>
+                          ))}
+                        </Input>
+                      </FormGroup>
+                      <FormGroup>
+                        <Label for="selectHostel">Select Floor:</Label>
+                        <Input
+                          type="select"
+                          id="selectFloor"
+                          onChange={(e) => setFloorId(e.target.value)}
+                        >
+                          <option value="" disabled>
+                            Select Floor
+                          </option>
+                          {[
+                            ...new Set(
+                              hostelData[getId]?.room_details.map(
+                                (floor) => floor.floor
+                              )
+                            ),
+                          ].map((uniqueFloor) => (
+                            <option key={uniqueFloor} value={uniqueFloor}>
+                              {uniqueFloor}
+                            </option>
+                          ))}
+                        </Input>
+                      </FormGroup>
+                      {hostelData[getId]?.room_details
+                        .filter((room) => room.floor === parseInt(floorId))
+                         .map((rooms) => {
+                          console.log("Filtered Room Data", rooms); 
+                          return (
+                            <div key={rooms.room}>
+                               {rooms.room}
+                            </div>
+                          );
+                        })}
+                    </ModalBody>
+                  </Modal>
                 </div>
               </Card>
             </Col>
