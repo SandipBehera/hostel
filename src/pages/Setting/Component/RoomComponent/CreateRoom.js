@@ -1,11 +1,6 @@
 import React, { Fragment } from "react";
 import { Row, Col, Form, Label, FormGroup, Button } from "reactstrap";
-import {
-  Password,
-  ConfirmPassword,
-  Previous,
-  Next,
-} from "../../../../Constant";
+import { Previous, Next } from "../../../../Constant";
 import { useForm } from "react-hook-form";
 import { H5 } from "../../../../AbstractElements";
 
@@ -13,14 +8,15 @@ const CreateRoom = ({ setSteps, setFormdata, formdata }) => {
   const {
     register,
     handleSubmit,
+    reset, // Add the reset function from react-hook-form
     formState: { errors },
   } = useForm();
   const onSubmit = (data) => {
     if (data) {
       setFormdata((prev) => ({ ...prev, ...data }));
       setSteps((pre) => pre + 1);
+      reset(); // Reset the form fields after successful submission
     }
-    console.log(formdata);
   };
 
   return (
@@ -39,7 +35,7 @@ const CreateRoom = ({ setSteps, setFormdata, formdata }) => {
                 id="hostel_name"
                 type="hostel_name"
                 name="hostel_name"
-                defaultValue={formdata.hostel_name || ""}
+                // defaultValue={formdata.hostel_name || ""}
                 {...register("hostel_name", { required: true })}
               />
               <span className="text-danger">
@@ -53,7 +49,7 @@ const CreateRoom = ({ setSteps, setFormdata, formdata }) => {
                 id="floor_count"
                 type="text"
                 name="floor_count"
-                defaultValue={formdata.floor_count || ""}
+                // defaultValue={formdata.floor_count || ""}
                 {...register("floor_count", { required: true })}
               />
               <span className="text-danger">
@@ -67,7 +63,7 @@ const CreateRoom = ({ setSteps, setFormdata, formdata }) => {
                 id="room_count"
                 type="text"
                 name="room_count"
-                defaultValue={formdata.room_count || ""}
+                // defaultValue={formdata.room_count || ""}
                 {...register("room_count", { required: true })}
               />
               <span className="text-danger">

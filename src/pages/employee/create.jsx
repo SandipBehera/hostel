@@ -113,24 +113,24 @@ export default function CreateEmployee() {
       toast.warning("All fields are required");   
     }
     else if (!nameRegex.test(formData.name)) {
-      toast.warning("Employee name should not contain numbers or alphabets");
-    } else if (!idRegex.test(formData.employeeId)) {
-      toast.warning("Employee ID should not contain special characters");
+      toast.warning("Employee name should not contain numbers or special characters ");
     } else if (!validateEmail(formData.email)) {
       toast.warning("Invalid email address");
-    } else if (!validateContactNumber(formData.contact)) {
+    }else if (!validateContactNumber(formData.contact)) {
       toast.warning("Contact number should be 10 digits");
-    } else if (!validateAadharNumber(formData.aadhar)) {
+    } else if (!idRegex.test(formData.employeeId)) {
+      toast.warning("Employee ID should not contain special characters");
+    }  else if (!validateAadharNumber(formData.aadhar)) {
       toast.warning("Aadhar number should be 12 digits");
-    } else if (!validateBankAccountNumber(formData.account)) {
+    } else if (!validatePanCard(formData.pan)) {
+      toast.warning("Invalid PAN card");
+    }else if (!validateBankAccountNumber(formData.account)) {
       toast.warning("Invalid bank account number");
     } else if (!validateBankName(formData.bank)) {
       toast.warning("Invalid bank name");
     } else if (!validateIFSCCode(formData.ifsc)) {
       toast.warning("Invalid IFSC code");
-    } else if (!validatePanCard(formData.pan)) {
-      toast.warning("Invalid PAN card");
-    }else {
+    } else {
       const data = new FormData();
       data.append("name", formData.name);
       data.append("email", formData.email);
