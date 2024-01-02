@@ -10,7 +10,7 @@ import {
   ModalFooter,
 } from "reactstrap";
 import Papa from "papaparse";
-import { Link } from "react-router-dom";
+import DataTable from "react-data-table-component";
 import { WebApi } from "../../api";
 
 const AllPurchases = () => {
@@ -39,7 +39,6 @@ const AllPurchases = () => {
         const res = await response.json();
         const fetched = res.data;
 
-        console.log(fetched);
         setData(
           fetched
             ?.filter((key) => key.branch_id === parseInt(branchId))
@@ -65,7 +64,6 @@ const AllPurchases = () => {
   }, []);
 
   const handleView = (purchase) => {
-    console.log("Viewing purchase:", purchase);
     setModal(true);
     setCurrentPurchase(purchase);
   };
@@ -90,101 +88,82 @@ const AllPurchases = () => {
     document.body.removeChild(link);
   };
 
+  const columns = [
+    { name: "ID", selector: (row, index)=>index+1 },
+    { name: "Date of Purchase", selector: (row) => `${new Date(row.date)}`.slice(4, 15) },
+
+    { name: "Purchased From", selector: "purchasedBy" },
+    {
+      name: "Actions",
+      cell: (row) => (
+        <Button color="info" onClick={() => handleView(row)}>
+          View
+        </Button>
+      ),
+    },
+  ];
+
   return (
     <Fragment>
       <Breadcrumbs
-        parent="Setings"
+        parent="Settings"
         subParent="Item Management"
         mainTitle="All Purchase"
         title="All Purchase"
       />
 
-      <div>
-        <Table className="text-center">
-          <thead>
-            <tr>
-              <th>ID</th>
-              <th>Date of Purchase</th>
-              <th>Purchased From</th>
-              <th>Purchased Item</th>
-            </tr>
-          </thead>
-          <tbody>
-            {data.length > 0 ? (
-              data.map((purchase, index) => (
-                <tr key={purchase.id}>
-                  <td>{index + 1}</td>
-                  <td>{`${new Date(purchase.date)}`.slice(4, 15)}</td>
-                  <td>{purchase.purchasedBy}</td>
-                  <td>
-                    <Button color="info" onClick={() => handleView(purchase)}>
-                      View
-                    </Button>
-                  </td>
-                </tr>
-              ))
-            ) : (
-              <tr>
-                <td colSpan="4" style={{ color: "red" }}>
-                  No Data Found
-                </td>
-              </tr>
-            )}
-          </tbody>
-        </Table>
+      <DataTable
+        columns={columns}
+        data={data}
+        pagination
+        striped
+        highlightOnHover
+        responsive
+      />
 
-        <Modal isOpen={modal} toggle={toggleModal}>
-          <ModalHeader toggle={toggleModal}>Purchase Details -</ModalHeader>
-          <ModalBody>
-            <div className="d-flex justify-content-between">
-              <div>
-                <p> Purchased From: {currentPurchase?.purchasedBy}</p>{" "}
-                <p>
-                  Dated: {`${new Date(currentPurchase?.date)}`.slice(4, 15)}
-                </p>
-              </div>
-              {/* <Link
-                to="#"
-                target="_blank"
-                className="btn btn-primary"
-                style={{ height: "2.5em" }}
-              >
-                View Bill
-              </Link> */}
+      <Modal isOpen={modal} toggle={toggleModal}>
+        <ModalHeader toggle={toggleModal}>Purchase Details</ModalHeader>
+        <ModalBody>
+          <div className="d-flex justify-content-between">
+            <div>
+              <p> Purchased From: {currentPurchase?.purchasedBy}</p>{" "}
+              <p>
+                Dated: {`${new Date(currentPurchase?.date)}`.slice(4, 15)}
+              </p>
             </div>
-            <Table>
-              <thead>
-                <tr>
-                  <th>Item Name</th>
-                  <th>Quantity</th>
-                  <th>Price</th>
+          </div>
+          <Table>
+            <thead>
+              <tr>
+                <th>Item Name</th>
+                <th>Quantity</th>
+                {/* <th>Price</th> */}
+              </tr>
+            </thead>
+            <tbody className="pl-3">
+              {currentPurchase?.items.map((item, index) => (
+                <tr key={index}>
+                  <td>{item.itemName}</td>
+                  <td>{item.quantity}</td>
+                  {/* <td>{item.price_per}</td> */}
                 </tr>
-              </thead>
-              <tbody className="pl-3">
-                {currentPurchase?.items.map((item, index) => (
-                  <tr key={index}>
-                    <td>{item.itemName}</td>
-                    <td>{item.quantity}</td>
-                    <td>{item.price_per}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </Table>
-            <p className="pl-3 total-price">
-              Total Price:{" "}
-              {currentPurchase && calculateTotalPrice(currentPurchase)}/-
-            </p>
-          </ModalBody>
-          <ModalFooter>
-            <Button color="secondary" onClick={toggleModal}>
-              Close
-            </Button>
-            <Button color="success" onClick={handleExport}>
-              Export
-            </Button>
-          </ModalFooter>
-        </Modal>
-      </div>
+              ))}
+            </tbody>
+          </Table>
+          <p className="pl-3 total-price">
+            Total Price:{" "}
+            {currentPurchase && calculateTotalPrice(currentPurchase)}/-
+          </p>
+        </ModalBody>
+        <ModalFooter>
+          <Button color="secondary" onClick={toggleModal}>
+            Close
+          </Button>
+          <Button color="success" onClick={handleExport}>
+            Export
+          </Button>
+        </ModalFooter>
+      </Modal>
     </Fragment>
   );
 };

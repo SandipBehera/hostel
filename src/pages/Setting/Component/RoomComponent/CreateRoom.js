@@ -70,7 +70,6 @@ const CreateRoom = ({ setSteps, setFormdata, formdata }) => {
                 {errors.room_count && "room count is required"}
               </span>
             </FormGroup>
-
             <div className="text-end">
               <Button
                 className="secondary me-2"

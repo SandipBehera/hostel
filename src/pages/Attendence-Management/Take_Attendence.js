@@ -17,9 +17,8 @@ import {
 import Select from "react-select";
 import { Breadcrumbs, H5 } from "../../AbstractElements";
 import "../styles/take_attendence.css";
-import { LocalApi, WebApi } from "../../api";
+import { WebApi } from "../../api";
 import { toast } from "react-toastify";
-import { tr } from "date-fns/locale";
 
 const Take_Attendence = () => {
   const [modalOpen, setModalOpen] = useState(false);
@@ -35,6 +34,7 @@ const Take_Attendence = () => {
 
   const [studentData, setStudentData] = useState([]);
 
+
   const [presentButtonDisabled, setPresentButtonDisabled] = useState(false);
   const [absentButtonDisabled, setAbsentButtonDisabled] = useState(false);
   const [selectedId, setSelectedId] = useState("");
@@ -42,6 +42,9 @@ const Take_Attendence = () => {
   const [selectedComment, setSelectedComment] = useState(""); // Add new state for selected comment
 
   const [otherMessage, setOtherMessage] = useState("");
+
+  const [attendanceStatus, setAttendanceStatus] = useState({});
+  const [attendanceData, setAttendanceData] = useState([])
 
   const resetButtonStates = () => {
     setPresentButtonDisabled(false);
@@ -103,7 +106,7 @@ const Take_Attendence = () => {
   };
 
   const viewReason = (comment) => {
-    const commentText = typeof comment === "object" ? comment.comment : comment;
+    const commentText = comment && typeof comment === "object" ? comment.comment : comment;
     setSelectedComment(commentText);
     setReasonModal(!reasonModal);
   };
@@ -125,12 +128,13 @@ const Take_Attendence = () => {
     if (result.data.length === 0) {
       toast.error("Room is not assigned to any person");
     } else {
-      toast.success("Room is data fetched Successfully");
+      toast.success("Room data is fetched Successfully");
       setStudentData(result.data);
     }
   };
-
+ 
   const makeAttandance = async (studentregistration, status, comments) => {
+    console.log(status)
     if (status === 1) {
       setPresentButtonDisabled(true);
       setAbsentButtonDisabled(false);
@@ -164,6 +168,7 @@ const Take_Attendence = () => {
         });
 
         const responseData = await response.json();
+        console.log(responseData);
         if (responseData.status === "success") {
           setAttendanceData((prevData) => [
             ...prevData,
@@ -173,6 +178,10 @@ const Take_Attendence = () => {
         } else {
           toast.error("Something went wrong!!");
         }
+        setAttendanceStatus((prevStatus) => ({
+          ...prevStatus,
+          [studentregistration]: status,
+        }));
       } catch (error) {
         console.error("Error Making Attendance Request:", error.message);
       }
@@ -180,7 +189,9 @@ const Take_Attendence = () => {
 
     // Call the async function
     await processAttendance();
+    
   };
+  console.log(studentData)
 
   return (
     <Fragment>
