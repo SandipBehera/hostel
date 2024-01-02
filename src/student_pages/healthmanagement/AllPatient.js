@@ -14,8 +14,6 @@ import { LocalApi, LocalStore, WebApi, WebStore } from "../../api";
 import DataTable from "react-data-table-component";
 
 const AllPatient = () => {
-  
-
   const [modal, setModal] = useState(false);
   const [selectedData, setSelectedData] = useState([]);
   const [data, setData] = useState([]);
@@ -26,32 +24,35 @@ const AllPatient = () => {
       try {
         const response = await fetch(`${WebApi}/getAllPatient`);
         const respData = await response.json();
-        console.log(respData.data)
-  
+        console.log(respData.data);
+
         setData(
           respData.data
-            ?.filter((key) => key.branch_id === parseInt(branchId))
+            ?.filter(
+              (key) =>
+                key.branch_id === parseInt(branchId) &&
+                key.patient_regdno === localStorage.getItem("userId")
+            )
             .map((item) => ({
               date: item.date,
               doc: item.doctorname,
               hostel: item.hostelid,
-              floor:item.floorid,
+              floor: item.floorid,
               room: item.roomno,
               time: item.time,
-              name:item.patientname,
+              name: item.patientname,
               pres: item.upload_preception,
 
               // Add other properties as needed
             }))
         );
       } catch (error) {
-        console.error('Error fetching data:', error.message);
+        console.error("Error fetching data:", error.message);
       }
     };
-  
+
     fetchData();
   }, []);
-  
 
   let colData = [
     {
@@ -89,10 +90,10 @@ const AllPatient = () => {
       name: "Date",
       selector: (row) => {
         const dateObject = new Date(row.date);
-        const formattedDate = dateObject.toLocaleDateString('en-GB', {
-          year: 'numeric',
-          month: 'numeric',
-          day: 'numeric',
+        const formattedDate = dateObject.toLocaleDateString("en-GB", {
+          year: "numeric",
+          month: "numeric",
+          day: "numeric",
         });
         return formattedDate;
       },
@@ -110,9 +111,8 @@ const AllPatient = () => {
       center: true,
     },
   ];
-  
 
-  console.log(data)
+  console.log(data);
   const toggleModal = (rowData) => {
     setSelectedData(rowData);
     setModal(!modal);
@@ -139,7 +139,7 @@ const AllPatient = () => {
     }
   };
   const userType = localStorage.getItem("userType");
-  console.log(userType)
+  console.log(userType);
   const dataByUType =
     localStorage.getItem("userType") === "admin" ||
     localStorage.getItem("userType") === "employee"
@@ -149,29 +149,31 @@ const AllPatient = () => {
         );
   return (
     <Fragment>
-    {(userType==="admin" || userType==="employee") &&
-      <Breadcrumbs
-      parent="Health Management"
-      mainTitle="All Patient"
-      title="All Patient"
-    />}
-      {userType==="student" && 
+      {(userType === "admin" || userType === "employee") && (
         <Breadcrumbs
-        parent="Health Report"
-        mainTitle="My Report"
-        title="My Report"
-      />}
-     
+          parent="Health Management"
+          mainTitle="All Patient"
+          title="All Patient"
+        />
+      )}
+      {userType === "student" && (
+        <Breadcrumbs
+          parent="Health Report"
+          mainTitle="My Report"
+          title="My Report"
+        />
+      )}
+
       <Card>
         <div>
-        <DataTable
-                data={data}
-                columns={colData}
-                striped={true}
-                center={true}
-                pagination
-                className="text-center"
-              />
+          <DataTable
+            data={data}
+            columns={colData}
+            striped={true}
+            center={true}
+            pagination
+            className="text-center"
+          />
           <Modal isOpen={modal} toggle={toggleModal}>
             <ModalHeader toggle={toggleModal}>Details</ModalHeader>
             <ModalBody>
@@ -180,7 +182,7 @@ const AllPatient = () => {
                   {/* Display details of selected data in the modal */}
                   <p>Student Name: {selectedData.name}</p>
                   <p>Doctor Name: {selectedData.doc}</p>
-                  
+
                   <p>Date: {`${new Date(selectedData.date)}`.slice(4, 15)}</p>
                   <p>Time: {selectedData.time}</p>
                   <p>Preception Copy</p>
@@ -210,9 +212,8 @@ const AllPatient = () => {
 
 export default AllPatient;
 
-
-
-{/* <Table className="text-center">
+{
+  /* <Table className="text-center">
 <thead>
   <tr>
     <th>Student Name</th>
@@ -243,4 +244,5 @@ export default AllPatient;
     </tr>
   ))}
 </tbody>
-</Table> */}
+</Table> */
+}
