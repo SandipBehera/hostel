@@ -60,6 +60,8 @@ const AllStudents = () => {
   const [tableData, setTableData] = useState([]);
   const socket = socketIOClient(WebSocketAPI);
 
+  const [getId, setGetId] = useState(0);
+  const [floorId, setFloorId] = useState(0);
   // const { data } = useContext(tableData);
   const [searchTerm, setSearchTerm] = useState("");
   const [dropdownOpen, setDropdownOpen] = useState(false);
@@ -79,6 +81,9 @@ const AllStudents = () => {
   const [selectedRowId, setSelectedRowId] = useState(null);
   const [selectedStudent, setSelectedStudent] = useState(null);
   const [reassignPopupOpen, setReassignPopupOpen] = useState(false);
+
+  const [hostelSelect, setHostelSelect] = useState(null);
+  const [floorSelect, setFloorSelect] = useState(null);
   const toggleAssignRoomModal = (rowId) => {
     setAssignRoomModalOpen(!assignRoomModalOpen);
     setSelectedRowId(rowId);
@@ -210,6 +215,54 @@ const AllStudents = () => {
     setModalOpen(!modalOpen);
   };
 
+  //  function handleOnHostel(e){
+  //   setHostelSelect(e.target.value)
+  //  }
+  //  function handleOnFloor(){
+
+  //  }
+  const fetchHostel = () => {
+    const extractedHostels = hostelData.room_details.map((room) => ({
+      id: room.branch_id,
+      name: hostelData.hostel_name,
+    }));
+
+    setHostelSelect(extractedHostels);
+  };
+  console.log(hostelSelect);
+
+  const fetchFloors = (selectedHostelId) => {
+    const selectedHostelFloors = [
+      ...new Set(
+        hostelData.room_details
+          .filter((room) => room.branch_id === selectedHostelId)
+          .map((room) => room.floor)
+      ),
+    ];
+
+    setFloorSelect(selectedHostelFloors);
+  };
+
+  const getRoomColor = (room) => {
+    const assignedRoom = tableData.filter(
+      (item) => item.room_id === room.details?.room_no
+    );
+
+    if (!assignedRoom) {
+      return "green"; // Room not assigned to anyone
+    } else if (
+      assignedRoom &&
+      assignedRoom.room_id === room.details?.room_no &&
+      assignedRoom.hostel_name === room.hostel_name
+    ) {
+      return "blue"; // Room is not full and assigned to the current user
+    } else {
+      return "red"; // Room is full or assigned to someone else
+    }
+  };
+  console.log("room data is", roomData);
+  console.log("hostel data is", hostelData);
+  console.log("table data is", tableData);
   return (
     <Fragment>
       <Breadcrumbs

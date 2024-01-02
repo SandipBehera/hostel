@@ -94,7 +94,8 @@ export default function CreateEmployee() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+    const nameRegex = /^[^\d\s]+$/;
+    const idRegex = /^[A-Za-z0-9]+$/;
     if (
       formData.name === "" ||
       formData.email === "" ||
@@ -111,20 +112,26 @@ export default function CreateEmployee() {
       formData.file === ""
     ) {
       toast.warning("All fields are required");
+    } else if (!nameRegex.test(formData.name)) {
+      toast.warning(
+        "Employee name should not contain numbers or special characters "
+      );
     } else if (!validateEmail(formData.email)) {
       toast.warning("Invalid email address");
     } else if (!validateContactNumber(formData.contact)) {
       toast.warning("Contact number should be 10 digits");
+    } else if (!idRegex.test(formData.employeeId)) {
+      toast.warning("Employee ID should not contain special characters");
     } else if (!validateAadharNumber(formData.aadhar)) {
       toast.warning("Aadhar number should be 12 digits");
+    } else if (!validatePanCard(formData.pan)) {
+      toast.warning("Invalid PAN card");
     } else if (!validateBankAccountNumber(formData.account)) {
       toast.warning("Invalid bank account number");
     } else if (!validateBankName(formData.bank)) {
       toast.warning("Invalid bank name");
     } else if (!validateIFSCCode(formData.ifsc)) {
       toast.warning("Invalid IFSC code");
-    } else if (!validatePanCard(formData.pan)) {
-      toast.warning("Invalid PAN card");
     } else {
       const data = new FormData();
       data.append("name", formData.name);
