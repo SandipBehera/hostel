@@ -3,28 +3,8 @@ import { Card, CardBody, CardHeader, Col } from "reactstrap";
 import { H5, H6, LI, P, UL } from "../../AbstractElements";
 import { WebApi } from "../../api";
 
-const ActivityCard = () => {
-  const [data, setRow] = useState([]);
-  useEffect(() => {
-    const myComplaints = async () => {
-      const response = await fetch(`${WebApi}/get_complaints`, {
-        method: "GET",
-      });
-      const res = await response.json();
-
-      setRow(
-        res.data.filter(
-          (item) =>
-            item.branch_id === parseInt(localStorage.getItem("branchId")) &&
-            item.issued_by === localStorage.getItem("userId")
-        )
-      );
-    };
-    myComplaints();
-  }, []);
-
-  console.log(data);
-
+const ActivityCard = ({ ActivityData }) => {
+  const [data, setRow] = useState(ActivityData);
   const calculateTimeElapsed = (createdAt) => {
     const currentTime = new Date();
     const dataCreationTime = new Date(createdAt);
@@ -80,7 +60,7 @@ const ActivityCard = () => {
                       {item.issue_type}
                       <span className="dot-notification" />
                     </H6>
-                    
+
                     <p className="f-light">{item.details?.reason}</p>
                     <p className="f-light">{item.details[0]?.content}</p>
                   </div>

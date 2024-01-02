@@ -1,13 +1,18 @@
-import React, { Fragment } from "react";
+import React, { Fragment, useEffect, useState } from "react";
 import { Container, Row, Col, Card, CardBody, CardHeader } from "reactstrap";
 import { Breadcrumbs, H5 } from "../../AbstractElements";
 import ActivityCard from "../../pages/Dashboard/ActivityCard";
 import GreetingCard from "../../pages/Dashboard/GreetingCard";
 import { ActivityData } from "../../Data/DefaultDashboard";
 import WidgetsWrapper from "../../pages/Dashboard/WidgetsWraper";
+import { myComplaints, fetchHealthData } from "../../Hooks/fetch_student_data";
+import { set } from "date-fns";
 
 const StudentDashboard = () => {
   // Simulated data (you'll fetch this data from API/backend)
+  const [data, setData] = useState([]);
+  const [healthData, setHealthData] = useState([]);
+  const issueTypeCount = {};
   const studentInfo = {
     daysPresent: 65,
     daysAbsent: 15,
@@ -56,6 +61,31 @@ const StudentDashboard = () => {
     e.currentTarget.style.boxShadow = "0 4px 8px 0 rgba(0,0,0,0.3)";
   };
 
+  useEffect(() => {
+    async function fetchData() {
+      setData(await myComplaints());
+      setHealthData(await fetchHealthData());
+    }
+
+    fetchData();
+  }, []);
+
+  console.log("fetchdata", data);
+  data.forEach((item) => {
+    let issueType = item.issue_type;
+
+    if (issueType) {
+      // Convert to snake_case
+      issueType = issueType.toLowerCase().replace(/\s+/g, "_");
+
+      if (issueTypeCount[issueType]) {
+        issueTypeCount[issueType]++;
+      } else {
+        issueTypeCount[issueType] = 1;
+      }
+    }
+  });
+
   return (
     <Fragment>
       <Breadcrumbs
@@ -69,9 +99,12 @@ const StudentDashboard = () => {
             name={localStorage.getItem("Name")}
             college={"Vaagdevi"}
           />
-          <WidgetsWrapper />
+          <WidgetsWrapper
+            issueTypeCount={issueTypeCount}
+            healthData={healthData?.length}
+          />
           <ActivityCard
-            ActivityData={ActivityData}
+            ActivityData={data}
             columnHeadder={"Complaint Tracker"}
           />
         </Row>
