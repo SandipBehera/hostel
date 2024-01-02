@@ -111,7 +111,9 @@ const AllPlanner = () => {
                   {data.map((item, index) => (
                     <tr key={item.id}>
                       <td>{index + 1}</td>
-                      <td>{item.month}</td>
+                      <td>
+                        {item.month}-{item.year}
+                      </td>
                       <td>
                         <ViewModal data={data} id={item.id} />
                       </td>
