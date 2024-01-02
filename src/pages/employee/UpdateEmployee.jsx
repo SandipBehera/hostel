@@ -30,7 +30,7 @@ const UpdateEmployee = ({ isOpen, toggle }) => {
   const [email, setEmail] = useState(employeeDetails?.email || "");
   const [regNo, setRegNo] = useState(employeeDetails?.regNo || "");
 
-  const [currentDes, setCurrentDes] = useState("");
+  const [currentDes, setCurrentDes] = useState(employeeDetails?.designation||"");
   const [address, setAddress] = useState(employeeDetails?.address || "");
   const [contact, setContact] = useState(employeeDetails?.contact || "");
   const [pan, setPan] = useState(employeeDetails?.pan || "");
@@ -67,6 +67,7 @@ const UpdateEmployee = ({ isOpen, toggle }) => {
   }, []);
 
   console.log(currentDes);
+  console.log(image)
 
   const handleSave = async () => {
     try {
@@ -88,6 +89,7 @@ const UpdateEmployee = ({ isOpen, toggle }) => {
       formData.append("userType", "employee");
       formData.append("branch_id", branch);
       formData.append("doj", doj);
+      
       if (image === undefined || image === null || image === "") {
         formData.append("file", employeeDetails?.image);
       } else {
