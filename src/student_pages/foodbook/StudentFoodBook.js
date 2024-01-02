@@ -20,7 +20,7 @@ const Book = () => {
   const date = new Date();
   const monthName = date.toLocaleString("default", { month: "long" });
   const yearName = date.getFullYear();
-  console.log(yearName);
+
   const now = new Date();
 
   const fetchedData = async () => {
@@ -99,7 +99,11 @@ const Book = () => {
         }),
       });
       const respData = await response.json();
-      console.log(respData);
+      if (respData.staus === "success") {
+        toast.success("Food Booked");
+      } else {
+        toast.error("Food Not Booked");
+      }
     } else {
       setGeneratedCode("");
       setIsCodeValid(false);
@@ -118,7 +122,7 @@ const Book = () => {
       toast.error("Mess is closed");
     }
   }, [gracePeriodExpired]);
-  console.log("mealdata is", mealData);
+
   return (
     <Fragment>
       <Breadcrumbs
