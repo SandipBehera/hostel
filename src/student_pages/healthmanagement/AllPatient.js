@@ -12,6 +12,8 @@ import { Breadcrumbs } from "../../AbstractElements";
 import Papa from "papaparse";
 import { LocalApi, LocalStore, WebApi, WebStore } from "../../api";
 import DataTable from "react-data-table-component";
+import { fetchHealthData } from "../../Hooks/fetch_student_data";
+import { set } from "date-fns";
 
 const AllPatient = () => {
   const [modal, setModal] = useState(false);
@@ -20,36 +22,9 @@ const AllPatient = () => {
   const branchId = localStorage.getItem("branchId");
   useEffect(() => {
     // Fetch data from API
-    const fetchData = async () => {
-      try {
-        const response = await fetch(`${WebApi}/getAllPatient`);
-        const respData = await response.json();
-        console.log(respData.data);
-
-        setData(
-          respData.data
-            ?.filter(
-              (key) =>
-                key.branch_id === parseInt(branchId) &&
-                key.patient_regdno === localStorage.getItem("userId")
-            )
-            .map((item) => ({
-              date: item.date,
-              doc: item.doctorname,
-              hostel: item.hostelid,
-              floor: item.floorid,
-              room: item.roomno,
-              time: item.time,
-              name: item.patientname,
-              pres: item.upload_preception,
-
-              // Add other properties as needed
-            }))
-        );
-      } catch (error) {
-        console.error("Error fetching data:", error.message);
-      }
-    };
+    async function fetchData() {
+      setData(await fetchHealthData());
+    }
 
     fetchData();
   }, []);

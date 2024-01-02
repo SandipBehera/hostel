@@ -24,7 +24,11 @@ export const fetchHealthData = async () => {
     console.log(respData.data);
 
     const data = respData.data
-      ?.filter((key) => key.branch_id === parseInt(branchId))
+      ?.filter(
+        (key) =>
+          key.branch_id === parseInt(branchId) &&
+          key.patient_regdno === localStorage.getItem("userId")
+      )
       .map((item) => ({
         date: item.date,
         doc: item.doctorname,
