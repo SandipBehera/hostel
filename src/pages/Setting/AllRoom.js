@@ -13,6 +13,7 @@ import {
   Button,
 } from "reactstrap";
 import Select from "react-select";
+import { Link, useNavigate } from "react-router-dom";
 import { WebApi } from "../../api";
 import { Breadcrumbs } from "../../AbstractElements";
 
@@ -28,8 +29,11 @@ const AllRoom = () => {
   const [activeDropdown, setActiveDropdown] = useState(null);
   const [modalOpen, setModalOpen] = useState(false);
   const [edit, setEdit] = useState(-1);
+
   const branchId = localStorage.getItem("branchId");
   console.log(branchId);
+  const userId = localStorage.getItem("userId");
+
   const roomHostel = async () => {
     const response = await fetch(`${WebApi}/get_student_room/${branchId}`, {
       method: "GET",
@@ -43,20 +47,20 @@ const AllRoom = () => {
     }
   };
 
-  function handleDelete(id) {
-    fetch(`${WebApi}/delete_rooms/${id}`, {
-      method: "DELETE",
-    })
-      .then((res) => res.json())
-      .then((res) => {
-        if (res.status === "success") {
-          toast.success("Room Deleted Successfully");
-          roomHostel();
-        } else {
-          toast.error("Room Not Deleted");
-        }
-      });
-  }
+  // function handleDelete(id) {
+  //   fetch(`${WebApi}/delete_rooms/${id}`, {
+  //     method: "DELETE",
+  //   })
+  //     .then((res) => res.json())
+  //     .then((res) => {
+  //       if (res.status === "success") {
+  //         toast.success("Room Deleted Successfully");
+  //         roomHostel();
+  //       } else {
+  //         toast.error("Room Not Deleted");
+  //       }
+  //     });
+  // }
 
   useEffect(() => {
     roomHostel();
@@ -84,6 +88,7 @@ const AllRoom = () => {
   };
 
   console.log("room data is", data);
+
   return (
     <Fragment>
       <Breadcrumbs
@@ -109,10 +114,14 @@ const AllRoom = () => {
                       </tr>
                     </thead>
                     <tbody style={{ textAlign: "center" }}>
-                      {data && data.length > 0 ? (
-                        data.map((item, index) =>
-                          edit === item.id ? (
+                      {data &&
+                        data.length > 0 &&
+                        data.map((item) => {
+                          console.log("item",item);
+
+                          return edit === item.id ? (
                             <EditForm
+                              key={item.id}
                               item={item}
                               data={data}
                               setData={setData}
@@ -124,7 +133,7 @@ const AllRoom = () => {
                               key={item.id}
                               className={`border-bottom-${item.color}`}
                             >
-                              <th scope="row">{index + 1}</th>
+                              <th scope="row">{item.id}</th>
                               <td>{item.hostel_name}</td>
                               <td>{item.floor_count}</td>
                               <td>
@@ -139,29 +148,36 @@ const AllRoom = () => {
                                     {Action}
                                   </DropdownToggle>
                                   <DropdownMenu>
-                                    <DropdownItem
-                                      onClick={() =>
-                                        handleOptionSelect("Edit", item.id)
-                                      }
+                                  
+                                    <Link
+                                      to={`/admin/${userId}/editroom/${item.id}`}
+                                      state={{ roomDetails: item }}
                                     >
-                                      Edit
-                                    </DropdownItem>
-                                    <DropdownItem
+                                      <DropdownItem
+                                        onClick={() =>
+                                          handleOptionSelect("Edit", item.id)
+                                        }
+                                      >
+                                        Edit
+                                      </DropdownItem>
+                                    </Link>
+
+                                    {/* <DropdownItem
                                       onClick={() => handleDelete(item.id)}
                                     >
                                       Delete
-                                    </DropdownItem>
+                                    </DropdownItem> */}
                                   </DropdownMenu>
                                 </Dropdown>
                               </td>
                             </tr>
-                          )
-                        )
-                      ) : (
-                        <tr>
-                          <td colSpan="5">Loading...</td>
-                        </tr>
-                      )}
+                          );
+                        })}
+                      
+                      <tr>
+                        <td colSpan="5">Loading...</td>
+                      </tr>
+                    
                     </tbody>
                   </Table>
 

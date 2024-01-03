@@ -217,6 +217,7 @@ import MonthlyAttendanceReport from "../pages/Attendence-Management/MonthlyAtten
 import HostelConfig from "../pages/Setting/HostelConfig";
 import UpdateEmployee from "../pages/employee/UpdateEmployee";
 import Config from "../pages/Setting/Hostel-Config/Config";
+import EditRoom from "../pages/Setting/Hostel-Config/EditRoom";
 
 export const routes = [
   { path: `/dashboard`, Component: <Dashboard /> },
@@ -251,6 +252,7 @@ export const routes = [
   //ROOM MANAGEMENT
   { path: `/room-management`, Component: <RoomManagement /> },
   { path: `/allroom`, Component: <AllRoom /> },
+{ path: `/editroom/:id`, Component: <EditRoom /> },
   //Compain Management
   { path: `/create-complain`, Component: <CreateComplain /> },
   { path: `/view-complain`, Component: <ViewComplain /> },

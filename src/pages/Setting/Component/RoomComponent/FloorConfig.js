@@ -1,3 +1,4 @@
+
 import React, { Fragment, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { Row, Col, Form, Label, FormGroup, Button } from "reactstrap";
@@ -8,7 +9,7 @@ import { LocalApi, WebApi } from "../../../../api";
 import { toast } from "react-toastify";
 
 const FloorConfig = ({ setSteps, setFormdata, formdata }) => {
-  const { register, handleSubmit, getValues, control } = useForm();
+  const { register, handleSubmit, getValues, control, reset,formState: { errors } } = useForm();
   const [Ammenities, setAmmenities] = useState([]);
   const [RoomType, setRoomType] = useState([]);
 
@@ -18,13 +19,13 @@ const FloorConfig = ({ setSteps, setFormdata, formdata }) => {
     try {
       const response = await fetch(`${WebApi}/get_config_by_type/${type}`);
       const respData = await response.json();
-      console.log(respData.data);
+      console.log("data is", respData.data);
       return respData.data.filter(
         (item) => item.branch_id === parseInt(branchId)
       );
     } catch (error) {
       console.error("Error fetching room config:", error);
-      throw error; // Re-throw the error to handle it outside this function if needed
+      throw error;
     }
   };
 
@@ -36,15 +37,41 @@ const FloorConfig = ({ setSteps, setFormdata, formdata }) => {
         setAmmenities(amenities[0].config_type_name.data);
         setRoomType(roomType[0].config_type_name.data);
       } catch (error) {
-        // Handle errors here
         console.error("Error fetching data:", error);
       }
     };
 
-    fetchData(); // Call the async function immediately
-  }, []); // Empty dependency array means this useEffect runs once on mount
+    fetchData();
+  }, []);
 
   const onSubmit = async () => {
+    const encounteredRoomNumbers = new Set();
+    let isDuplicate = false;
+
+    for (let floor = 1; floor <= formdata.floor_count; floor++) {
+      for (let room = 1; room <= formdata.room_count; room++) {
+        const inputName = `floor${floor}_room${room}`;
+        const roomNumber = getValues(inputName) || "";
+
+        if (encounteredRoomNumbers.has(roomNumber)) {
+          isDuplicate = true;
+          break;
+        }
+
+        encounteredRoomNumbers.add(roomNumber);
+      }
+
+      if (isDuplicate) {
+        break;
+      }
+    }
+
+    if (isDuplicate) {
+      toast.error("Duplicate room numbers found. Please use unique room numbers.");
+      // {errors, "room count is required"}
+      return;
+    }
+
     const updatedRooms = [];
 
     for (let floor = 1; floor <= formdata.floor_count; floor++) {
@@ -69,7 +96,6 @@ const FloorConfig = ({ setSteps, setFormdata, formdata }) => {
       }
     }
 
-    // setFormdata((prev) => ({ ...prev, rooms: rooms }));
     const updatedFormdata = {
       ...formdata,
       rooms: updatedRooms,
@@ -110,7 +136,7 @@ const FloorConfig = ({ setSteps, setFormdata, formdata }) => {
 
   const floor_no = formdata.floor_count || {};
   const room_count = formdata.room_count || {};
-
+console.log(formdata)
   return (
     <Fragment>
       <Row>
@@ -126,6 +152,7 @@ const FloorConfig = ({ setSteps, setFormdata, formdata }) => {
               RoomType={RoomType}
               Ammenities={Ammenities}
               control={control}
+              errors={errors}
             />
             <div className="text-end btn-mb">
               <Button color="primary" type="submit">
@@ -140,3 +167,4 @@ const FloorConfig = ({ setSteps, setFormdata, formdata }) => {
 };
 
 export default FloorConfig;
+
