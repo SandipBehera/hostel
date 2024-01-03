@@ -1,5 +1,6 @@
 import React, { Fragment, useEffect, useState } from "react";
 import { Breadcrumbs } from "../../AbstractElements";
+import { useNavigate } from "react-router-dom";
 import {
   Button,
   Card,
@@ -34,6 +35,9 @@ export default function Purchases() {
   const [file, setFile] = useState("");
 
   const branchId = localStorage.getItem("branchId");
+  const userId = localStorage.getItem("userId");
+  const navigate = useNavigate();
+
 
   const toggleModal = () => {
     setModal(!modal);
@@ -171,6 +175,8 @@ export default function Purchases() {
         .then((data) => {
           console.log(data);
           toast.success(data.message);
+          navigate(`/admin/${userId}/all-item-purchases`)
+
         })
         .catch((e) => {
           console.log(e), toast.error("Faild to add stocks");

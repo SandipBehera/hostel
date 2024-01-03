@@ -14,6 +14,7 @@ import {
 import { Breadcrumbs, H5 } from "../../AbstractElements";
 import { LocalApi, WebApi } from "../../api";
 import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
 
 const FoodPlanner = () => {
   const [month, setMonth] = useState("January");
@@ -31,6 +32,9 @@ const FoodPlanner = () => {
   const [prevMonthData, setPrevMonthData] = useState(null);
 
   const branchId = localStorage.getItem("branchId");
+  const userId = localStorage.getItem("userId");
+
+  const navigate = useNavigate();
 
   // Function to handle input changes
   const handleInputChange = (e, day, mealType, field) => {
@@ -75,6 +79,7 @@ const FoodPlanner = () => {
     const respdata = await response.json();
     if (respdata.status === "success") {
       toast.success("Food Menu Created");
+      navigate(`/admin/${userId}/allplanner`);
     } else {
       toast.warning("Failed to create food menu");
     }
