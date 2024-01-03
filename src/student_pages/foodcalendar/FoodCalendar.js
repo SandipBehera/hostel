@@ -9,24 +9,28 @@ const FoodCalendar = () => {
   const branchId = localStorage.getItem("branchId");
   const date = new Date();
   const monthName = date.toLocaleString("default", { month: "long" });
+  console.log(typeof monthName);
   const yearName = date.getFullYear();
+  console.log(typeof yearName);
   const fetchData = async () => {
     const response = await fetch(`${WebApi}/get_all_menu`);
     const respData = await response.json();
+    console.log(respData.data);
     setData(
       respData.data.filter(
         (key) =>
           key.branch_id === parseInt(branchId) &&
-          key.month === monthName &&
-          key.year === yearName
+          key.year === yearName.toString() &&
+          key.month === monthName
       )
     );
+    console.log(data);
   };
 
   useEffect(() => {
     fetchData();
   }, []);
-
+  console.log(data);
   return (
     <Fragment>
       <Breadcrumbs

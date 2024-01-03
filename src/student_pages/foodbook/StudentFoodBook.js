@@ -37,7 +37,7 @@ const Book = () => {
         (key) =>
           key.branch_id === parseInt(branchId) &&
           key.month === monthName &&
-          key.year === yearName
+          key.year === yearName.toString()
       );
       setMealData(filteredData);
       setDisabledBtn(filteredData.length === 0 ? true : false);
@@ -118,8 +118,26 @@ const Book = () => {
   };
 
   useEffect(() => {
-    if (gracePeriodExpired) {
-      toast.error("Mess is closed");
+    const day = now.toLocaleString("default", { weekday: "long" });
+    const mealTimings = getMealTimings(mealData[0]?.menu_data, day);
+    console.log(mealTimings);
+    const breakfastStart = mealTimings.breakfastStart;
+    const breakfastEnd = mealTimings.breakfastEnd;
+
+    const lunchStart = mealTimings.lunchStart;
+    const lunchEnd = mealTimings.lunchEnd;
+
+    const dinnerStart = mealTimings.dinnerStart;
+    const dinnerEnd = mealTimings.dinnerEnd;
+
+    if (
+      (now >= breakfastStart && now <= breakfastEnd) ||
+      (now >= lunchStart && now <= lunchEnd) ||
+      (now >= dinnerStart && now <= dinnerEnd)
+    ) {
+      setGracePeriodExpired(false);
+    } else {
+      setGracePeriodExpired(true);
     }
   }, [gracePeriodExpired]);
 

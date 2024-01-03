@@ -1,4 +1,3 @@
-
 import React, { Fragment, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { Row, Col, Form, Label, FormGroup, Button } from "reactstrap";
@@ -9,7 +8,14 @@ import { LocalApi, WebApi } from "../../../../api";
 import { toast } from "react-toastify";
 
 const FloorConfig = ({ setSteps, setFormdata, formdata }) => {
-  const { register, handleSubmit, getValues, control, reset,formState: { errors } } = useForm();
+  const {
+    register,
+    handleSubmit,
+    getValues,
+    control,
+    reset,
+    formState: { errors },
+  } = useForm();
   const [Ammenities, setAmmenities] = useState([]);
   const [RoomType, setRoomType] = useState([]);
 
@@ -67,7 +73,9 @@ const FloorConfig = ({ setSteps, setFormdata, formdata }) => {
     }
 
     if (isDuplicate) {
-      toast.error("Duplicate room numbers found. Please use unique room numbers.");
+      toast.error(
+        "Duplicate room numbers found. Please use unique room numbers."
+      );
       // {errors, "room count is required"}
       return;
     }
@@ -136,7 +144,7 @@ const FloorConfig = ({ setSteps, setFormdata, formdata }) => {
 
   const floor_no = formdata.floor_count || {};
   const room_count = formdata.room_count || {};
-console.log(formdata)
+  console.log(formdata);
   return (
     <Fragment>
       <Row>
@@ -167,4 +175,3 @@ console.log(formdata)
 };
 
 export default FloorConfig;
-

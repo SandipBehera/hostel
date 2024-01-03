@@ -29,6 +29,7 @@ const AllRoom = () => {
   const [edit, setEdit] = useState(-1);
 
   const branchId = localStorage.getItem("branchId");
+  const userId = localStorage.getItem("userId");
 
   const roomHostel = async () => {
     const response = await fetch(`${WebApi}/get_student_room/${branchId}`, {
