@@ -17,6 +17,7 @@ import OutingComponent from "./component/outing";
 import { toast } from "react-toastify";
 import socketIOClient from "socket.io-client";
 import VacantRequest from "./component/Vacant";
+import { useNavigate } from "react-router-dom";
 
 const Complaints = () => {
   const studentId = localStorage.getItem("userId");
@@ -27,6 +28,9 @@ const Complaints = () => {
   const [leaveReason, setLeaveReason] = React.useState("");
   const [leaveFrom, setLeaveFrom] = React.useState("");
   const [leaveTo, setLeaveTo] = React.useState("");
+
+  const navigate = useNavigate();
+  const userId = localStorage.getItem("userId");
   const socket = socketIOClient(WebSocketAPI);
   console.log(complaint);
   const date = new Date();
@@ -155,6 +159,7 @@ const Complaints = () => {
           status: "",
           details: "",
         });
+        navigate(`/student/${userId}/complaints-report`)
       }
       // You can add further logic after a successful submission
     } catch (error) {
