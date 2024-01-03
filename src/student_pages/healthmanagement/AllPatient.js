@@ -13,13 +13,12 @@ import Papa from "papaparse";
 import { LocalApi, LocalStore, WebApi, WebStore } from "../../api";
 import DataTable from "react-data-table-component";
 import { fetchHealthData } from "../../Hooks/fetch_student_data";
-import { set } from "date-fns";
 
 const AllPatient = () => {
   const [modal, setModal] = useState(false);
   const [selectedData, setSelectedData] = useState([]);
   const [data, setData] = useState([]);
-  const branchId = localStorage.getItem("branchId");
+
   useEffect(() => {
     // Fetch data from API
     async function fetchData() {
@@ -28,7 +27,6 @@ const AllPatient = () => {
 
     fetchData();
   }, []);
-
   let colData = [
     {
       name: "Student Name",

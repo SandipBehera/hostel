@@ -24,10 +24,11 @@ export const fetchHealthData = async () => {
     console.log(respData.data);
 
     const data = respData.data
-      ?.filter(
-        (key) =>
-          key.branch_id === parseInt(branchId) &&
-          key.patient_regdno === localStorage.getItem("userId")
+      ?.filter((key) =>
+        localStorage.getItem("userType") === "student"
+          ? key.branch_id === parseInt(branchId) &&
+            key.patient_regdno === localStorage.getItem("userId")
+          : key.branch_id === parseInt(branchId)
       )
       .map((item) => ({
         date: item.date,
