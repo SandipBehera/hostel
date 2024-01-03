@@ -26,26 +26,21 @@ const NewPatient = () => {
   const [reg, setReg] = useState("");
   const [userType, setUserType] = useState("");
   const [profileData, setProfileData] = useState([]);
-  const [name, setName] = useState("");
-
+const [err, setErr] =useState("");
   useEffect(() => {
     const roomHostel = async () => {
       const response = await fetch(`${WebApi}/get_rooms`, {
         method: "GET",
       });
       const resproom = await response.json();
-      // sethostelData(
-      //   resproom.data.filter(
-      //     (hostel) => hostel.branch_id === parseInt(branch_id)
-      //   )
-      // );
-      console.log(resproom.data);
+    
+
     };
     roomHostel();
   }, []);
 
   const fetchProfile = async () => {
-    console.log(reg, userType);
+   
     try {
       const response = await fetch(`${WebApi}/profile_info`, {
         method: "POST",
@@ -73,7 +68,7 @@ const NewPatient = () => {
       const contentType = response.headers.get("Content-Type");
       if (contentType && contentType.includes("application/json")) {
         const res = await response.json();
-        console.log(res.data);
+      
         const fetchedUserData = res.data;
         let obj = {
           studentName: fetchedUserData.name,
@@ -88,16 +83,18 @@ const NewPatient = () => {
           file: null,
         }
         setFormData(obj);
+        setErr("")
       } else {
         console.error("Response is not in JSON format");
       }
     } catch (error) {
       console.error("An error occurred:", error);
+      setErr("Registration number or user type incorrect!!")
+
     }
   };
 
-  console.log(formData);
-  console.log(profileData)
+
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -120,7 +117,7 @@ const NewPatient = () => {
   const handleSubmit = async (e) => {
 
     e.preventDefault();
-    console.log(formData);
+  
    
     if (
       studentName === "" ||
@@ -147,7 +144,7 @@ const NewPatient = () => {
       formDataForSubmission.append("file", formData.file);
       formDataForSubmission.append("branch_id", branch_id);
 
-      console.log([...formDataForSubmission.entries()]);
+    
  
       try {
         // Make the API call
@@ -163,7 +160,7 @@ const NewPatient = () => {
         const result = await response.json();
         toast.success(result.message);
         // Handle the result as needed
-        console.log(result);
+
         
 
         // Reset form after successful submission
@@ -234,8 +231,9 @@ const NewPatient = () => {
               </Input>
             </Col>
             <Col sm={1} className="d-flex align-items-center justify-content-center fs-3 text-secondary" style={{ marginBottom: "15px", paddingTop: "20px", cursor:"pointer"}}>
-  <i className="fa fa-search" aria-hidden="true" onClick={fetchProfile} style={{ transition: 'color 0.3s ease' }}></i>
+  <i className="fa fa-search" aria-hidden="true" onClick={fetchProfile} style={{ transition: 'color 0.3s blue' }}></i>
 </Col>
+       <p className="text-danger text-center"> {err===""?"":err}</p>
           </FormGroup>
           <hr></hr>
           <FormGroup row>
