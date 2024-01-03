@@ -18,25 +18,33 @@ const Book = () => {
   const [disabledBtn, setDisabledBtn] = useState(false);
   //get this month name
   const date = new Date();
-  const month = date.toLocaleString("default", { month: "long" });
-  const [monthName, setMonthName] = useState(month);
+  const monthName = date.toLocaleString("default", { month: "long" });
+  const yearName = date.getFullYear();
+
   const now = new Date();
 
   const fetchedData = async () => {
     const response = await fetch(`${WebApi}/get_all_menu`);
     const respData = await response.json();
-    const fetched_data = respData.data;
-    return fetched_data;
+    return respData.data;
   };
 
-  useEffect(async () => {
-    const data = await fetchedData(); // Set fetched data to state (Replace this with actual API fetch)
-    console.log(data);
-    const filteredData = data.filter(
-      (key) => key.branch_id === parseInt(branchId) && key.month === monthName
-    );
-    setMealData(filteredData);
-    setSelectedDay(now.toLocaleString("default", { weekday: "long" }));
+  useEffect(() => {
+    async function fetchData() {
+      const data = await fetchedData(); // Set fetched data to state (Replace this with actual API fetch)
+      console.log(data);
+      const filteredData = data.filter(
+        (key) =>
+          key.branch_id === parseInt(branchId) &&
+          key.month === monthName &&
+          key.year === yearName
+      );
+      setMealData(filteredData);
+      setDisabledBtn(filteredData.length === 0 ? true : false);
+      setSelectedDay(now.toLocaleString("default", { weekday: "long" }));
+    }
+
+    fetchData();
   }, []);
 
   const handleBookButtonClick = async () => {
@@ -91,7 +99,11 @@ const Book = () => {
         }),
       });
       const respData = await response.json();
-      console.log(respData);
+      if (respData.staus === "success") {
+        toast.success("Food Booked");
+      } else {
+        toast.error("Food Not Booked");
+      }
     } else {
       setGeneratedCode("");
       setIsCodeValid(false);
@@ -110,7 +122,7 @@ const Book = () => {
       toast.error("Mess is closed");
     }
   }, [gracePeriodExpired]);
- console.log("mealdata is",mealData)
+
   return (
     <Fragment>
       <Breadcrumbs
@@ -161,7 +173,6 @@ const Book = () => {
           <tbody>
             {/* Render meal data fetched from the backend */}
             {mealData.map((meal, index) => (
-              
               <tr key={index}>
                 {/* Replace 'selectedDay' with the actual selected day */}
                 <td>{selectedDay}</td>

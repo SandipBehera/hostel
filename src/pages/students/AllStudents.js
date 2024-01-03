@@ -1,5 +1,3 @@
-
-
 import React, { Fragment, useContext, useEffect, useState } from "react";
 import { Box } from "react-feather/dist";
 import {
@@ -17,7 +15,7 @@ import {
   Row,
 } from "reactstrap";
 import Select from "react-select";
-import { options2 } from "../../Components/Forms/FormWidget/FormSelect2/OptionDatas";
+
 import {
   Col,
   Card,
@@ -44,16 +42,12 @@ import {
 } from "../../Constant";
 import { FaSearch } from "react-icons/fa";
 import { H5, Image, H1, Btn, Breadcrumbs } from "../../AbstractElements";
-import TableContext from "../../_helper/Table";
-import { BasicColorData } from "../../Components/Common/Data/Ui-kits/index";
-import CommonDropDown from "../../Components/UiKits/Dropdown/Common/CommonDropDown";
-import { useNavigate } from "react-router-dom";
 import PopUpButton from "./PopUpButton";
 import { LocalApi, LocalSocketAPI, WebApi, WebSocketAPI } from "../../api";
 import socketIOClient from "socket.io-client";
 import { toast } from "react-toastify";
-import { el } from "date-fns/locale";
-import { get } from "react-hook-form";
+import RoomDetails from "./component/roomDetails";
+import { ro } from "date-fns/locale";
 
 const roomNumberOptions = [
   { value: "room1", label: "Room 1" },
@@ -88,11 +82,12 @@ const AllStudents = () => {
   const [selectedStudent, setSelectedStudent] = useState(null);
   const [reassignPopupOpen, setReassignPopupOpen] = useState(false);
 
-   const[hostelSelect,setHostelSelect]=useState(null)
-   const[floorSelect,setFloorSelect]=useState(null)
+  const [hostelSelect, setHostelSelect] = useState(null);
+  const [floorSelect, setFloorSelect] = useState(null);
   const toggleAssignRoomModal = (rowId) => {
     setAssignRoomModalOpen(!assignRoomModalOpen);
     setSelectedRowId(rowId);
+    setRoomData([]);
   };
   const branchId = localStorage.getItem("branchId");
   const getData = async () => {
@@ -115,51 +110,58 @@ const AllStudents = () => {
       socket.off("newUserOnBoard", getData());
     };
   }, []);
+  const roomHostel = async () => {
+    const response = await fetch(`${WebApi}/get_student_room/${branchId}`, {
+      method: "GET",
+    });
+    const resproom = await response.json();
+    sethostelData(
+      resproom.data.filter((key) => key.branch_id === parseInt(branchId))
+    );
+  };
 
   useEffect(() => {
-    const roomHostel = async () => {
-      // const response = await fetch(`${WebApi}/get_rooms`, {
-        const response =await fetch(`${WebApi}/get_student_room/${branchId}`,{
-        method: "GET",
-      });
-      const resproom = await response.json();
-      console.log("get response room",resproom)
-      sethostelData(
-        resproom.data.filter((key) => key.branch_id === parseInt(branchId))
-      );
-    };
     roomHostel();
   }, []);
-   
+
   const hostel_name = hostelData?.map((key) => {
     return { value: key.id, label: key.hostel_name };
   });
-
   const handleAssignRoom = async () => {
-   
-    const data = {
-      user_id: userid,
-      hostel_id: selectedHostel,
-      floor_id: selectedFloor,
-      room_id: selectedRoom,
-      branch_id: branchId,
-    };
-
-    const response = await fetch(`${WebApi}/assign_rooms`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(data),
-    });
-    const resproom = await response.json();
-
-    if (resproom.status === "success") {
-      getData();
-      setAssignRoomModalOpen(false);
-      toast.success(resproom.message);
+    if (
+      selectedHostel === null ||
+      selectedFloor === null ||
+      selectedRoom === null
+    ) {
+      toast.error("Please select all fields");
+      return;
     } else {
-      toast.error(resproom.message);
+      const data = {
+        user_id: userid,
+        hostel_id: selectedHostel,
+        floor_id: selectedFloor,
+        room_id: selectedRoom,
+        branch_id: branchId,
+      };
+
+      const response = await fetch(`${WebApi}/assign_rooms`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+      });
+      const resproom = await response.json();
+
+      if (resproom.status === "success") {
+        getData();
+        roomHostel();
+        setAssignRoomModalOpen(false);
+        setRoomData([]);
+        toast.success(resproom.message);
+      } else {
+        toast.error(resproom.message);
+      }
     }
   };
 
@@ -182,20 +184,9 @@ const AllStudents = () => {
 
   const handleFloorSelect = (floor) => {
     setSelectedFloor(floor);
-    const rooms = hostelData
-      .find((hostel) => hostel.id === selectedHostel)
-      .room_details.filter((room) => room.floor === floor)
-      .map((room) => {
-        return {
-          value: room.details.room_no,
-          label: `Room ${room.details.room_no}`,
-        };
-      });
-    setRoomData(rooms);
-  };
-
-  const handleChange = (e) => {
-    setSearchTerm(e.target.value);
+    const rooms = hostelData.find((hostel) => hostel.id === selectedHostel);
+    console.log("rooms", rooms);
+    setRoomData([rooms]);
   };
 
   const toggleDropdown = (id) => {
@@ -206,16 +197,6 @@ const AllStudents = () => {
   const toggleReassignPopup = () => {
     setReassignPopupOpen(!reassignPopupOpen);
   };
-  // const handleOptionSelect = (option, id) => {
-  //   if (option === "Assign Room") {
-  //     toggleAssignRoomModal(id);
-  //     setUserid(id);
-  //   } else if (option === "View") {
-  //     const student = tableData.find((item) => item.id === id);
-  //     setSelectedStudent(student);
-  //     toggleModal();
-  //   }
-  // };
   const handleOptionSelect = (option, id) => {
     if (option === "Assign Room") {
       toggleAssignRoomModal(id);
@@ -234,45 +215,54 @@ const AllStudents = () => {
     setModalOpen(!modalOpen);
   };
 
-    //  function handleOnHostel(e){
-    //   setHostelSelect(e.target.value)
-    //  }
-    //  function handleOnFloor(){
-      
-    //  }
-    const fetchHostel=()=>{
-      const extractedHostels = hostelData.room_details.map(room => ({
-        id: room.branch_id,
-        name: hostelData.hostel_name
-      }));
-  
-      setHostelSelect(extractedHostels);
-    }
-    console.log((hostelSelect))
+  //  function handleOnHostel(e){
+  //   setHostelSelect(e.target.value)
+  //  }
+  //  function handleOnFloor(){
 
-    const fetchFloors = (selectedHostelId) => {
-      const selectedHostelFloors = [...new Set(hostelData.room_details
-        .filter(room => room.branch_id === selectedHostelId)
-        .map(room => room.floor)
-      )];
-  
-      setFloorSelect(selectedHostelFloors);
-      };
+  //  }
+  const fetchHostel = () => {
+    const extractedHostels = hostelData.room_details.map((room) => ({
+      id: room.branch_id,
+      name: hostelData.hostel_name,
+    }));
+
+    setHostelSelect(extractedHostels);
+  };
+  console.log(hostelSelect);
+
+  const fetchFloors = (selectedHostelId) => {
+    const selectedHostelFloors = [
+      ...new Set(
+        hostelData.room_details
+          .filter((room) => room.branch_id === selectedHostelId)
+          .map((room) => room.floor)
+      ),
+    ];
+
+    setFloorSelect(selectedHostelFloors);
+  };
 
   const getRoomColor = (room) => {
-    const assignedRoom = tableData.filter((item) => item.room_id === room.details?.room_no);
-  
+    const assignedRoom = tableData.filter(
+      (item) => item.room_id === room.details?.room_no
+    );
+
     if (!assignedRoom) {
       return "green"; // Room not assigned to anyone
-    } else if (assignedRoom && assignedRoom.room_id === room.details?.room_no && assignedRoom.hostel_name === room.hostel_name) {
+    } else if (
+      assignedRoom &&
+      assignedRoom.room_id === room.details?.room_no &&
+      assignedRoom.hostel_name === room.hostel_name
+    ) {
       return "blue"; // Room is not full and assigned to the current user
     } else {
       return "red"; // Room is full or assigned to someone else
     }
   };
-console.log("room data is",roomData)
-console.log("hostel data is",hostelData)
-console.log("table data is",tableData)
+  console.log("room data is", roomData);
+  console.log("hostel data is", hostelData);
+  console.log("table data is", tableData);
   return (
     <Fragment>
       <Breadcrumbs
@@ -320,7 +310,7 @@ console.log("table data is",tableData)
                           <td>{item.semesterYear}</td>
                           <td>{item.branch}</td>
                           <td>
-                            {item.room_id !== null ? (
+                            {item.hostel_name !== null ? (
                               <>
                                 <p>Hostel Name: {item?.hostel_name}</p>
                                 <p>Room No: {item?.room_id}</p>
@@ -368,75 +358,59 @@ console.log("table data is",tableData)
                       ))}
                     </tbody>
                   </Table>
-                  <Modal
-                    isOpen={assignRoomModalOpen}
-                    toggle={() => toggleAssignRoomModal(null)}
-                  >
-                    <ModalHeader toggle={() => toggleAssignRoomModal(null)}>
-                      Assign Room
-                    </ModalHeader>
-                    <ModalBody>
-                      <FormGroup>
-                        <Label for="selectHostel">Select Hostel:</Label>
-                        <Input
-                          type="select"
-                          id="selectHostel"
-                          onChange={(e) => setGetId(e.target.value)}
-                        >
-                          <option value="" disabled>
-                            Select Hostel
-                          </option>
-                          {/* {hostelSelect?.map((hostel)=>(
-                            <option>
-                              {hostel.name}
-                            </option>
-                          ))} */}
-                          {[
-                            ...new Set(
-                              hostelData.map((hostel) => hostel.hostel_name)
-                            ),
-                          ].map((uniqueHostelName, index) => (
-                            <option key={index} value={index}>
-                              {uniqueHostelName}
-                            </option>
-                          ))}
-                        </Input>
-                      </FormGroup>
-                      <FormGroup>
-                        <Label for="selectHostel">Select Floor:</Label>
-                        <Input
-                          type="select"
-                          id="selectFloor"
-                          onChange={(e) => setFloorId(e.target.value)}
-                        >
-                          <option value="" disabled>
-                            Select Floor
-                          </option>
-                          {[
-                            ...new Set(
-                              hostelData[getId]?.room_details.map(
-                                (floor) => floor.floor
-                              )
-                            ),
-                          ].map((uniqueFloor) => (
-                            <option key={uniqueFloor} value={uniqueFloor}>
-                              {uniqueFloor}
-                            </option>
-                          ))}
-                        </Input>
-                      </FormGroup>
-                      {hostelData[getId]?.room_details
-                        .filter((room) => room.floor === parseInt(floorId))
-                         .map((rooms) => {
-                          console.log("Filtered Room Data", rooms); 
-                          return (
-                            <div key={rooms.room}>
-                               {rooms.room}
-                            </div>
-                          );
-                        })}
-                    </ModalBody>
-                  </Modal>
+
+                  {assignRoomModalOpen && (
+                    <Modal
+                      isOpen={assignRoomModalOpen}
+                      toggle={() => toggleAssignRoomModal(null)}
+                    >
+                      <ModalHeader toggle={() => toggleAssignRoomModal(null)}>
+                        Assign Room
+                      </ModalHeader>
+                      <ModalBody>
+                        <FormGroup>
+                          <Label for="hostelSelect">Hostel Name</Label>
+                          <Select
+                            id="hostelSelect"
+                            options={hostel_name}
+                            onChange={(selectedOption) =>
+                              handleHostelSelect(selectedOption.value)
+                            }
+                          />
+                        </FormGroup>
+                        <FormGroup>
+                          <Label for="floorSelect">Floor</Label>
+                          <Select
+                            id="floorSelect"
+                            options={floorData}
+                            onChange={(selectedOption) =>
+                              handleFloorSelect(selectedOption.value)
+                            }
+                          />
+                        </FormGroup>
+                        {/* <FormGroup>
+                          <Label for="roomNumberSelect">Room Number</Label>
+                          <Select
+                            id="roomNumberSelect"
+                            options={roomData}
+                            onChange={(selectedOption) =>
+                              setSelectedRoom(selectedOption.value)
+                            }
+                          />
+                        </FormGroup> */}
+                        {roomData.length > 0 && (
+                          <RoomDetails
+                            data={roomData}
+                            selectedFloor={selectedFloor}
+                            setSelectedRoom={setSelectedRoom}
+                          />
+                        )}
+                        <Button color="primary" onClick={handleAssignRoom}>
+                          Assign Room
+                        </Button>
+                      </ModalBody>
+                    </Modal>
+                  )}
                 </div>
               </Card>
             </Col>

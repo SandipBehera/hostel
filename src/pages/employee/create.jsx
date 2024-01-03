@@ -1,6 +1,5 @@
-
 import React, { Fragment, useEffect } from "react";
-import FooterCard from "../../Components/Forms/FormControl/Common/FooterCard";
+
 import {
   Col,
   Card,
@@ -10,14 +9,17 @@ import {
   Label,
   Input,
   CardHeader,
+  Button,
 } from "reactstrap";
 import { Breadcrumbs, H6 } from "../../AbstractElements";
 import { AccountInformation, UploadFile } from "../../Constant";
 import { LocalApi, WebApi } from "../../api";
 import { toast } from "react-toastify";
-import {useNavigate} from 'react-router-dom'
+import { useNavigate } from "react-router-dom";
+import { set } from "date-fns";
+
 export default function CreateEmployee() {
-  const navigate=useNavigate()
+  const navigate = useNavigate();
   const userType = localStorage.getItem("userType");
   const branch_id = localStorage.getItem("branchId");
   const [formData, setFormData] = React.useState({
@@ -44,7 +46,7 @@ export default function CreateEmployee() {
       return respData.data;
     } catch (error) {
       console.error("Error fetching room config:", error);
-      throw error; 
+      throw error;
     }
   };
 
@@ -92,7 +94,7 @@ export default function CreateEmployee() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const nameRegex = /^[^\d\s]+$/; 
+    const nameRegex = /^[^\d\s]+$/;
     const idRegex = /^[A-Za-z0-9]+$/;
     if (
       formData.name === "" ||
@@ -109,22 +111,22 @@ export default function CreateEmployee() {
       formData.doj === "" ||
       formData.file === ""
     ) {
-      
-      toast.warning("All fields are required");   
-    }
-    else if (!nameRegex.test(formData.name)) {
-      toast.warning("Employee name should not contain numbers or special characters ");
+      toast.warning("All fields are required");
+    } else if (!nameRegex.test(formData.name)) {
+      toast.warning(
+        "Employee name should not contain numbers or special characters "
+      );
     } else if (!validateEmail(formData.email)) {
       toast.warning("Invalid email address");
-    }else if (!validateContactNumber(formData.contact)) {
+    } else if (!validateContactNumber(formData.contact)) {
       toast.warning("Contact number should be 10 digits");
     } else if (!idRegex.test(formData.employeeId)) {
       toast.warning("Employee ID should not contain special characters");
-    }  else if (!validateAadharNumber(formData.aadhar)) {
+    } else if (!validateAadharNumber(formData.aadhar)) {
       toast.warning("Aadhar number should be 12 digits");
     } else if (!validatePanCard(formData.pan)) {
       toast.warning("Invalid PAN card");
-    }else if (!validateBankAccountNumber(formData.account)) {
+    } else if (!validateBankAccountNumber(formData.account)) {
       toast.warning("Invalid bank account number");
     } else if (!validateBankName(formData.bank)) {
       toast.warning("Invalid bank name");
@@ -149,7 +151,7 @@ export default function CreateEmployee() {
       data.append("userType", "employee");
       data.append("branch_id", branch_id);
 
-     const userId=localStorage.getItem("userId")
+      const userId = localStorage.getItem("userId");
       try {
         const response = await fetch(`${WebApi}/addEmployee`, {
           method: "POST",
@@ -161,23 +163,23 @@ export default function CreateEmployee() {
         if (result.status === "success") {
           toast.success(result.message);
           console.log(result);
-          navigate(`/admin/${userId}/allemployee`)
-           // Reset the form after successful submission
-        setFormData({
-          name: "",
-          email: "",
-          contact: "",
-          employeeId: "",
-          address: "",
-          designation: "",
-          aadhar: "",
-          pan: "",
-          account: "",
-          bank: "",
-          ifsc: "",
-          doj: "",
-          file: "",
-        });
+          navigate(`/admin/${userId}/allemployee`);
+          // Reset the form after successful submission
+          setFormData({
+            name: "",
+            email: "",
+            contact: "",
+            employeeId: "",
+            address: "",
+            designation: "",
+            aadhar: "",
+            pan: "",
+            account: "",
+            bank: "",
+            ifsc: "",
+            doj: "",
+            file: "",
+          });
         } else {
           toast.error(result.message);
         }
@@ -211,6 +213,7 @@ export default function CreateEmployee() {
                     className="form-control"
                     type="text"
                     placeholder="Employee Name"
+                    value={formData.name}
                     onChange={(e) =>
                       setFormData((prevData) => ({
                         ...prevData,
@@ -225,6 +228,7 @@ export default function CreateEmployee() {
                     className="form-control"
                     type="email"
                     placeholder="Enter email"
+                    value={formData.email}
                     onChange={(e) =>
                       setFormData((prevData) => ({
                         ...prevData,
@@ -239,6 +243,7 @@ export default function CreateEmployee() {
                     className="form-control"
                     type="Number"
                     placeholder="Enter contact number"
+                    value={formData.contact}
                     onChange={(e) =>
                       setFormData((prevData) => ({
                         ...prevData,
@@ -255,7 +260,8 @@ export default function CreateEmployee() {
                   <Input
                     className="form-control"
                     type="text"
-                    placeholder="Address"
+                    placeholder="Employee Id"
+                    value={formData.employeeId}
                     onChange={(e) =>
                       setFormData((prevData) => ({
                         ...prevData,
@@ -285,6 +291,7 @@ export default function CreateEmployee() {
                     className="form-control"
                     type="select"
                     placeholder="Designation"
+                    value={formData.designation}
                     onChange={(e) =>
                       setFormData((prevData) => ({
                         ...prevData,
@@ -306,6 +313,7 @@ export default function CreateEmployee() {
                     className="form-control"
                     type="text"
                     placeholder="Aadhar Number"
+                    value={formData.aadhar}
                     onChange={(e) =>
                       setFormData((prevData) => ({
                         ...prevData,
@@ -334,6 +342,7 @@ export default function CreateEmployee() {
                     className="form-control"
                     type="text"
                     placeholder="Enter Your Account Number"
+                    value={formData.account}
                     onChange={(e) =>
                       setFormData((prevData) => ({
                         ...prevData,
@@ -348,6 +357,7 @@ export default function CreateEmployee() {
                     className="form-control"
                     type="text"
                     placeholder="Bank Name"
+                    value={formData.bank}
                     onChange={(e) =>
                       setFormData((prevData) => ({
                         ...prevData,
@@ -376,6 +386,7 @@ export default function CreateEmployee() {
                     className="form-control"
                     type="date"
                     placeholder="Date Of Joining"
+                    value={formData.doj}
                     onChange={(e) =>
                       setFormData((prevData) => ({
                         ...prevData,
@@ -402,7 +413,9 @@ export default function CreateEmployee() {
                     />
                   </Col>
                 </FormGroup>
-                <FooterCard />
+                <Button type="submit" color="primary">
+                  Create
+                </Button>
               </Form>
             </CardBody>
           </Card>

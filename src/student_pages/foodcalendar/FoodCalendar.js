@@ -7,11 +7,19 @@ import { WebApi } from "../../api";
 const FoodCalendar = () => {
   const [data, setData] = useState([]);
   const branchId = localStorage.getItem("branchId");
+  const date = new Date();
+  const monthName = date.toLocaleString("default", { month: "long" });
+  const yearName = date.getFullYear();
   const fetchData = async () => {
     const response = await fetch(`${WebApi}/get_all_menu`);
     const respData = await response.json();
     setData(
-      respData.data.filter((key) => key.branch_id === parseInt(branchId))
+      respData.data.filter(
+        (key) =>
+          key.branch_id === parseInt(branchId) &&
+          key.month === monthName &&
+          key.year === yearName
+      )
     );
   };
 
@@ -34,7 +42,7 @@ const FoodCalendar = () => {
               <H5>Food Calendar</H5>
             </CardHeader>
             <div>
-              <Table>
+              <Table className="text-center">
                 <thead>
                   <tr>
                     <th>S.No.</th>
@@ -43,15 +51,23 @@ const FoodCalendar = () => {
                   </tr>
                 </thead>
                 <tbody>
-                  {data.map((item, index) => (
-                    <tr key={item.id}>
-                      <td>{index + 1}</td>
-                      <td>{item.month}</td>
-                      <td>
-                        <ViewModal data={data} id={item.id} />
+                  {data?.length > 0 ? (
+                    data?.map((item, index) => (
+                      <tr key={item.id}>
+                        <td>{index + 1}</td>
+                        <td>{item.month}</td>
+                        <td>
+                          <ViewModal data={data} id={item.id} />
+                        </td>
+                      </tr>
+                    ))
+                  ) : (
+                    <tr>
+                      <td colSpan="3" style={{ color: "red" }}>
+                        No Data Found
                       </td>
                     </tr>
-                  ))}
+                  )}
                 </tbody>
               </Table>
             </div>

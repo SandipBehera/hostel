@@ -51,8 +51,8 @@ const Complaints = () => {
       });
       const res = await response.json();
       if (res.status === "success") {
-        setHostel(res.data.hostel);
-        setRoom(res.data.room);
+        setHostel(res.data.hostel_name);
+        setRoom(res.data.room_id);
       }
     };
     student_info();
@@ -227,10 +227,13 @@ const Complaints = () => {
                   title={formData.issueType}
                   setLeave={(e) => setLeaveReason(e.target.value)}
                   setLeaveFrom={(e) => setLeaveFrom(e.target.value)}
-                  setHostel={(e)=>{setHostel(e.target.value)}}
-                  setRoom={(e)=>{setRoom(e.target.value)}}
+                  hostelData={hostel}
+                  roomData={room}
+                
                 />
               )}
+
+              {console.log(hostel, room)}
 
             </Col>
           </Row>

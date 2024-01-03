@@ -2,7 +2,7 @@ import React from "react";
 import { Col, Container, FormGroup, Input, Row } from "reactstrap";
 import { H5 } from "../../../AbstractElements";
 
-const VacantRequest = ({ title, setLeave, setLeaveFrom, setRoom, setHostel }) => {
+const VacantRequest = ({ title, setLeave, setLeaveFrom, roomData, hostelData }) => {
   const today = new Date();
   const minDate = new Date();
   minDate.setDate(today.getDate() + 10); 
@@ -20,7 +20,9 @@ const VacantRequest = ({ title, setLeave, setLeaveFrom, setRoom, setHostel }) =>
                 type="text"
                 name="from"
                 id="time"
-                onChange={setHostel}
+                value={hostelData}
+                disabled
+
               />
             </FormGroup>
             <FormGroup>
@@ -29,7 +31,9 @@ const VacantRequest = ({ title, setLeave, setLeaveFrom, setRoom, setHostel }) =>
               type="text"
               name="from"
               id="time"
-              onChange={setRoom}
+              value={roomData}
+              disabled
+
             />
           </FormGroup>
             <FormGroup>
