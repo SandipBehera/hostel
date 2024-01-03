@@ -13,6 +13,7 @@ import {
   Button,
 } from "reactstrap";
 import Select from "react-select";
+import { Link, useNavigate } from "react-router-dom";
 import { WebApi } from "../../api";
 import { Breadcrumbs } from "../../AbstractElements";
 
@@ -26,7 +27,9 @@ const AllRoom = () => {
   const [data, setData] = useState([]);
   const [modalOpen, setModalOpen] = useState(false);
   const [edit, setEdit] = useState(-1);
+
   const branchId = localStorage.getItem("branchId");
+  const userId = localStorage.getItem("userId");
 
   const roomHostel = async () => {
     const response = await fetch(`${WebApi}/get_student_room/${branchId}`, {
@@ -41,20 +44,20 @@ const AllRoom = () => {
     }
   };
 
-  function handleDelete(id) {
-    fetch(`${WebApi}/delete_rooms/${id}`, {
-      method: "DELETE",
-    })
-      .then((res) => res.json())
-      .then((res) => {
-        if (res.status === "success") {
-          toast.success("Room Deleted Successfully");
-          roomHostel();
-        } else {
-          toast.error("Room Not Deleted");
-        }
-      });
-  }
+  // function handleDelete(id) {
+  //   fetch(`${WebApi}/delete_rooms/${id}`, {
+  //     method: "DELETE",
+  //   })
+  //     .then((res) => res.json())
+  //     .then((res) => {
+  //       if (res.status === "success") {
+  //         toast.success("Room Deleted Successfully");
+  //         roomHostel();
+  //       } else {
+  //         toast.error("Room Not Deleted");
+  //       }
+  //     });
+  // }
 
   useEffect(() => {
     roomHostel();
@@ -73,7 +76,7 @@ const AllRoom = () => {
   };
   const handleOptionSelect = (option, id) => {
     if (option === "Edit") {
-      toggleModal();  // Assuming you have a toggleModal function
+      toggleModal(); // Assuming you have a toggleModal function
       setEdit(id);
     } else if (option === "Delete") {
       handleDelete(id);
@@ -134,26 +137,90 @@ const AllRoom = () => {
           <Col sm="12">
             <Card>
               <CardBody>
-                <DataTable
-                  title="All Room"
-                  columns={columns}
-                  data={data}
-                  pagination
-                  striped
-                  highlightOnHover
-                  responsive
-                />
+                <div className="table-responsive">
+                  <Table>
+                    <thead style={{ textAlign: "center" }}>
+                      <tr className="border-bottom-primary">
+                        <th scope="col">{"SL.NO"}</th>
+                        <th scope="col">{" H-Name"}</th>
+                        <th scope="col">{"No of Floor"}</th>
+                        <th scope="col">{"View"}</th>
+                        <th scope="col">{"Action"}</th>
+                      </tr>
+                    </thead>
+                    <tbody style={{ textAlign: "center" }}>
+                      {data && data.length > 0 ? (
+                        data.map((item) => {
+                          console.log("item", item);
 
-                {/* popup modal */}
-                {edit !== -1 && (
-                  <EditForm
-                    item={data.find((item) => item.id === edit)}
-                    data={data}
-                    setData={setData}
-                    isOpen={toggleModal}
-                    setEdit={setEdit}
-                  />
-                )}
+                          return edit === item.id ? (
+                            <EditForm
+                              key={item.id}
+                              item={item}
+                              data={data}
+                              setData={setData}
+                              isOpen={toggleModal}
+                              setEdit={setEdit}
+                            />
+                          ) : (
+                            <tr
+                              key={item.id}
+                              className={`border-bottom-${item.color}`}
+                            >
+                              <th scope="row">{item.id}</th>
+                              <td>{item.hostel_name}</td>
+                              <td>{item.floor_count}</td>
+                              <td>
+                                <PopUp data={data} id={item.id} />
+                              </td>
+                              <td>
+                                <Dropdown
+                                  isOpen={item.activeDropdown}
+                                  toggle={() => toggleDropdown(item.id)}
+                                >
+                                  <DropdownToggle caret>
+                                    {Action}
+                                  </DropdownToggle>
+                                  <DropdownMenu>
+                                    <Link
+                                      to={`/admin/${userId}/editroom/${item.id}`}
+                                      state={{ roomDetails: item }}
+                                    >
+                                      <DropdownItem
+                                        onClick={() =>
+                                          handleOptionSelect("Edit", item.id)
+                                        }
+                                      >
+                                        Edit
+                                      </DropdownItem>
+                                    </Link>
+                                  </DropdownMenu>
+                                </Dropdown>
+                              </td>
+                            </tr>
+                          );
+                        })
+                      ) : (
+                        <tr>
+                          <td colSpan="5" style={{ color: "red" }}>
+                            No data found
+                          </td>
+                        </tr>
+                      )}
+                    </tbody>
+                  </Table>
+
+                  {/* popup modal */}
+                  {edit !== -1 && (
+                    <EditForm
+                      item={data.find((item) => item.id === edit)}
+                      data={data}
+                      setData={setData}
+                      isOpen={toggleModal}
+                      setEdit={setEdit}
+                    />
+                  )}
+                </div>
               </CardBody>
             </Card>
           </Col>
