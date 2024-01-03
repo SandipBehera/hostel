@@ -71,12 +71,7 @@ const CreateRoom = ({ setSteps, setFormdata, formdata }) => {
               </span>
             </FormGroup>
             <div className="text-end">
-              <Button
-                className="secondary me-2"
-                onClick={() => setSteps((pre) => pre - 1)}
-              >
-                {Previous}
-              </Button>
+        
               <Button className="primary" type="submit">
                 {Next}
               </Button>

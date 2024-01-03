@@ -188,7 +188,7 @@ const AllEmployee = () => {
       branch_id: parseInt(branchId),
     };
     try {
-      const response = await fetch(`${LocalApi}/assignHostel`, {
+      const response = await fetch(`${WebApi}/assignHostel`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

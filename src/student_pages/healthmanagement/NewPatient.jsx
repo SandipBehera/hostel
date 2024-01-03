@@ -5,6 +5,7 @@ import Select from "react-select";
 import { LocalApi, WebApi } from "../../api";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
+import SvgIcon from "../../Components/Common/Component/SvgIcon";
 
 const NewPatient = () => {
   const navigate = useNavigate();
@@ -21,63 +22,79 @@ const NewPatient = () => {
     file: null,
   });
   const branch_id = localStorage.getItem("branchId");
-  const [hostelData, sethostelData] = useState([]);
-  const [floorData, setFloorData] = useState([]);
-  const [roomData, setRoomData] = useState([]);
-  const [selectedHostel, setSelectedHostel] = useState(null);
-  const [selectedFloor, setSelectedFloor] = useState(null);
-  const [selectedRoom, setSelectedRoom] = useState(null);
 
+  const [reg, setReg] = useState("");
+  const [userType, setUserType] = useState("");
+  const [profileData, setProfileData] = useState([]);
+const [err, setErr] =useState("");
   useEffect(() => {
     const roomHostel = async () => {
       const response = await fetch(`${WebApi}/get_rooms`, {
         method: "GET",
       });
       const resproom = await response.json();
-      sethostelData(
-        resproom.data.filter(
-          (hostel) => hostel.branch_id === parseInt(branch_id)
-        )
-      );
-      console.log(resproom.data);
+    
+
     };
     roomHostel();
   }, []);
 
-  const hostel_name = hostelData?.map((key) => {
-    return { value: key.id, label: key.hostel_name };
-  });
-  console.log(hostel_name);
-  const handleHostelSelect = (hostelid) => {
-    setSelectedHostel(hostelid);
-    const floors = hostelid
-      ? Array.from(
-          new Set(
-            hostelData
-              .find((hostel) => hostel.id === hostelid)
-              .room_details.map((room) => room.floor)
-          )
-        )
-      : [];
-    const floorOptions = floors.map((floor) => {
-      return { value: floor, label: `floor ${floor}` };
-    });
-    setFloorData(floorOptions);
+  const fetchProfile = async () => {
+   
+    try {
+      const response = await fetch(`${WebApi}/profile_info`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ user_id: reg, userType: userType }),
+      });
+
+      if (!response.ok) {
+        let errorData;
+        try {
+          errorData = await response.json();
+        } catch (error) {
+          console.error("Error parsing error response as JSON:", error);
+        }
+
+        console.error(
+          `Error: ${response.status} - ${response.statusText}`,
+          errorData
+        );
+        return;
+      }
+
+      const contentType = response.headers.get("Content-Type");
+      if (contentType && contentType.includes("application/json")) {
+        const res = await response.json();
+      
+        const fetchedUserData = res.data;
+        let obj = {
+          studentName: fetchedUserData.name,
+          hostelName: fetchedUserData.hostel_name,
+          floorNo: "1",
+          roomNo: fetchedUserData.room_id,
+          date: "",
+          time: "",
+          reason: "",
+          doctor: "",
+          regdNo: fetchedUserData.userId,
+          file: null,
+        }
+        setFormData(obj);
+        setErr("")
+      } else {
+        console.error("Response is not in JSON format");
+      }
+    } catch (error) {
+      console.error("An error occurred:", error);
+      setErr("Registration number or user type incorrect!!")
+
+    }
   };
 
-  const handleFloorSelect = (floor) => {
-    setSelectedFloor(floor);
-    const rooms = hostelData
-      .find((hostel) => hostel.id === selectedHostel)
-      .room_details.filter((room) => room.floor === floor)
-      .map((room) => {
-        return {
-          value: room.details.room_no,
-          label: `Room ${room.details.room_no}`,
-        };
-      });
-    setRoomData(rooms);
-  };
+
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -95,20 +112,20 @@ const NewPatient = () => {
     });
   };
 
-const userId = localStorage.getItem("userId")
+  const userId = localStorage.getItem("userId");
 
   const handleSubmit = async (e) => {
+
     e.preventDefault();
+  
+   
     if (
       studentName === "" ||
-      selectedFloor === "" ||
-      selectedHostel === "" ||
-      selectedRoom === "" ||
       formData.date === "" ||
       formData.time === "" ||
       formData.reason === "" ||
       doctor === "" ||
-      formData.file === (null) ||
+      formData.file === null ||
       formData.regdNo === ""
     ) {
       toast.warning("Please Fill All The Required Fields");
@@ -117,9 +134,9 @@ const userId = localStorage.getItem("userId")
       const formDataForSubmission = new FormData();
       formDataForSubmission.append("patientname", formData.studentName);
       formDataForSubmission.append("patient_regdno", formData.regdNo);
-      formDataForSubmission.append("hostelid", selectedHostel);
-      formDataForSubmission.append("floorid", selectedFloor);
-      formDataForSubmission.append("roomno", selectedRoom);
+      formDataForSubmission.append("hostelid", formData.hostelName);
+      formDataForSubmission.append("floorid", "1");
+      formDataForSubmission.append("roomno", formData.roomNo);
       formDataForSubmission.append("date", formData.date);
       formDataForSubmission.append("time", formData.time);
       formDataForSubmission.append("reason", formData.reason);
@@ -127,7 +144,8 @@ const userId = localStorage.getItem("userId")
       formDataForSubmission.append("file", formData.file);
       formDataForSubmission.append("branch_id", branch_id);
 
-      console.log([...formDataForSubmission.entries()]);
+    
+ 
       try {
         // Make the API call
         const response = await fetch(`${WebApi}/add_patient`, {
@@ -142,7 +160,8 @@ const userId = localStorage.getItem("userId")
         const result = await response.json();
         toast.success(result.message);
         // Handle the result as needed
-        console.log(result);
+
+        
 
         // Reset form after successful submission
         setFormData({
@@ -153,18 +172,12 @@ const userId = localStorage.getItem("userId")
           doctor: "",
           regdNo: "",
           file: "",
+
           branch_id: parseInt(localStorage.getItem("branchId")),
-        
         });
+    
 
-        setSelectedHostel(null);
-        setSelectedFloor(null);
-        setSelectedRoom(null);
         navigate(`/admin/${userId}/all-patient`);
-
-       
-
-        // Optionally, you can redirect the user or show a success message
       } catch (error) {
         console.error(error);
         // Handle errors (e.g., show an error message)
@@ -185,10 +198,48 @@ const userId = localStorage.getItem("userId")
           encType="multipart/form-data"
         >
           <FormGroup row>
-            <Col sm={6} style={{ marginBottom: "20px" }}>
+            <Col sm={6} style={{ marginBottom: "15px" }}>
               <Label
                 for="studentName"
                 style={{ marginTop: "13px:marginBottom: ,px" }}
+              >
+                Registration Number
+              </Label>
+              <Input
+                type="text"
+                name="regNo"
+                id="regNo"
+                onChange={(e) => setReg(e.target.value)}
+              />
+            </Col>
+            <Col sm={5} style={{ marginBottom: "15px" }}>
+              <Label
+                for="studentName"
+                style={{ marginTop: "13px:marginBottom: ,px" }}
+              >
+                User Type
+              </Label>
+              <Input
+                type="select"
+                name="usertype"
+                id="userType"
+                onChange={(e) => setUserType(e.target.value)}
+              >
+                <option value="">Select User Type</option>
+                <option value="student">Student</option>
+                <option value="employee">Employee</option>
+              </Input>
+            </Col>
+            <Col sm={1} className="d-flex align-items-center justify-content-center fs-3 text-secondary" style={{ marginBottom: "15px", paddingTop: "20px", cursor:"pointer"}}>
+  <i className="fa fa-search" aria-hidden="true" onClick={fetchProfile} style={{ transition: 'color 0.3s blue' }}></i>
+</Col>
+       <p className="text-danger text-center"> {err===""?"":err}</p>
+          </FormGroup>
+          <hr></hr>
+          <FormGroup row>
+            <Col sm={6} style={{ marginBottom: "15px", marginTop:"10px" }}>
+              <Label
+                for="studentName"
               >
                 Student Name
               </Label>
@@ -197,54 +248,32 @@ const userId = localStorage.getItem("userId")
                 name="studentName"
                 id="studentName"
                 value={formData.studentName}
-                onChange={handleChange}
+                disabled
               />
             </Col>
-            <Col sm={6} style={{ marginBottom: "15px" }}>
-              <Label for="time">Registration Number</Label>
+
+            <Col sm={6} style={{ marginBottom: "20px" }} >
+              <Label className="col-form-label">Hostel name</Label>
               <Input
                 type="text"
-                name="regdNo"
-                id="regdNo"
-                value={formData.regdNo}
-                onChange={handleChange}
+                name="hostel"
+                id="hostel"
+                value={formData.hostelName}
+                disabled
               />
             </Col>
-            <Col sm={6} style={{ marginBottom: "15px" }}>
-              <div className="mb-2" style={{ width: "100%" }}>
-                <Label className="col-form-label">Select Hostel name</Label>
-                <Select
-                  options={hostel_name}
-                  className="js-example-basic-single col-sm-12"
-                  onChange={(selectedOption) =>
-                    handleHostelSelect(selectedOption.value)
-                  }
-                />
-              </div>
+
+            <Col sm={6} style={{ marginBottom: "15px", marginTop:"-10px" }}>
+              <Label className="col-form-label">Room No.</Label>
+              <Input
+                type="text"
+                name="roomNo"
+                id="roomNo"
+                value={formData.roomNo}
+                disabled
+              ></Input>
             </Col>
-            <Col sm={6} style={{ marginBottom: "15px" }}>
-              <div className="mb-2" style={{ width: "100%" }}>
-                <Label className="col-form-label">Select Floor No.</Label>
-                <Select
-                  options={floorData}
-                  className="js-example-basic-single col-sm-12"
-                  onChange={(selectedOption) =>
-                    handleFloorSelect(selectedOption.value)
-                  }
-                />
-              </div>
-            </Col>
-            <Col sm={6} style={{ marginBottom: "15px" }}>
-              <div className="mb-2" style={{ width: "100%" }}>
-                <Label className="col-form-label">Select Room No.</Label>
-                <Select
-                  options={roomData}
-                  onChange={(selectedOption) =>
-                    setSelectedRoom(selectedOption.value)
-                  }
-                />
-              </div>
-            </Col>
+
             <Col sm={6} style={{ marginBottom: "15px" }}>
               <Label for="date">Date</Label>
               <Input

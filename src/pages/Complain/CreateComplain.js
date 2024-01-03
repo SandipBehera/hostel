@@ -18,6 +18,7 @@ import socketIOClient from "socket.io-client";
 import { toast } from "react-toastify";
 import SimpleMDE from "react-simplemde-editor";
 import Select from "react-select";
+import { useNavigate } from "react-router-dom";
 
 export default function CreateComplain() {
   const [content, setContent] = useState("");
@@ -26,6 +27,8 @@ export default function CreateComplain() {
   };
 
   const role = localStorage.getItem("userType");
+  const userId=localStorage.getItem("userId");
+  const navigate = useNavigate();
 
   const [issueType, setIssueType] = useState("");
   const [hostelNumber, setHostelNumber] = useState("");
@@ -100,6 +103,7 @@ export default function CreateComplain() {
     );
   };
   console.log(filteredEmployee);
+  
 
   const handleSubmit = async () => {
     if (
@@ -139,7 +143,8 @@ export default function CreateComplain() {
         if (response.status === 200) {
           socket.emit("newComplaint", data);
           toast.success("Complaint Created Successfully");
-          resetForm();
+          navigate(`/admin/${userId}/view-complain`);
+
         } else {
           toast.error("Something went wrong");
         }
@@ -148,17 +153,6 @@ export default function CreateComplain() {
       }
     }
   };
- // Function to reset form fields
- const resetForm = () => {
-  setIssueType("");
-  setHostelNumber("");
-  setRoomNumber("");
-  setAssignTo("");
-  setSelectedEmployee("");
-  setComplaint("");
-  setStatus("");
-  setContent("");
-};
 
   return (
     <Fragment>
@@ -293,5 +287,3 @@ export default function CreateComplain() {
     </Fragment>
   );
 }
-
-
