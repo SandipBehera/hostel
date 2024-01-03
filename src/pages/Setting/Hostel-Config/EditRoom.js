@@ -10,11 +10,13 @@ import {
   Label,
   Row,
 } from "reactstrap";
+import { useNavigate } from "react-router-dom";
 import { Breadcrumbs } from "../../../AbstractElements";
 import { useLocation, useParams } from "react-router-dom";
 import { Controller, useForm } from "react-hook-form";
 import Select from "react-select";
-import { WebApi } from "../../../api";
+import { fetchRoomConfig, updateHostel } from "../../../Hooks/fetchRoomConfig";
+import { toast } from "react-toastify";
 const EditRoom = () => {
   const location = useLocation();
   const {
@@ -31,28 +33,23 @@ const EditRoom = () => {
   const branchId = localStorage.getItem("branchId");
   const [Ammenities, setAmmenities] = useState([]);
   const [RoomType, setRoomType] = useState([]);
-  // const[roomType,setRoomType]=useState();
-  const fetchRoomConfig = async (type) => {
-    try {
-      const response = await fetch(`${WebApi}/get_config_by_type/${type}`);
-      const respData = await response.json();
+  const { id } = useParams();
+  const userId = localStorage.getItem("userId");
+  const navigate = useNavigate();
 
-      return respData.data.filter(
-        (item) => item.branch_id === parseInt(branchId)
-      );
-    } catch (error) {
-      console.error("Error fetching room config:", error);
-      throw error;
-    }
-  };
+  // const[roomType,setRoomType]=useState();
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         const amenities = await fetchRoomConfig("ammenities");
         const roomType = await fetchRoomConfig("room_type");
-        setAmmenities(amenities[0].config_type_name.data);
-        setRoomType(roomType[0].config_type_name.data);
+        setAmmenities(
+          amenities[0].config_type_name.data.filter((amenity) => amenity !== "")
+        );
+        setRoomType(
+          roomType[0].config_type_name.data.filter((type) => type !== "")
+        );
       } catch (error) {
         console.error("Error fetching data:", error);
       }
@@ -60,33 +57,54 @@ const EditRoom = () => {
 
     fetchData();
   }, []);
-  const handleEdit = () => {
+  const handleEdit = async () => {
     const updatedRooms = [];
-    let count = 0;
     roomDetails.room_details.map((room, index) => {
       const inputName = `floor${room.floor}_room${room.room}`;
       const roomCapacity = `floor${room.floor}_room${room.room}_capacity`;
       const amenitiesControl = `floor${room.floor}_room${room.room}_amenities`;
       const roomTypeControl = `floor${room.floor}_room${room.room}_roomType`;
+      const roomAmenityOptions =
+        room?.details.amenities.map((amenity) => ({
+          value: amenity.label,
+          label: amenity.label,
+        })) || [];
+      const roomTypeOptions =
+        room?.details.room_type.map((type) => ({
+          value: type.label,
+          label: type.label,
+        })) || [];
       const roomData = {
         floor: room.floor,
-        room: room,
+        room: room.room,
         details: {
           room_no: getValues(inputName) || "",
           capacity: parseInt(getValues(roomCapacity) || 0),
-          amenities: getValues(amenitiesControl) || [],
-          room_type: getValues(roomTypeControl) || [],
+          amenities: getValues(amenitiesControl) || roomAmenityOptions,
+          room_type: getValues(roomTypeControl) || roomTypeOptions,
         },
         branch_id: branchId,
       };
-      console.log(count++);
       updatedRooms.push(roomData);
     });
 
     const updatedFormdata = {
+      hostel_name: hostelName,
+      floor_count: parseInt(floorNo),
+      room_count: parseInt(roomNo),
       rooms: updatedRooms,
+      branch_id: branchId,
     };
+    updatedFormdata.rooms = JSON.stringify(updatedFormdata.rooms);
     console.log("edit", updatedFormdata);
+    const stored = await updateHostel(updatedFormdata, id);
+    console.log("stored", stored);
+    if (stored.status === "success") {
+      toast.success("Hostel Updated Successfully");
+      navigate(`/admin/${userId}/allroom`);
+    } else {
+      alert("Not Stored");
+    }
   };
   const roomDataTypes = RoomType.map((room) => {
     return { value: room, label: room };
@@ -118,7 +136,7 @@ const EditRoom = () => {
                 onChange={(e) => setHostelName(e.target.value)}
               />
             </FormGroup>
-            <FormGroup>
+            {/* <FormGroup>
               <Label for="floors">Number of Floors</Label>
               <Input
                 type="text"
@@ -137,7 +155,7 @@ const EditRoom = () => {
                 value={roomNo}
                 onChange={(e) => setRoomNo(e.target.value)}
               />
-            </FormGroup>
+            </FormGroup> */}
 
             <hr></hr>
             {roomDetails.room_details.map((room, index) => {
@@ -219,6 +237,13 @@ const EditRoom = () => {
             })}
             <Button color="primary" type="submit">
               Save Changes
+            </Button>
+            <Button
+              color="danger"
+              onClick={() => navigate(`/admin/${userId}/allroom`)}
+              style={{ marginLeft: "10px" }}
+            >
+              cancel
             </Button>
           </Form>
         </CardBody>

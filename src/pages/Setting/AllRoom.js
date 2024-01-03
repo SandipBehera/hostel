@@ -149,8 +149,7 @@ const AllRoom = () => {
                       </tr>
                     </thead>
                     <tbody style={{ textAlign: "center" }}>
-                      {data &&
-                        data.length > 0 &&
+                      {data && data.length > 0 ? (
                         data.map((item) => {
                           console.log("item", item);
 
@@ -195,22 +194,19 @@ const AllRoom = () => {
                                         Edit
                                       </DropdownItem>
                                     </Link>
-
-                                    {/* <DropdownItem
-                                      onClick={() => handleDelete(item.id)}
-                                    >
-                                      Delete
-                                    </DropdownItem> */}
                                   </DropdownMenu>
                                 </Dropdown>
                               </td>
                             </tr>
                           );
-                        })}
-
-                      <tr>
-                        <td colSpan="5">Loading...</td>
-                      </tr>
+                        })
+                      ) : (
+                        <tr>
+                          <td colSpan="5" style={{ color: "red" }}>
+                            No data found
+                          </td>
+                        </tr>
+                      )}
                     </tbody>
                   </Table>
 

@@ -6,6 +6,7 @@ import { H5 } from "../../../../AbstractElements";
 import DynamicForm from "../../../../Components/DynamicForm";
 import { LocalApi, WebApi } from "../../../../api";
 import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
 
 const FloorConfig = ({ setSteps, setFormdata, formdata }) => {
   const {
@@ -20,6 +21,8 @@ const FloorConfig = ({ setSteps, setFormdata, formdata }) => {
   const [RoomType, setRoomType] = useState([]);
 
   const branchId = localStorage.getItem("branchId");
+  const userId = localStorage.getItem("userId");
+  const navigate = useNavigate();
 
   const fetchRoomConfig = async (type) => {
     try {
@@ -133,7 +136,7 @@ const FloorConfig = ({ setSteps, setFormdata, formdata }) => {
 
       if (respData.status === "success") {
         toast.success(respData.message);
-        setSteps(1);
+        navigate(`/admin/${userId}/allroom`);
       } else {
         toast.error(respData.message);
       }
