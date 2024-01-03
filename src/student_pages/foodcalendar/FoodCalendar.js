@@ -17,8 +17,8 @@ const FoodCalendar = () => {
       respData.data.filter(
         (key) =>
           key.branch_id === parseInt(branchId) &&
-          key.month === monthName &&
-          key.year === yearName
+          key.year === yearName.toString() &&
+          key.month === monthName
       )
     );
   };
