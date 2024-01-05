@@ -61,7 +61,7 @@ const Book = () => {
       setGeneratedCode("");
       setIsCodeValid(false);
       setIsButtonClicked(false);
-      toast.error("Code Not Generated");
+      setDisabledBtn(false);
     }
   };
   useEffect(() => {
@@ -139,42 +139,42 @@ const Book = () => {
     const code = Math.floor(100000 + Math.random() * 900000); // Generate 6-digit code
     return code.toString().substring(0, 6); // Ensure 6-digit code format
   };
-  const calculateGracePeriod = () => {
-    if (mealData.length > 0) {
-      const day = now.toLocaleString("default", { weekday: "long" });
-      const mealTimings = getMealTimings(mealData[0]?.menu_data, day);
-      console.log(mealTimings);
-      const breakfastStart = mealTimings.breakfastStart;
-      const breakfastEnd = mealTimings.breakfastEnd;
+  // const calculateGracePeriod = () => {
+  //   if (mealData.length > 0) {
+  //     const day = now.toLocaleString("default", { weekday: "long" });
+  //     const mealTimings = getMealTimings(mealData[0]?.menu_data, day);
+  //     console.log(mealTimings);
+  //     const breakfastStart = mealTimings.breakfastStart;
+  //     const breakfastEnd = mealTimings.breakfastEnd;
 
-      const lunchStart = mealTimings.lunchStart;
-      const lunchEnd = mealTimings.lunchEnd;
+  //     const lunchStart = mealTimings.lunchStart;
+  //     const lunchEnd = mealTimings.lunchEnd;
 
-      const dinnerStart = mealTimings.dinnerStart;
-      const dinnerEnd = mealTimings.dinnerEnd;
+  //     const dinnerStart = mealTimings.dinnerStart;
+  //     const dinnerEnd = mealTimings.dinnerEnd;
 
-      if (
-        (now >= breakfastStart && now <= breakfastEnd) ||
-        (now >= lunchStart && now <= lunchEnd) ||
-        (now >= dinnerStart && now <= dinnerEnd)
-      ) {
-        return false; // Grace period is active
-      } else {
-        return true; // Grace period has expired
-      }
-    }
-    return true; // Default to grace period expired if no mealData
-  };
+  //     if (
+  //       (now >= breakfastStart && now <= breakfastEnd) ||
+  //       (now >= lunchStart && now <= lunchEnd) ||
+  //       (now >= dinnerStart && now <= dinnerEnd)
+  //     ) {
+  //       return false; // Grace period is active
+  //     } else {
+  //       return true; // Grace period has expired
+  //     }
+  //   }
+  //   return true; // Default to grace period expired if no mealData
+  // };
 
-  // Usage
-  const isGracePeriodExpired = calculateGracePeriod();
+  // // Usage
+  // const isGracePeriodExpired = calculateGracePeriod();
 
-  // Check if the state needs to be updated before setting it
-  if (gracePeriodExpired !== isGracePeriodExpired) {
-    setGracePeriodExpired(isGracePeriodExpired);
-  }
+  // // Check if the state needs to be updated before setting it
+  // if (gracePeriodExpired !== isGracePeriodExpired) {
+  //   setGracePeriodExpired(isGracePeriodExpired);
+  // }
 
-  console.log(mealData);
+  console.log(isCodeValid, gracePeriodExpired, disabledBtn);
   return (
     <Fragment>
       <Breadcrumbs
@@ -251,7 +251,7 @@ const Book = () => {
           </tbody>
         </Table>
         {/* New Table */}
-        <div
+        {/* <div
           style={{
             textAlign: "center",
             marginTop: "30px",
@@ -268,18 +268,18 @@ const Book = () => {
               </tr>
             </thead>
             <tbody>
-              {/* Render month's data fetched from the backend */}
-              {/* {mealData.map((dataItem, index) => (
+              
+              {mealData.map((dataItem, index) => (
                 <tr key={index}>
                   <td>{dataItem.date}</td>
                   <td>{dataItem.type}</td>
                   <td>{dataItem.checkIn}</td>
                 </tr>
-              ))} */}
-              {/* Add more rows as needed */}
+              ))}
+             
             </tbody>
           </Table>
-        </div>
+        </div> */}
       </Card>
     </Fragment>
   );
