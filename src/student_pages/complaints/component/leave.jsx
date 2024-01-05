@@ -1,3 +1,4 @@
+
 import React from "react";
 import { Col, Container, FormGroup, Row } from "reactstrap";
 import { H5 } from "../../../AbstractElements";
@@ -8,6 +9,9 @@ export default function StudentLeave({
   setLeaveFrom,
   setLeaveTo,
 }) {
+  // Get current date in "YYYY-MM-DD" format
+  const currentDate = new Date().toISOString().split("T")[0]; 
+
   return (
     <div>
       <Container>
@@ -20,6 +24,7 @@ export default function StudentLeave({
                 type="date"
                 className="form-control"
                 onChange={setLeaveFrom}
+                min={currentDate}
               />
             </FormGroup>
             <FormGroup>
@@ -28,6 +33,7 @@ export default function StudentLeave({
                 type="date"
                 className="form-control"
                 onChange={setLeaveTo}
+                min={currentDate}
               />
             </FormGroup>
             <FormGroup>
