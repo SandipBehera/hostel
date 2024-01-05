@@ -1,4 +1,3 @@
-
 import React, { Fragment, useState, useEffect } from "react";
 import {
   Table,
@@ -53,7 +52,12 @@ const FoodPlanner = () => {
         const to = mealData[day][mealType]?.To || "";
         const price = mealData[day][mealType]?.Price || "";
 
-        if (!description.trim() || !from.trim() || !to.trim() || !price.trim()) {
+        if (
+          !description.trim() ||
+          !from.trim() ||
+          !to.trim() ||
+          !price.trim()
+        ) {
           toast.warning("All fields are required");
           return; // Stop submission if any field is empty
         }
@@ -78,10 +82,10 @@ const FoodPlanner = () => {
 
     const respdata = await response.json();
     if (respdata.status === "success") {
-      toast.success("Food Menu Created");
+      toast.success(respdata.message);
       navigate(`/admin/${userId}/allplanner`);
     } else {
-      toast.warning("Failed to create food menu");
+      toast.error(respdata.message);
     }
   };
 
@@ -148,7 +152,7 @@ const FoodPlanner = () => {
     "Monday",
     "Tuesday",
     "Wednesday",
-    "Thursday", 
+    "Thursday",
     "Friday",
     "Saturday",
   ];
