@@ -41,10 +41,34 @@ const Book = () => {
       return [];
     }
   };
+  const getCode = async () => {
+    const response = await fetch(`${WebApi}/getCodes`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        regd_no: localStorage.getItem("userId"),
+      }),
+    });
+    const respData = await response.json();
 
+    if (respData.status === "success") {
+      setGeneratedCode(respData?.data?.auth_code);
+      setIsCodeValid(true);
+      setIsButtonClicked(true);
+    } else {
+      setGeneratedCode("");
+      setIsCodeValid(false);
+      setIsButtonClicked(false);
+      toast.error("Code Not Generated");
+    }
+  };
   useEffect(() => {
     fetchedData();
+    getCode();
   }, []);
+  console.log(generatedCode);
 
   const handleBookButtonClick = async () => {
     const day = now.toLocaleString("default", { weekday: "long" });
