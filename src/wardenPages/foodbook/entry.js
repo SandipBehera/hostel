@@ -16,9 +16,8 @@ const FoodBookEntry = () => {
 
   //get this month name
   const date = new Date();
-  const month = date.toLocaleString("default", { month: "long" });
-  const [monthName, setMonthName] = useState(month);
-  const now = new Date();
+  const monthName = date.toLocaleString("default", { month: "long" });
+
   const [studentData, setStudentData] = useState([]);
   const [authCode, setAuthCode] = useState("");
 
@@ -33,7 +32,6 @@ const FoodBookEntry = () => {
       }),
     });
     const respData = await response.json();
-    console.log(respData);
     if (respData.status === "success") {
       setStudentData(respData.data);
       toast.success(respData.message);
@@ -41,7 +39,6 @@ const FoodBookEntry = () => {
       toast.error(respData.message);
     }
   };
-  console.log(typeof studentData);
   const FoodStatus = async (status) => {
     let meal_type;
     if (studentData?.result[0].lunch === "1") {
@@ -68,6 +65,7 @@ const FoodBookEntry = () => {
     const respData = await response.json();
     if (respData.status === "success") {
       toast.success(respData.message);
+      setIsButtonClicked(true);
     } else {
       toast.error("Something went wrong");
     }
@@ -144,6 +142,7 @@ const FoodBookEntry = () => {
                     <Button
                       className="btn-block btn-success"
                       onClick={() => FoodStatus("approved")}
+                      disabled={isButtonClicked}
                     >
                       Approve
                     </Button>
@@ -151,6 +150,7 @@ const FoodBookEntry = () => {
                     <Button
                       className="btn-block btn-danger m-l-5"
                       onClick={() => FoodStatus("rejected")}
+                      disabled={isButtonClicked}
                     >
                       Reject
                     </Button>
