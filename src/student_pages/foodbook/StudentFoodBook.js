@@ -17,40 +17,63 @@ const Book = () => {
   const branchId = localStorage.getItem("branchId");
   const [disabledBtn, setDisabledBtn] = useState(false);
   //get this month name
-  const date = new Date();
-  const monthName = date.toLocaleString("default", { month: "long" });
-  const yearName = date.getFullYear();
 
   const now = new Date();
+  const monthName = now.toLocaleString("default", { month: "long" });
+  const yearName = now.getFullYear();
 
   const fetchedData = async () => {
-    const response = await fetch(`${WebApi}/get_all_menu`);
-    const respData = await response.json();
-    return respData.data;
-  };
-
-  useEffect(() => {
-    async function fetchData() {
-      const data = await fetchedData(); // Set fetched data to state (Replace this with actual API fetch)
-      console.log(data);
-      const filteredData = data.filter(
+    try {
+      const response = await fetch(`${WebApi}/get_all_menu`);
+      const respData = await response.json();
+      const filteredData = respData.data.filter(
         (key) =>
           key.branch_id === parseInt(branchId) &&
           key.month === monthName &&
           key.year === yearName.toString()
       );
+      console.log(filteredData);
       setMealData(filteredData);
       setDisabledBtn(filteredData.length === 0 ? true : false);
       setSelectedDay(now.toLocaleString("default", { weekday: "long" }));
+    } catch (error) {
+      console.error("Error fetching data:", error);
+      return [];
     }
+  };
+  const getCode = async () => {
+    const response = await fetch(`${WebApi}/getCodes`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        regd_no: localStorage.getItem("userId"),
+      }),
+    });
+    const respData = await response.json();
 
-    fetchData();
+    if (respData.status === "success") {
+      setGeneratedCode(respData?.data?.auth_code);
+      setIsCodeValid(true);
+      setIsButtonClicked(true);
+    } else {
+      setGeneratedCode("");
+      setIsCodeValid(false);
+      setIsButtonClicked(false);
+      toast.error("Code Not Generated");
+    }
+  };
+  useEffect(() => {
+    fetchedData();
+    getCode();
   }, []);
+  console.log(generatedCode);
 
   const handleBookButtonClick = async () => {
     const day = now.toLocaleString("default", { weekday: "long" });
     const mealTimings = getMealTimings(mealData[0]?.menu_data, day);
-    console.log(mealTimings);
+
     const breakfastStart = mealTimings.breakfastStart;
     const breakfastEnd = mealTimings.breakfastEnd;
 
@@ -67,10 +90,6 @@ const Book = () => {
     ) {
       // Code generation during meal time
       const code = generateCode();
-      setGeneratedCode(code);
-      setIsCodeValid(true);
-      setIsButtonClicked(true);
-
       // Set timeout for code expiration after 30 minutes (grace period)
       const expirationTime = new Date(now.getTime() + 30 * 60000); // 30 minutes
       setTimeout(() => {
@@ -99,7 +118,11 @@ const Book = () => {
         }),
       });
       const respData = await response.json();
-      if (respData.staus === "success") {
+      console.log(respData);
+      if (respData.status === "success") {
+        setGeneratedCode(code);
+        setIsCodeValid(true);
+        setIsButtonClicked(true);
         toast.success("Food Booked");
       } else {
         toast.error("Food Not Booked");
@@ -116,31 +139,42 @@ const Book = () => {
     const code = Math.floor(100000 + Math.random() * 900000); // Generate 6-digit code
     return code.toString().substring(0, 6); // Ensure 6-digit code format
   };
+  const calculateGracePeriod = () => {
+    if (mealData.length > 0) {
+      const day = now.toLocaleString("default", { weekday: "long" });
+      const mealTimings = getMealTimings(mealData[0]?.menu_data, day);
+      console.log(mealTimings);
+      const breakfastStart = mealTimings.breakfastStart;
+      const breakfastEnd = mealTimings.breakfastEnd;
 
-  useEffect(() => {
-    const day = now.toLocaleString("default", { weekday: "long" });
-    const mealTimings = getMealTimings(mealData[0]?.menu_data, day);
-    console.log(mealTimings);
-    const breakfastStart = mealTimings.breakfastStart;
-    const breakfastEnd = mealTimings.breakfastEnd;
+      const lunchStart = mealTimings.lunchStart;
+      const lunchEnd = mealTimings.lunchEnd;
 
-    const lunchStart = mealTimings.lunchStart;
-    const lunchEnd = mealTimings.lunchEnd;
+      const dinnerStart = mealTimings.dinnerStart;
+      const dinnerEnd = mealTimings.dinnerEnd;
 
-    const dinnerStart = mealTimings.dinnerStart;
-    const dinnerEnd = mealTimings.dinnerEnd;
-
-    if (
-      (now >= breakfastStart && now <= breakfastEnd) ||
-      (now >= lunchStart && now <= lunchEnd) ||
-      (now >= dinnerStart && now <= dinnerEnd)
-    ) {
-      setGracePeriodExpired(false);
-    } else {
-      setGracePeriodExpired(true);
+      if (
+        (now >= breakfastStart && now <= breakfastEnd) ||
+        (now >= lunchStart && now <= lunchEnd) ||
+        (now >= dinnerStart && now <= dinnerEnd)
+      ) {
+        return false; // Grace period is active
+      } else {
+        return true; // Grace period has expired
+      }
     }
-  }, [gracePeriodExpired]);
+    return true; // Default to grace period expired if no mealData
+  };
 
+  // Usage
+  const isGracePeriodExpired = calculateGracePeriod();
+
+  // Check if the state needs to be updated before setting it
+  if (gracePeriodExpired !== isGracePeriodExpired) {
+    setGracePeriodExpired(isGracePeriodExpired);
+  }
+
+  console.log(mealData);
   return (
     <Fragment>
       <Breadcrumbs

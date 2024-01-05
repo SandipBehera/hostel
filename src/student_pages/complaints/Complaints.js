@@ -82,91 +82,117 @@ const Complaints = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-    if (formData.issueType === "Complaint") {
-      formData.details = [
-        { status: "new", content: complaint, date: formattedDate },
-      ];
-      formData.details = JSON.stringify(formData.details);
+    if (formData.issueType === "") {
+      toast.warning("Please Select Issue Type");
+    } else if (formData.issueType === "Complaint" && complaint === "") {
+      toast.warning("Please enter the description of the complaint");
     } else if (
-      formData.issueType === "Night Out Request" ||
-      formData.issueType === "Leave Request"
+      formData.issueType === "Vacant Hostel Request" &&
+      (leaveFrom === "" || leaveReason === "")
     ) {
-      const leaveData = {
-        leave_from: leaveFrom,
-        leave_to: leaveTo,
-        reason: leaveReason,
-      };
-      formData.details = leaveData;
-      formData.details = JSON.stringify(formData.details);
+      toast.warning("All fields are required");
+    } else if (
+      (formData.issueType === "Night Out Request" ||
+        formData.issueType === "Leave Request" ||
+        formData.issueType === "Outing Request") &&
+      (leaveFrom === "" || leaveTo === "" || leaveReason === "")
+    ) {
+      toast.warning("All fields are required");
     } 
-    else if(formData.issueType==="Vacant Hostel Request"){
-      const vacantData = {
-        leave_from:leaveFrom,
-        reason: leaveReason,
-        hostel_id:hostel,
-        floor_no:room
-      }
-      formData.details=vacantData;
-      formData.details=JSON.stringify(formData.details);
 
-    }
-    else {
-      const outingData = {
-        leave_from: leaveFrom,
-        leave_to: leaveTo,
-        reason: leaveReason,
-      };
-      formData.details = outingData;
-      formData.details = JSON.stringify(formData.details);
-    }
-    const fdata = {
-      issue_type: formData.issueType,
-      issued_by: studentId,
-      hostel_id: hostel,
-      floor_no: room,
-      assigned_to: formData.assignedTo,
-      status: formData.status,
-      details: formData.details,
-      branch_id: branchId,
+else{
+
+  if (formData.issueType === "Complaint") {
+      
+    formData.details = [
+      { status: "new", content: complaint, date: formattedDate },
+    ];
+    formData.details = JSON.stringify(formData.details);
+  }
+   else if (
+    formData.issueType === "Night Out Request" ||
+    formData.issueType === "Leave Request"
+  ) {
+    const leaveData = {
+      leave_from: leaveFrom,
+      leave_to: leaveTo,
+      reason: leaveReason,
     };
-    console.log(fdata);
-    try {
-      const response = await fetch(`${WebApi}/create_complaint`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(fdata),
-      });
-
-      const res = await response.json();
-
-      if (res.status === "error") {
-        toast.error(res.message);
-      } else {
-        // const data = await response.json();
-
-        socket.emit("newComplaint", fdata);
-        toast.success(res.message);
-        // Reset form a fter successful submission if needed
-        setFormData({
-          issueType: "",
-          issuedBy: "",
-          hostelId: "",
-          roomNo: "",
-          assignedTo: "",
-          status: "",
-          details: "",
-        });
-        navigate(`/student/${userId}/complaints-report`)
-      }
-      // You can add further logic after a successful submission
-    } catch (error) {
-      console.error("Error submitting data:", error);
-      // Handle errors here
+    formData.details = leaveData;
+    formData.details = JSON.stringify(formData.details);
+  } 
+  else if(formData.issueType==="Vacant Hostel Request"){
+    const vacantData = {
+      leave_from:leaveFrom,
+      reason: leaveReason,
+      hostel_id:hostel,
+      floor_no:room
     }
+    formData.details=vacantData;
+    formData.details=JSON.stringify(formData.details);
+
+  }
+  else {
+    const outingData = {
+      leave_from: leaveFrom,
+      leave_to: leaveTo,
+      reason: leaveReason,
+    };
+    formData.details = outingData;
+    formData.details = JSON.stringify(formData.details);
+  }
+  const fdata = {
+    issue_type: formData.issueType,
+    issued_by: studentId,
+    hostel_id: hostel,
+    floor_no: room,
+    assigned_to: formData.assignedTo,
+    status: formData.status,
+    details: formData.details,
+    branch_id: branchId,
   };
+  console.log(fdata);
+  try {
+    const response = await fetch(`${WebApi}/create_complaint`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(fdata),
+    });
+
+    const res = await response.json();
+
+    if (res.status === "error") {
+      toast.error(res.message);
+    } else {
+      // const data = await response.json();
+
+      socket.emit("newComplaint", fdata);
+      toast.success(res.message);
+      // Reset form a fter successful submission if needed
+      setFormData({
+        issueType: "",
+        issuedBy: "",
+        hostelId: "",
+        roomNo: "",
+        assignedTo: "",
+        status: "",
+        details: "",
+      });
+      navigate(`/student/${userId}/complaints-report`)
+    }
+    // You can add further logic after a successful submission
+  } catch (error) {
+    console.error("Error submitting data:", error);
+    // Handle errors here
+  }
+};
+
+}
+
+
+   
 
   return (
     <Fragment>

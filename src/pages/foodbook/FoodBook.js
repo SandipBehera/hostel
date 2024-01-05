@@ -40,9 +40,8 @@ const FoodBook = () => {
   const colData = [
     {
       name: "S.No.",
-      selector: (row) => 
-        row.id,
-      
+      selector: (row) => row.id,
+
       center: false,
       sortable: true,
     },
@@ -54,37 +53,39 @@ const FoodBook = () => {
     },
     {
       name: "St. Name",
-      selector: (row) =>    row.name,
+      selector: (row) => row.name,
       center: false,
       sortable: true,
     },
     {
       name: "Type",
-      selector: (row) =>  row.type,
+      selector: (row) => row.type,
       center: false,
       sortable: true,
     },
     {
       name: "Breakast",
-      selector: (row) =>   row.breakfast===1? "Food Taken" : "Food Not Taken",
+      selector: (row) =>
+        row.breakfast === 1 ? "Food Taken" : "Food Not Taken",
       center: false,
       sortable: true,
     },
     {
       name: "Lunch",
-      selector: (row) =>  row.lunch==="1"? "Food Taken" : "Food Not Taken",
+      selector: (row) => (row.lunch === "1" ? "Food Taken" : "Food Not Taken"),
       center: false,
       sortable: true,
     },
     {
       name: "Dinner",
-      selector: (row) =>   row.dinner===1? "Food Taken" : "Food Not Taken",
+      selector: (row) => (row.dinner === 1 ? "Food Taken" : "Food Not Taken"),
       center: false,
       sortable: true,
     },
     {
       name: "Payment",
-      selector: (row) =>   row.type==="hostel"? "Not Required": item.payment,
+      selector: (row) =>
+        row.type === "hostel" ? "Not Required" : item.payment,
       center: false,
       sortable: true,
     },
@@ -100,85 +101,31 @@ const FoodBook = () => {
   };
 
   return (
-    <Fragment>
-      <Col sm="12">
-        <Card>
-          <CardHeader>
-            <Row className="align-items-center justify-content-between">
-              <Col xs="auto">
-                <H5 className="mb-0">Food Book</H5>
-              </Col>
-              <Col xs="auto">
-                <Button onClick={handleExport}>Export</Button>
-              </Col>
-            </Row>
-          </CardHeader>
-          <div>
-            <DataTable
-              data={data}
-              columns={colData}
-              striped={true}
-              center={true}
-              pagination
-              className="text-center"
-            />
-          </div>
-        </Card>
-      </Col>
-    </Fragment>
+    <Col sm="12">
+      <Card>
+        <CardHeader>
+          <Row className="align-items-center justify-content-between">
+            <Col xs="auto">
+              <H5 className="mb-0">Food Book</H5>
+            </Col>
+            <Col xs="auto">
+              <Button onClick={handleExport}>Export</Button>
+            </Col>
+          </Row>
+        </CardHeader>
+        <div>
+          <DataTable
+            data={data}
+            columns={colData}
+            striped={true}
+            center={true}
+            pagination
+            className="text-center"
+          />
+        </div>
+      </Card>
+    </Col>
   );
 };
 
 export default FoodBook;
-
-{
-  /* <Table>
-<thead>
-  <tr>
-    <th>S.No.</th>
-    <th>St. Reg. No.</th>
-    <th>St. Name</th>
-    <th>Type</th>
-    <th>Breakfast</th>
-    <th>Lunch</th>
-    <th>Dinner</th>
-    <th>Payment</th>
-  </tr>
-</thead>
-<tbody>
-  {data.length > 0 ? (
-    data.map((item, index) => (
-      <tr key={index}>
-        <td>{item.id}</td>
-        <td>{item.regd_no}</td>
-        <td>{item.name}</td>
-        <td>{item.user_from}</td>
-        <td>
-          {item.break_fast === "1"
-            ? "Food Taken"
-            : "Food Not Taken"}
-        </td>
-        <td>
-          {item.lunch === "1" ? "Food Taken" : "Food Not Taken"}
-        </td>
-        <td>
-          {item.dinner === "1" ? "Food Taken" : "Food Not Taken"}
-        </td>
-        <td>
-          {" "}
-          {item.user_from === "hostel"
-            ? "Not Required"
-            : item.payment}
-        </td>
-      </tr>
-    ))
-  ) : (
-    <tr>
-      <td colSpan="8" style={{ textAlign: "center" }}>
-        <p style={{ color: "red" }}>No Data Found</p>
-      </td>
-    </tr>
-  )}
-</tbody>
-</Table> */
-}
