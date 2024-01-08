@@ -63,7 +63,7 @@ const Routers = () => {
           </Route>
           <Route
             exact
-            path={`/users/:userId/branchId/:branchId`}
+            path={`/users/:userId/campus/:campus_name/branchId/:branchId`}
             element={<RedirectionPage />}
           />
           {/* <Route exact path={`/login`} element={<Signin />} /> */}

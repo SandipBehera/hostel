@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "homepage": "",
+  "proxy": "http://13.58.217.203:3001",
   "dependencies": {
     "@auth0/auth0-react": "^2.0.1",
     "@babel/core": "^7.16.0",
@@ -147,7 +148,7 @@
   },
   "scripts": {
     "start": "node scripts/start.js",
-    "build": "react-scripts --max_old_space_size=8096 build",
+    "build": "parcel build src/index.html --no-source-maps --public-url ../foody/backend/public",
     "test": "node scripts/test.js",
     "lint": "eslint --fix --ext .js,.jsx .",
     "json-serve": "node public/server.js",
@@ -194,6 +195,7 @@
   "devDependencies": {
     "moment": "^2.29.4",
     "moment-timezone": "^0.5.43",
+    "parcel": "^2.11.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
   },

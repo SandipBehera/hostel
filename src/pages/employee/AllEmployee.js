@@ -32,6 +32,10 @@ const AllEmployee = () => {
     try {
       const response = await fetch(`${WebApi}/get_rooms`, {
         method: "GET",
+        credentials: "include",
+        headers: {
+          Cookie: document.cookie,
+        },
       });
 
       if (!response.ok) {
@@ -62,6 +66,10 @@ const AllEmployee = () => {
       try {
         const response = await fetch(`${WebApi}/getEmployee`, {
           method: "GET",
+          credentials: "include",
+          headers: {
+            Cookie: document.cookie,
+          },
         });
 
         if (!response.ok) {

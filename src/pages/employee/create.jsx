@@ -155,6 +155,10 @@ export default function CreateEmployee() {
       try {
         const response = await fetch(`${WebApi}/addEmployee`, {
           method: "POST",
+          credentials: "include",
+          headers: {
+            Cookie: document.cookie,
+          },
           body: data,
         });
 

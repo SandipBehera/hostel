@@ -6,6 +6,10 @@ const branchId = localStorage.getItem("branchId");
 export const myComplaints = async () => {
   const response = await fetch(`${WebApi}/get_complaints`, {
     method: "GET",
+    credentials: "include",
+    headers: {
+      Cookie: document.cookie,
+    },
   });
   const res = await response.json();
 
@@ -19,7 +23,13 @@ export const myComplaints = async () => {
 };
 export const fetchHealthData = async () => {
   try {
-    const response = await fetch(`${WebApi}/getAllPatient`);
+    const response = await fetch(`${WebApi}/getAllPatient`, {
+      method: "GET",
+      credentials: "include",
+      headers: {
+        Cookie: document.cookie,
+      },
+    });
     const respData = await response.json();
     console.log(respData.data);
 

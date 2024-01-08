@@ -106,6 +106,10 @@ const UpdateEmployee = ({ isOpen, toggle }) => {
       }
       const response = await fetch(`${WebApi}/updateEmployee`, {
         method: "POST",
+        credentials: "include",
+        headers: {
+          Cookie: document.cookie,
+        },
         body: formData,
       });
 

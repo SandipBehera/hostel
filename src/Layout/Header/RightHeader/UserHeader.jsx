@@ -46,6 +46,10 @@ const UserHeader = () => {
   const Logout = async () => {
     const loggedOut = await fetch(`${WebApi}/logout/${userId}`, {
       method: "GET",
+      credentials: "include",
+      headers: {
+        Cookie: document.cookie,
+      },
     });
     const data = await loggedOut.json();
     if (data) {

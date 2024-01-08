@@ -93,6 +93,10 @@ const AllStudents = () => {
   const getData = async () => {
     const response = await fetch(`${WebApi}/get_all_users`, {
       method: "GET",
+      credentials: "include",
+      headers: {
+        Cookie: document.cookie,
+      },
     });
     const respdata = await response.json();
     console.log(respdata);
@@ -113,6 +117,10 @@ const AllStudents = () => {
   const roomHostel = async () => {
     const response = await fetch(`${WebApi}/get_student_room/${branchId}`, {
       method: "GET",
+      credentials: "include",
+      headers: {
+        Cookie: document.cookie,
+      },
     });
     const resproom = await response.json();
     sethostelData(
@@ -146,8 +154,10 @@ const AllStudents = () => {
 
       const response = await fetch(`${WebApi}/assign_rooms`, {
         method: "POST",
+        credentials: "include",
         headers: {
           "Content-Type": "application/json",
+          Cookie: document.cookie,
         },
         body: JSON.stringify(data),
       });

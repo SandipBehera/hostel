@@ -4,7 +4,7 @@ import { LocalApi, WebApi, api } from "../api";
 
 const RedirectionPage = () => {
   const navigation = useNavigate();
-  const { userId, branchId } = useParams();
+  const { userId, campus_name, branchId } = useParams();
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -12,9 +12,12 @@ const RedirectionPage = () => {
     const checkUserInDatabase = async () => {
       try {
         // Replace the following with your actual API call to check user existence
-        const response = await fetch(`${WebApi}/users/${userId}`, {
-          method: "GET",
-        });
+        const response = await fetch(
+          `${LocalApi}/users/${userId}/campus/${campus_name}`,
+          {
+            method: "GET",
+          }
+        );
         const data = await response.json();
         console.log(data);
         if (data.status === "success") {

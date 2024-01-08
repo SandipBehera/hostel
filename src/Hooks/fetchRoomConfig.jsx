@@ -4,7 +4,13 @@ const branchId = localStorage.getItem("branchId");
 
 export const fetchRoomConfig = async (type) => {
   try {
-    const response = await fetch(`${WebApi}/get_config_by_type/${type}`);
+    const response = await fetch(`${WebApi}/get_config_by_type/${type}`, {
+      method: "GET",
+      credentials: "include",
+      headers: {
+        Cookie: document.cookie,
+      },
+    });
     const respData = await response.json();
 
     return respData.data.filter(
@@ -21,8 +27,10 @@ export const updateHostel = async (data, id) => {
     const response = await fetch(`${WebApi}/update_hostel/${id}`, {
       method: "POST",
       body: JSON.stringify(data),
+      credentials: "include",
       headers: {
         "Content-Type": "application/json",
+        Cookie: document.cookie,
       },
     });
 
