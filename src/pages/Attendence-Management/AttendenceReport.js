@@ -1,5 +1,9 @@
 import React, { Fragment, useEffect, useState } from "react";
 import {
+  Dropdown,
+  DropdownToggle,
+  DropdownMenu,
+  DropdownItem,
   Table,
   Row,
   Col,
@@ -32,7 +36,7 @@ import MonthlyAttendanceReport from "./MonthlyAttendenceReport";
 const AttendenceReport = ({ attendanceData }) => {
   const [data, setData] = useState([]);
   const [modalOpen, setModalOpen] = useState(false);
-  const [dropdownOpen, setDropdownOpen] = useState(false);
+  const [dropdownOpenMap, setDropdownOpenMap] = useState({});
   const [hostelData, setHostelData] = useState([]);
   const [msg, setMsg] = useState("");
   const [ID, setID] = useState("");
@@ -40,24 +44,15 @@ const AttendenceReport = ({ attendanceData }) => {
   const [pillTab, setPillTab] = useState("1");
   const [hostelId, setHostelId] = useState("");
   const [selectedItem, setSelectedItem] = useState(null);
+  const [commentModalOpen, setCommentModalOpen] = useState(false);
+  console.log(msg);
+  console.log(selectedItem);
 
   const branchId = localStorage.getItem("branchId");
 
-  const handleExport = () => {
-    const csv = Papa.unparse(data);
-    const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
-    const link = document.createElement("a");
-    link.href = window.URL.createObjectURL(blob);
-    link.download = `Hostel_Attendance_${new Date().toLocaleDateString()}.csv`;
-    link.click();
+  const toggleCommentModal = () => {
+    setCommentModalOpen(!commentModalOpen);
   };
-
-  const toggleDropdown = (id) => {
-    console.log(id);
-    setID(id);
-    setModalOpen(!modalOpen);
-  };
-  console.log(ID);
 
   useEffect(() => {
     const roomHostel = async () => {
@@ -71,10 +66,34 @@ const AttendenceReport = ({ attendanceData }) => {
     };
     roomHostel();
   }, []);
+  console.log(hostelData);
+  const handleExport = () => {
+    const exportData = data.map((item, i) => ({
+      "S.No.": i+1,
+      "St. Reg. No.": item.registration_no,
+      "St. Name": item.name,
+      "H-Name": item.hostel_name,
+      "Room No": item.room_id,
+      "Present/Absent": item.status === 1 ? "present" : "absent"
+    }));
+    const csv = Papa.unparse(exportData);
+    const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+    const link = document.createElement("a");
+    link.href = window.URL.createObjectURL(blob);
+    link.download = `Hostel_Attendance_${new Date().toLocaleDateString()}.csv`;
+    link.click();
+  };
 
   const hostel_name = hostelData?.map((key) => {
     return { value: key.id, label: key.hostel_name };
   });
+
+  const toggleDropdown = (id) => {
+    setDropdownOpenMap((prevState) => ({
+      ...prevState,
+      [id]: !prevState[id] || false,
+    }));
+  };
 
   const handleHostelSelect = async (hostelId) => {
     const response = await fetch(`${WebApi}/get_attendence`, {
@@ -83,12 +102,13 @@ const AttendenceReport = ({ attendanceData }) => {
       body: JSON.stringify({ hostel_id: hostelId }),
     });
     const resproom = await response.json();
+    console.log(resproom);
     setData(
       resproom.data.filter((key) => key.branch_id === parseInt(branchId))
     );
   };
-
-  const handleMarkAttendance = async (itemId, newStatus) => {
+  console.log(data);
+  const handleMarkAttendance = async (itemId, newStatus, comm) => {
     try {
       const response = await fetch(`${WebApi}/update_attendence`, {
         method: "POST",
@@ -96,7 +116,7 @@ const AttendenceReport = ({ attendanceData }) => {
         body: JSON.stringify({
           id: itemId,
           status: newStatus,
-          comments: JSON.stringify({ comments: "" }),
+          comments: JSON.stringify({ comments: comm }),
         }),
       });
 
@@ -119,7 +139,7 @@ const AttendenceReport = ({ attendanceData }) => {
         mainTitle="Attendance"
         subParent="Attendance Report"
         title="Attendance Report"
-      />{" "}
+      />
       <Col className="xl-100 box-col-12">
         <Card>
           <CardBody>
@@ -133,169 +153,166 @@ const AttendenceReport = ({ attendanceData }) => {
                   Daily Report
                 </NavLink>
               </NavItem>
-              {/* <NavItem>
-                <NavLink
-                  href="#"
-                  className={pillTab === "2" ? "active" : ""}
-                  onClick={() => setPillTab("2")}
-                >
-                  Monthly Report
-                </NavLink>
-              </NavItem> */}
             </Nav>
             <TabContent activeTab={pillTab}>
               <TabPane className="fade show" tabId="1">
                 <P attrPara={{ className: "mb-0 m-t-30" }}>
                   <Container>
                     <Col>
-                      <Card>
-                        <H5 className="text-center">
-                          Daily Attendance Report{" "}
-                        </H5>
-                        <CardHeader>
-                          <Row className="align-items-center justify-content-between">
-                            <Col xs="auto">
-                              <div className="mb-2" style={{ width: "100%" }}>
-                                <Label className="col-form-label">
-                                  Select Hostel name
-                                </Label>
-                                <Select
-                                  options={hostel_name}
-                                  className="js-example-basic-single col-sm-12"
-                                  onChange={(selectedOption) => {
-                                    handleHostelSelect(selectedOption.value),
-                                      setHostelId(selectedOption.value);
-                                  }}
-                                />
-                              </div>
-                            </Col>
-                            <Col xs="auto">
-                              <Button onClick={handleExport}>Export</Button>
-                            </Col>
-                          </Row>
-                        </CardHeader>
-                        <div>
-                          <Table className="table-responsive text-center">
-                            <thead>
-                              <tr>
-                                <th>S.No.</th>
-                                <th>Image</th>
-                                <th>St. Reg. No.</th>
-                                <th>St. Name</th>
-                                <th>H-Name</th>
-                                <th>Room No</th>
-                                <th>Present/Absent</th>
-                                <th>Action</th>
-                              </tr>
-                            </thead>
-
-                            <tbody>
-                              {data.length > 0 ? (
-                                data.map((item, index) => (
-                                  <tr
-                                    key={item.id}
-                                    onClick={() => setSelectedItem(item)}
-                                  >
-                                    <td>{index + 1}</td>
-                                    <td>
-                                      <img
-                                        src={item.image}
-                                        alt="image"
-                                        style={{
-                                          height: "4rem",
-                                          width: "4rem",
-                                          borderRadius: "50%",
-                                        }}
-                                      />
-                                      {/* <Image
-                                        attrImage={{
-                                          className: "img-30 me-2",
-                                          src: require(item.image),
-                                          alt: "user",
-                                        }}
-                                      /> */}
-                                    </td>
-                                    <td>{item.registration_no}</td>
-                                    <td style={{ padding: "26px" }}>
-                                      {item.name}
-                                    </td>
-                                    <td style={{ padding: "26px" }}>
-                                      {item.hostel_name}
-                                    </td>
-                                    <td style={{ padding: "26px" }}>
-                                      {item.room_id}
-                                    </td>
-                                    <td style={{ paddingTop: "26px" }}>
-                                      {item.status === 1 ? "present" : "absent"}
-                                    </td>
-                                    <td style={{ paddingTop: "26px" }}>
-                                      {item.status === 0 && (
-                                        <Button
-                                          size="sm"
-                                          color="success"
-                                          style={{ padding: "5px" }}
-                                          onClick={() =>
-                                            handleMarkAttendance(item.id, 1)
-                                          }
-                                          disabled={item.status === 1}
-                                        >
-                                          Present
-                                        </Button>
-                                      )}
-                                      {item.status === 1 && (
-                                        <Button
-                                          size="sm"
-                                          color="danger"
-                                          style={{ padding: "5px" }}
-                                          onClick={() =>
-                                            handleMarkAttendance(item.id, 0)
-                                          }
-                                          disabled={item.status === 0}
-                                        >
-                                          Absent
-                                        </Button>
-                                      )}
-                                    </td>
-                                  </tr>
-                                ))
-                              ) : (
-                                <tr>
-                                  <td
-                                    colSpan="8"
-                                    style={{ textAlign: "center" }}
-                                  >
-                                    <p style={{ color: "red" }}>
-                                      Please Select the hostel Name
-                                    </p>
+                      <H5 className="text-center">Daily Attendance Report </H5>
+                      <CardHeader>
+                        <Row className="align-items-center justify-content-between">
+                          <Col xs="auto">
+                            <div className="mb-2" style={{ width: "100%" }}>
+                              <Label className="col-form-label">
+                                Select Hostel name
+                              </Label>
+                              <Select
+                                options={hostel_name}
+                                className="js-example-basic-single col-sm-12"
+                                onChange={(selectedOption) => {
+                                  handleHostelSelect(selectedOption.value),
+                                    setHostelId(selectedOption.value);
+                                }}
+                              />
+                            </div>
+                          </Col>
+                          <Col xs="auto">
+                            <Button onClick={handleExport}>Export</Button>
+                          </Col>
+                        </Row>
+                      </CardHeader>
+                      <div className="table-responsive">
+                        <Table className="table-responsive text-center">
+                          <thead>
+                            <tr>
+                              <th>S.No.</th>
+                              <th>Image</th>
+                              <th>St. Reg. No.</th>
+                              <th>St. Name</th>
+                              <th>H-Name</th>
+                              <th>Room No</th>
+                              <th>Present/Absent</th>
+                              <th>Action</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            {data.length > 0 ? (
+                              data.map((item, index) => (
+                                <tr
+                                  key={item.id}
+                                  onClick={() => setSelectedItem(item)}
+                                >
+                                  <td>{index + 1}</td>
+                                  <td>
+                                    <img
+                                      src={item.image}
+                                      alt="image"
+                                      style={{
+                                        height: "4rem",
+                                        width: "4rem",
+                                        borderRadius: "50%",
+                                      }}
+                                    />
+                                  </td>
+                                  <td>{item.registration_no}</td>
+                                  <td style={{ padding: "26px" }}>
+                                    {item.name}
+                                  </td>
+                                  <td style={{ padding: "26px" }}>
+                                    {item.hostel_name}
+                                  </td>
+                                  <td style={{ padding: "26px" }}>
+                                    {item.room_id}
+                                  </td>
+                                  <td style={{ paddingTop: "26px" }}>
+                                    {item.status === 1 ? "present" : "absent"}
+                                  </td>
+                                  <td style={{ paddingTop: "26px" }}>
+                                    <Dropdown
+                                      isOpen={dropdownOpenMap[item.id]}
+                                      toggle={() => toggleDropdown(item.id)}
+                                    >
+                                      <DropdownToggle caret>
+                                        {item.status === 1
+                                          ? "Absent"
+                                          : "Present"}
+                                      </DropdownToggle>
+                                      <DropdownMenu>
+                                        {item.status === 0 ? (
+                                          <>
+                                            <DropdownItem
+                                              onClick={toggleCommentModal}
+                                            >
+                                              View Reason
+                                            </DropdownItem>
+                                            <DropdownItem
+                                              onClick={() =>
+                                                handleMarkAttendance(
+                                                  item.id,
+                                                  1
+                                                )
+                                              }
+                                              disabled={item.status === 1}
+                                            >
+                                              Present
+                                            </DropdownItem>
+                                          </>
+                                        ) : (
+                                          <DropdownItem
+                                            onClick={() =>
+                                              setModalOpen(!modalOpen)
+                                            }
+                                          >
+                                            Absent
+                                          </DropdownItem>
+                                        )}
+                                      </DropdownMenu>
+                                    </Dropdown>
                                   </td>
                                 </tr>
-                              )}
-                            </tbody>
-                          </Table>
-                        </div>
-                      </Card>
+                              ))
+                            ) : (
+                              <tr>
+                                <td
+                                  colSpan="8"
+                                  style={{ textAlign: "center" }}
+                                >
+                                  <p style={{ color: "red" }}>
+                                    Please Select the hostel Name
+                                  </p>
+                                </td>
+                              </tr>
+                            )}
+                          </tbody>
+                        </Table>
+                      </div>
                     </Col>
                   </Container>
                 </P>
               </TabPane>
-              <TabPane tabId="2">
-                <P attrPara={{ className: "mb-0 m-t-30" }}>
-                  <MonthlyAttendanceReport />
-                </P>
-              </TabPane>
             </TabContent>
-            {/* Modal outside the loop */}
+            <Modal isOpen={commentModalOpen} toggle={toggleCommentModal}>
+              <ModalHeader toggle={toggleCommentModal}>
+                Reason for Absence
+              </ModalHeader>
+              <ModalBody>
+                <p>{selectedItem?.comments?.comment || selectedItem?.comments?.comments }</p>
+              </ModalBody>
+              <ModalFooter>
+                <Button color="secondary" onClick={toggleCommentModal}>
+                  Close
+                </Button>
+              </ModalFooter>
+            </Modal>
             <Modal isOpen={modalOpen} toggle={() => setModalOpen(!modalOpen)}>
               <ModalHeader toggle={() => setModalOpen(!modalOpen)}>
-                Change Attendance Status
+                Mark Absent
               </ModalHeader>
               <ModalBody>
                 {selectedItem?.status === 1 && (
                   <FormGroup>
-                    <Label for="exampleText">
-                      Reason for marking{" "}
-                      {selectedItem?.status === 0 ? "present" : "absent"}
-                    </Label>
+                    <Label for="exampleText">Reason for marking absent</Label>
                     <Input
                       type="textarea"
                       name="text"
@@ -306,23 +323,8 @@ const AttendenceReport = ({ attendanceData }) => {
                     />
                   </FormGroup>
                 )}
-
                 <FormGroup tag="fieldset">
                   <legend>Status</legend>
-                  {selectedItem?.status === 0 && (
-                    <FormGroup check>
-                      <Label check>
-                        <Input
-                          type="radio"
-                          name="status"
-                          value="1"
-                          checked={status === 1}
-                          onChange={() => setStatus(1)}
-                        />{" "}
-                        Mark Present
-                      </Label>
-                    </FormGroup>
-                  )}
                   {selectedItem?.status === 1 && (
                     <FormGroup check>
                       <Label check>
@@ -340,12 +342,19 @@ const AttendenceReport = ({ attendanceData }) => {
                 </FormGroup>
               </ModalBody>
               <ModalFooter>
-                <Button
-                  color="secondary"
-                  onClick={() => handleActionSelect(status, msg)}
-                >
-                  Send
-                </Button>
+                {status === "" || msg === "" ? (
+                  <Button disabled>Send</Button>
+                ) : (
+                  <Button
+                    color="secondary"
+                    onClick={() => {
+                      handleMarkAttendance(selectedItem.id, 0, msg);
+                      setModalOpen(!modalOpen);
+                    }}
+                  >
+                    Send
+                  </Button>
+                )}
               </ModalFooter>
             </Modal>
           </CardBody>
@@ -356,4 +365,3 @@ const AttendenceReport = ({ attendanceData }) => {
 };
 
 export default AttendenceReport;
-

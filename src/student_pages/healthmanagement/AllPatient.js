@@ -185,37 +185,3 @@ const AllPatient = () => {
 
 export default AllPatient;
 
-{
-  /* <Table className="text-center">
-<thead>
-  <tr>
-    <th>Student Name</th>
-    <th>Doctor Name</th>
-    <th>Hostel Name</th>
-    <th>Floor No.</th>
-    <th>Room No.</th>
-    <th>Date</th>
-    <th>Time</th>
-    <th>Action</th>
-  </tr>
-</thead>
-<tbody>
-  {dataByUType?.map((item) => (
-    <tr key={item.id}>
-      <td>{item.patientname}</td>
-      <td>{item.doctorname}</td>
-      <td>{item.hostelid}</td>
-      <td>{item.floorid}</td>
-      <td>{item.roomno}</td>
-      <td>{`${new Date(item.date)}`.slice(4, 15)}</td>
-      <td>{item.time}</td>
-      <td>
-        <Button color="primary" onClick={() => toggleModal(item)}>
-          View
-        </Button>
-      </td>
-    </tr>
-  ))}
-</tbody>
-</Table> */
-}

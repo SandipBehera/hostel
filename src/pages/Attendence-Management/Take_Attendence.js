@@ -69,6 +69,8 @@ const Take_Attendence = () => {
     return { value: key.id, label: key.hostel_name };
   });
 
+  console.log(hostelData)
+
   const handleHostelSelect = (hostelid) => {
     setSelectedHostel(hostelid);
     const floors = hostelid
@@ -128,12 +130,14 @@ const Take_Attendence = () => {
     if (result.data.length === 0) {
       toast.error("Room is not assigned to any person");
     } else {
-      toast.success("Room data is fetched Successfully");
+      // toast.success("Room data is fetched Successfully");
       setStudentData(result.data);
     }
   };
+  console.log(studentData)
  
   const makeAttandance = async (studentregistration, status, comments) => {
+    console.log(studentregistration, status,comments)
     console.log(status)
     if (status === 1) {
       setPresentButtonDisabled(true);
@@ -143,6 +147,7 @@ const Take_Attendence = () => {
       setAbsentButtonDisabled(true);
     }
     const processAttendance = async () => {
+      
       let comment = "";
       if (comments === null) {
         comment = "{}";
@@ -175,6 +180,7 @@ const Take_Attendence = () => {
             { ...responseData.data, type: status === 1 ? "present" : "absent" },
           ]);
           toast.success("Attendance marked successfully");
+          handleSubmit();
         } else {
           toast.error("Something went wrong!!");
         }
@@ -185,13 +191,16 @@ const Take_Attendence = () => {
       } catch (error) {
         console.error("Error Making Attendance Request:", error.message);
       }
+     
     };
 
     // Call the async function
     await processAttendance();
     
   };
-  console.log(studentData)
+ 
+  
+
 
   return (
     <Fragment>
@@ -347,7 +356,7 @@ const Take_Attendence = () => {
                               <Button
                                 color="secondary"
                                 onClick={() => {
-                                  makeAttandance(stud.userId, 0, msg);
+                                  makeAttandance(selectedId, 0, msg);
                                   openModal();
                                   setAbsentButtonDisabled(true);
                                 }}
@@ -367,35 +376,22 @@ const Take_Attendence = () => {
                             </ModalBody>
                           </Modal>
                         </div>
-                        {absentButtonDisabled && selectedId === stud.userId ? (
-                          <Button
-                            color="primary"
-                            onClick={() =>
-                              viewReason(JSON.parse(stud.comments))
-                            }
-                          >
-                            View
-                          </Button>
-                        ) : (
+                        {( stud.statuses!=="0")
+                        &&(
                           <Button
                             color="success"
                             onClick={() => {
                               makeAttandance(stud.userId, 1, null),
                                 setSelectedId(stud.userId);
                             }}
-                            disabled={
-                              stud.attendance_taken === "taken" ||
-                              stud.userId === selectedId
-                                ? true
-                                : false
-                            }
+                            disabled ={stud.attendance_taken==="taken"}
+                          
                           >
                             Present
                           </Button>
                         )}{" "}
-                        {presentButtonDisabled && selectedId === stud.userId ? (
-                          ""
-                        ) : (
+                        {(stud.statuses!=="1") && (
+                          <>
                           <Button
                             color="danger"
                             onClick={() => {
@@ -403,15 +399,23 @@ const Take_Attendence = () => {
                               setMsg("");
                               setSelectedId(stud.userId);
                             }}
-                            disabled={
-                              stud.attendance_taken === "taken" ||
-                              stud.userId === selectedId
-                                ? true
-                                : false
-                            }
+
+                            disabled ={stud.attendance_taken==="taken"}
+                          
                           >
                             Absent
                           </Button>
+                          
+                            {stud.statuses==="0"&&<Button
+                              color="primary"
+                              onClick={() =>
+                                viewReason(JSON.parse(stud.comments))
+                              }
+                            >
+                              View
+                            </Button>}
+                          </>
+                           
                         )}
                       </td>
                     </tr>
