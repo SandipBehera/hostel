@@ -13,7 +13,7 @@ const RedirectionPage = () => {
       try {
         // Replace the following with your actual API call to check user existence
         const response = await fetch(
-          `${LocalApi}/users/${userId}/campus/${campus_name}`,
+          `${WebApi}/users/${userId}/campus/${campus_name}`,
           {
             method: "GET",
           }
