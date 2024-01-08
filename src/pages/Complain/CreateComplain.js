@@ -106,7 +106,10 @@ export default function CreateComplain() {
   
 
   const handleSubmit = async () => {
-    if (
+    if(issueType===""){
+      toast.warning("Please choose issue type");
+    }
+    else if (
       issueType === "Hostel Issue" &&
       (content === "" || hostelNumber === "" || assignTo === "")
     ) {
