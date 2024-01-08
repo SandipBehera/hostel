@@ -64,7 +64,11 @@ export default function ComplaintStatus() {
           method: "GET",
         });
         const respData = await response.json();
-        setEmpData(respData.data.filter((emp) => emp.branch_id === branch_id));
+        setEmpData(
+          respData.data.filter(
+            (key) => key.branch_id === branch_id && key.user_type === "employee"
+          )
+        );
       } catch (error) {
         console.error("Error fetching data:", error);
         // Handle the error, for example, set an error state

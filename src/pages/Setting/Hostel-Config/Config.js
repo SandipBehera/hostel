@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { Fragment, useEffect, useState } from "react";
 import {
   Badge,
   Button,
@@ -12,7 +12,7 @@ import {
   TabContent,
   TabPane,
 } from "reactstrap";
-import { H5, P } from "../../../AbstractElements";
+import { Breadcrumbs, H5, P } from "../../../AbstractElements";
 import { Contact, Hometxt, PrimaryColor, Profile } from "../../../Constant";
 import { Table } from "react-feather";
 import { WebApi } from "../../../api";
@@ -55,86 +55,93 @@ const PillPrimaryTab = () => {
   console.log(aminites);
 
   return (
-    <Col sm="12" xl="12" className="xl-12">
-      <Card>
-        <CardHeader></CardHeader>
-        <CardBody>
-          <Nav className="nav-primary" tabs>
-            <NavItem>
-              <NavLink
-                href="#javascript"
-                className={primarycolorTab === "1" ? "active" : ""}
-                onClick={() => setprimarycolorTab("1")}
-              >
-                Ammenities
-              </NavLink>
-            </NavItem>
-            <NavItem>
-              <NavLink
-                href="#javascript"
-                className={primarycolorTab === "2" ? "active" : ""}
-                onClick={() => setprimarycolorTab("2")}
-              >
-                Room Type
-              </NavLink>
-            </NavItem>
-            <NavItem>
-              <NavLink
-                href="#javascript"
-                className={primarycolorTab === "3" ? "active" : ""}
-                onClick={() => setprimarycolorTab("3")}
-              >
-                Designation
-              </NavLink>
-            </NavItem>
-          </Nav>
-          <TabContent activeTab={primarycolorTab}>
-            <TabPane className="fade show" tabId="1">
-              <P attrPara={{ className: "mb-0 m-t-30" }}>
-                {aminites.map((item, i) => (
-                  <Badge
-                    color="success"
-                    style={{ padding: "0.5rem 1rem" }}
-                    className="m-2"
-                    key={i}
-                  >
-                    {item !== "" ? item : <></>}
-                  </Badge>
-                ))}
-              </P>
-            </TabPane>
-            <TabPane tabId="2">
-              <P attrPara={{ className: "mb-0 m-t-30" }}>
-                {roomType.map((item, i) => (
-                  <Badge
-                    color="success"
-                    style={{ padding: "0.5rem 1rem" }}
-                    className="m-2"
-                    key={i}
-                  >
-                    {item !== "" ? item : <></>}
-                  </Badge>
-                ))}
-              </P>
-            </TabPane>
-            <TabPane tabId="3">
-              <P attrPara={{ className: "mb-0 m-t-30" }}>
-                {designation.map((item, i) => (
-                  <Badge
-                    color="success"
-                    style={{ padding: "0.5rem 1rem" }}
-                    className="m-2"
-                    key={i}
-                  >
-                    {item !== "" ? item : <></>}
-                  </Badge>
-                ))}
-              </P>
-            </TabPane>
-          </TabContent>
-        </CardBody>
-      </Card>
-    </Col>
+    <Fragment>
+      <Breadcrumbs
+        parent="Room Config"
+        mainTitle="All Room Configs"
+        title="All Room Configs"
+      />
+      <Col sm="12" xl="12" className="xl-12">
+        <Card>
+          <CardHeader></CardHeader>
+          <CardBody>
+            <Nav className="nav-primary" tabs>
+              <NavItem>
+                <NavLink
+                  href="#javascript"
+                  className={primarycolorTab === "1" ? "active" : ""}
+                  onClick={() => setprimarycolorTab("1")}
+                >
+                  Ammenities
+                </NavLink>
+              </NavItem>
+              <NavItem>
+                <NavLink
+                  href="#javascript"
+                  className={primarycolorTab === "2" ? "active" : ""}
+                  onClick={() => setprimarycolorTab("2")}
+                >
+                  Room Type
+                </NavLink>
+              </NavItem>
+              <NavItem>
+                <NavLink
+                  href="#javascript"
+                  className={primarycolorTab === "3" ? "active" : ""}
+                  onClick={() => setprimarycolorTab("3")}
+                >
+                  Designation
+                </NavLink>
+              </NavItem>
+            </Nav>
+            <TabContent activeTab={primarycolorTab}>
+              <TabPane className="fade show" tabId="1">
+                <P attrPara={{ className: "mb-0 m-t-30" }}>
+                  {aminites.map((item, i) => (
+                    <Badge
+                      color="success"
+                      style={{ padding: "0.5rem 1rem" }}
+                      className="m-2"
+                      key={i}
+                    >
+                      {item !== "" ? item : <></>}
+                    </Badge>
+                  ))}
+                </P>
+              </TabPane>
+              <TabPane tabId="2">
+                <P attrPara={{ className: "mb-0 m-t-30" }}>
+                  {roomType.map((item, i) => (
+                    <Badge
+                      color="success"
+                      style={{ padding: "0.5rem 1rem" }}
+                      className="m-2"
+                      key={i}
+                    >
+                      {item !== "" ? item : <></>}
+                    </Badge>
+                  ))}
+                </P>
+              </TabPane>
+              <TabPane tabId="3">
+                <P attrPara={{ className: "mb-0 m-t-30" }}>
+                  {designation.map((item, i) => (
+                    <Badge
+                      color="success"
+                      style={{ padding: "0.5rem 1rem" }}
+                      className="m-2"
+                      key={i}
+                    >
+                      {item !== "" ? item : <></>}
+                    </Badge>
+                  ))}
+                </P>
+              </TabPane>
+            </TabContent>
+          </CardBody>
+        </Card>
+      </Col>
+    </Fragment>
   );
 };
 
