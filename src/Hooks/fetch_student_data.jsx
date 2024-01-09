@@ -32,7 +32,7 @@ export const fetchHealthData = async () => {
     });
     const respData = await response.json();
     console.log(respData.data);
-    if (respData.data.length > 0) {
+    if (respData.data.length > 0 && respData.data !== undefined) {
       const data = respData.data
         ?.filter((key) =>
           localStorage.getItem("userType") === "student"
