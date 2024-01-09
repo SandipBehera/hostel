@@ -12,14 +12,17 @@ export const myComplaints = async () => {
     },
   });
   const res = await response.json();
+  if (rres.data.length > 0 && res.data !== undefined) {
+    const filter_data = res.data.filter(
+      (item) =>
+        item.branch_id === parseInt(localStorage.getItem("branchId")) &&
+        item.issued_by === localStorage.getItem("userId")
+    );
 
-  const filter_data = res.data.filter(
-    (item) =>
-      item.branch_id === parseInt(localStorage.getItem("branchId")) &&
-      item.issued_by === localStorage.getItem("userId")
-  );
-
-  return filter_data;
+    return filter_data;
+  } else {
+    return [];
+  }
 };
 export const fetchHealthData = async () => {
   try {
