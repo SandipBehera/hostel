@@ -32,27 +32,30 @@ export const fetchHealthData = async () => {
     });
     const respData = await response.json();
     console.log(respData.data);
+    if (respData.data.length > 0) {
+      const data = respData.data
+        ?.filter((key) =>
+          localStorage.getItem("userType") === "student"
+            ? key.branch_id === parseInt(branchId) &&
+              key.patient_regdno === localStorage.getItem("userId")
+            : key.branch_id === parseInt(branchId)
+        )
+        .map((item) => ({
+          date: item.date,
+          doc: item.doctorname,
+          hostel: item.hostelid,
+          floor: item.floorid,
+          room: item.roomno,
+          time: item.time,
+          name: item.patientname,
+          pres: item.upload_preception,
 
-    const data = respData.data
-      ?.filter((key) =>
-        localStorage.getItem("userType") === "student"
-          ? key.branch_id === parseInt(branchId) &&
-            key.patient_regdno === localStorage.getItem("userId")
-          : key.branch_id === parseInt(branchId)
-      )
-      .map((item) => ({
-        date: item.date,
-        doc: item.doctorname,
-        hostel: item.hostelid,
-        floor: item.floorid,
-        room: item.roomno,
-        time: item.time,
-        name: item.patientname,
-        pres: item.upload_preception,
-
-        // Add other properties as needed
-      }));
-    return data;
+          // Add other properties as needed
+        }));
+      return data;
+    } else {
+      return [];
+    }
   } catch (error) {
     console.error("Error fetching data:", error.message);
   }
