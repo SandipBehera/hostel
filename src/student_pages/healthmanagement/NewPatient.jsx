@@ -31,6 +31,10 @@ const [err, setErr] =useState("");
     const roomHostel = async () => {
       const response = await fetch(`${WebApi}/get_rooms`, {
         method: "GET",
+        credentials: "include",
+        headers: {
+          Cookie: document.cookie,
+        },
       });
       const resproom = await response.json();
     
@@ -44,9 +48,14 @@ const [err, setErr] =useState("");
     try {
       const response = await fetch(`${WebApi}/profile_info`, {
         method: "POST",
+        credentials: "include",
         headers: {
+          Cookie: document.cookie,
           "Content-Type": "application/json",
         },
+        // headers: {
+        //   "Content-Type": "application/json",
+        // },
         body: JSON.stringify({ user_id: reg, userType: userType }),
       });
 
@@ -150,6 +159,10 @@ const [err, setErr] =useState("");
         // Make the API call
         const response = await fetch(`${WebApi}/add_patient`, {
           method: "POST",
+          credentials: "include",
+          headers: {
+            Cookie: document.cookie,
+          },
           body: formDataForSubmission,
         });
 

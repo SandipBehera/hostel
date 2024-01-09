@@ -76,7 +76,12 @@ const FoodPlanner = () => {
 
     const response = await fetch(`${WebApi}/create_food_menu`, {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      credentials: "include",
+      headers: {
+        Cookie: document.cookie,
+        "Content-Type": "application/json",
+      },
+     // headers: { "Content-Type": "application/json" },
       body: JSON.stringify(data),
     });
 
@@ -109,7 +114,12 @@ const FoodPlanner = () => {
     if (!copyPrevMonthData) {
       const response = await fetch(`${WebApi}/get_last_menu`, {
         method: "GET",
-        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+        headers: {
+          Cookie: document.cookie,
+          "Content-Type": "application/json",
+        },
+        // headers: { "Content-Type": "application/json" },
       });
       const respdata = await response.json();
       console.log(respdata);

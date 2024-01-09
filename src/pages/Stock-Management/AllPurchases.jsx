@@ -25,7 +25,13 @@ const AllPurchases = () => {
   useEffect(() => {
     const fetchAllPurchase = async () => {
       try {
-        const response = await fetch(`${WebApi}/get_stock`, { method: "GET" });
+        const response = await fetch(`${WebApi}/get_stock`, {
+         method: "GET" ,
+        credentials: "include",
+        headers: {
+          Cookie: document.cookie,
+        },
+      });
 
         if (!response.ok) {
           const errorData = await response.json();

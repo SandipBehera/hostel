@@ -13,7 +13,13 @@ const FoodCalendar = () => {
   const yearName = date.getFullYear();
   console.log(typeof yearName);
   const fetchData = async () => {
-    const response = await fetch(`${WebApi}/get_all_menu`);
+    const response = await fetch(`${WebApi}/get_all_menu`,{
+      method:"GET",
+      credentials: "include",
+      headers: {
+        Cookie: document.cookie,
+      },
+    });
     const respData = await response.json();
     console.log(respData.data);
     setData(

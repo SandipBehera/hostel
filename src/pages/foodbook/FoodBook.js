@@ -13,6 +13,10 @@ const FoodBook = () => {
       try {
         const response = await fetch(`${WebApi}/today_booking`, {
           method: "GET",
+          credentials: "include",
+          headers: {
+            Cookie: document.cookie,
+          },
         });
         const respData = await response.json();
         console.log(respData.data);

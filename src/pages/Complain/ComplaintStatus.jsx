@@ -49,6 +49,10 @@ export default function ComplaintStatus() {
       try {
         const response = await fetch(`${WebApi}/get_complaints_by_id/${id}`, {
           method: "GET",
+          credentials: "include",
+          headers: {
+            Cookie: document.cookie,
+          },
         });
         const respData = await response.json();
         setData(respData.data);
@@ -62,6 +66,10 @@ export default function ComplaintStatus() {
       try {
         const response = await fetch(`${WebApi}/getEmployee`, {
           method: "GET",
+          credentials: "include",
+          headers: {
+            Cookie: document.cookie,
+          },
         });
         const respData = await response.json();
         setEmpData(
@@ -93,7 +101,12 @@ export default function ComplaintStatus() {
     updatedata.content = JSON.stringify(updatedata.content);
     const response = await fetch(`${WebApi}/update_complaint`, {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      credentials: "include",
+      headers: {
+        Cookie: document.cookie,
+        "Content-Type": "application/json"
+      },
+      // headers: { "Content-Type": "application/json" },
       body: JSON.stringify(updatedata),
     });
     const respData = await response.json();

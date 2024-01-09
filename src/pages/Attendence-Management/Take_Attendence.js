@@ -56,6 +56,10 @@ const Take_Attendence = () => {
     const roomHostel = async () => {
       const response = await fetch(`${WebApi}/get_rooms`, {
         method: "GET",
+        credentials: "include",
+        headers: {
+          Cookie: document.cookie,
+        },
       });
       const resproom = await response.json();
       sethostelData(
@@ -116,9 +120,14 @@ const Take_Attendence = () => {
   const handleSubmit = async () => {
     const response = await fetch(`${WebApi}/get_student_by_room`, {
       method: "POST",
+      credentials: "include",
       headers: {
-        "Content-Type": "application/json",
+        Cookie: document.cookie,
+        "Content-Type": "application/json"
       },
+      // headers: {
+      //   "Content-Type": "application/json",
+      // },
       body: JSON.stringify({
         hostel_id: selectedHostel,
         floor_id: selectedFloor,
@@ -159,9 +168,14 @@ const Take_Attendence = () => {
       try {
         const response = await fetch(`${WebApi}/mark_attendance`, {
           method: "POST",
+          credentials: "include",
           headers: {
-            "Content-Type": "application/json",
+            Cookie: document.cookie,
+            "Content-Type": "application/json"
           },
+          // headers: {
+          //   "Content-Type": "application/json",
+          // },
           body: JSON.stringify({
             user_id: studentregistration,
             hostel_id: selectedHostel,

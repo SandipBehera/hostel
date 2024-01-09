@@ -36,9 +36,14 @@ const MyProfile = () => {
       try {
         const response = await fetch(`${WebApi}/profile_info`, {
           method: "POST",
+          credentials: "include",
           headers: {
+            Cookie: document.cookie,
             "Content-Type": "application/json",
           },
+          // headers: {
+          //   "Content-Type": "application/json",
+          // },
           body: JSON.stringify({ user_id: userId, userType }),
         });
 

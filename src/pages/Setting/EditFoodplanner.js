@@ -65,9 +65,12 @@ const EditFoodplanner = ({
     try {
       const response = await fetch(`${WebApi}/update_menu`, {
         method: "POST",
+        credentials: "include",
         headers: {
+          Cookie: document.cookie,
           "Content-Type": "application/json",
         },
+      
         body: JSON.stringify(updatedMenuData),
       });
       const resp = await response.json();

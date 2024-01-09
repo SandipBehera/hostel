@@ -44,7 +44,13 @@ export default function Purchases() {
     setItemPrice(0); // Reset the price per item when the modal is toggled
   };
   const fetchItems = async () => {
-    const response = await fetch(WebApi + "/get_items", { method: "GET" });
+    const response = await fetch(WebApi + "/get_items", {
+       method: "GET" ,
+       credentials: "include",
+       headers: {
+         Cookie: document.cookie,
+       },
+      });
     const data = await response.json();
     setItemList(
       data.data.filter((item) => item.branch_id === parseInt(branchId))
@@ -125,9 +131,14 @@ export default function Purchases() {
     else{
       const response = await fetch(WebApi + "/create_item", {
         method: "POST",
+        credentials: "include",
         headers: {
+          Cookie: document.cookie,
           "Content-Type": "application/json",
         },
+        // headers: {
+        //   "Content-Type": "application/json",
+        // },
         body: JSON.stringify({
           item_name: newItem,
           item_for: itemFor,
@@ -166,10 +177,15 @@ export default function Purchases() {
 
       await fetch(`${WebApi}/add_stock`, {
         method: "POST",
-        body: JSON.stringify(data),
+        credentials: "include",
         headers: {
-          "Content-type": "Application/json",
+          Cookie: document.cookie,
+          "Content-Type": "application/json",
         },
+        body: JSON.stringify(data),
+        // headers: {
+        //   "Content-type": "Application/json",
+        // },
       })
         .then((response) => response.json())
         .then((data) => {

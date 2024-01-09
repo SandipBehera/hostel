@@ -52,7 +52,12 @@ const CreateHostelConfig = (props) => {
       data.config_type_name = JSON.stringify({ data: data.config_type_name });
       const response = await fetch(`${WebApi}/addConfig`, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+        headers: {
+          Cookie: document.cookie,
+          "Content-Type": "application/json",
+        },
+        // headers: { "Content-Type": "application/json" },
         body: JSON.stringify(data),
       });
       const res = await response.json();

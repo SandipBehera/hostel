@@ -19,10 +19,16 @@ const fetchData = async () => {
     try {
       const response = await fetch(`${WebApi}/get_outing`, {
         method: "GET",
+        credentials: "include",
         headers: {
+          Cookie: document.cookie,
           "Content-Type": "application/json",
           "Access-Control-Allow-Origin": "*",
         },
+        // headers: {
+        //   "Content-Type": "application/json",
+        //   "Access-Control-Allow-Origin": "*",
+        // },
       });
   
       if (response.ok) {

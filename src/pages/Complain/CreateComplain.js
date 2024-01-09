@@ -60,6 +60,10 @@ export default function CreateComplain() {
   const getHostelNames = async () => {
     fetch(`${WebApi}/get_rooms`, {
       method: "GET",
+      credentials: "include",
+      headers: {
+        Cookie: document.cookie,
+      },
     })
       .then((res) => res.json())
       .then((res) => {
@@ -73,6 +77,10 @@ export default function CreateComplain() {
   const getEmployeeNames = async () => {
     fetch(`${WebApi}/getEmployee`, {
       method: "GET",
+      credentials: "include",
+      headers: {
+        Cookie: document.cookie,
+      },
     })
       .then((res) => res.json())
       .then((res) => {
@@ -137,10 +145,16 @@ export default function CreateComplain() {
         const response = await fetch(`${WebApi}/create_complaint`, {
           method: "POST",
           body: JSON.stringify(data),
+          credentials: "include",
           headers: {
+            Cookie: document.cookie,
             "Content-Type": "application/json",
-            "Access-Control-Allow-Origin": "*",
+             "Access-Control-Allow-Origin": "*",
           },
+          // headers: {
+          //   "Content-Type": "application/json",
+          //   "Access-Control-Allow-Origin": "*",
+          // },
         });
         console.log("response", response);
         if (response.status === 200) {

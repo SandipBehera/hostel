@@ -24,7 +24,14 @@ const Book = () => {
 
   const fetchedData = async () => {
     try {
-      const response = await fetch(`${WebApi}/get_all_menu`);
+      const response = await fetch(`${WebApi}/get_all_menu`,{
+        method:"GET",
+        credentials: "include",
+        headers: {
+          Cookie: document.cookie,
+        
+        },
+      });
       const respData = await response.json();
       const filteredData = respData.data.filter(
         (key) =>
@@ -44,9 +51,14 @@ const Book = () => {
   const getCode = async () => {
     const response = await fetch(`${WebApi}/getCodes`, {
       method: "POST",
+      credentials: "include",
       headers: {
+        Cookie: document.cookie,
         "Content-Type": "application/json",
       },
+      // headers: {
+      //   "Content-Type": "application/json",
+      // },
       body: JSON.stringify({
         regd_no: localStorage.getItem("userId"),
       }),
@@ -107,9 +119,14 @@ const Book = () => {
       );
       const response = await fetch(`${WebApi}/food_booking`, {
         method: "POST",
+        credentials: "include",
         headers: {
+          Cookie: document.cookie,
           "Content-Type": "application/json",
         },
+        // headers: {
+        //   "Content-Type": "application/json",
+        // },
         body: JSON.stringify({
           auth_code: code,
           regd_no: localStorage.getItem("userId"),
