@@ -12,7 +12,7 @@ export const myComplaints = async () => {
     },
   });
   const res = await response.json();
-  if (rres.data.length > 0 && res.data !== undefined) {
+  if (res.data.length > 0 && res.data !== undefined) {
     const filter_data = res.data.filter(
       (item) =>
         item.branch_id === parseInt(localStorage.getItem("branchId")) &&
