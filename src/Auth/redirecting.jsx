@@ -16,6 +16,10 @@ const RedirectionPage = () => {
           `${WebApi}/users/${userId}/campus/${campus_name}`,
           {
             method: "GET",
+            credentials: "include",
+            headers: {
+              Cookie: document.cookie,
+            },
           }
         );
         const data = await response.json();

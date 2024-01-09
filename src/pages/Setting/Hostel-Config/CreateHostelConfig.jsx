@@ -38,11 +38,12 @@ const CreateHostelConfig = (props) => {
   const handleSubmit = async (event) => {
     event.preventDefault();
     // Do something with inputFields data, for example:
-    if (inputFields.length === 0 || inputFields.some(field => field.trim() === "")) {
+    if (
+      inputFields.length === 0 ||
+      inputFields.some((field) => field.trim() === "")
+    ) {
       toast.warning("Cannot Add Empty Field");
-    }
-   
-     else{
+    } else {
       console.log(inputFields);
       const data = {
         config_type: props.config_type,
@@ -52,7 +53,11 @@ const CreateHostelConfig = (props) => {
       data.config_type_name = JSON.stringify({ data: data.config_type_name });
       const response = await fetch(`${WebApi}/addConfig`, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+        headers: {
+          "Content-Type": "application/json",
+          cookie: document.cookie,
+        },
         body: JSON.stringify(data),
       });
       const res = await response.json();
@@ -62,9 +67,8 @@ const CreateHostelConfig = (props) => {
       } else {
         toast.success(res.message);
       }
-      
-    };
-     }
+    }
+  };
 
   const handleCancel = () => {
     // Handle cancel action if needed
