@@ -6,7 +6,6 @@ import GreetingCard from "../../pages/Dashboard/GreetingCard";
 import { ActivityData } from "../../Data/DefaultDashboard";
 import WidgetsWrapper from "../../pages/Dashboard/WidgetsWraper";
 import { myComplaints, fetchHealthData } from "../../Hooks/fetch_student_data";
-import { set } from "date-fns";
 
 const StudentDashboard = () => {
   // Simulated data (you'll fetch this data from API/backend)
@@ -97,7 +96,7 @@ const StudentDashboard = () => {
         <Row className="widget-grid">
           <GreetingCard
             name={localStorage.getItem("Name")}
-            college={"Vaagdevi"}
+            college={localStorage.getItem("campusName")}
           />
           <WidgetsWrapper
             issueTypeCount={issueTypeCount}

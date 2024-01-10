@@ -16,7 +16,6 @@ import { AccountInformation, UploadFile } from "../../Constant";
 import { LocalApi, WebApi } from "../../api";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
-import { set } from "date-fns";
 
 export default function CreateEmployee() {
   const navigate = useNavigate();
@@ -38,6 +37,8 @@ export default function CreateEmployee() {
     file: "",
   });
   const [designation, setDesignation] = React.useState([]);
+  const [disabled, setDisabled] = React.useState(false);
+  const [error, setError] = React.useState("");
   const fetchDesignation = async (type) => {
     try {
       const response = await fetch(`${WebApi}/get_config_by_type/${type}`, {
@@ -199,7 +200,43 @@ export default function CreateEmployee() {
       }
     }
   };
-
+  const checkEmployeeId = async (e) => {
+    try {
+      const response = await fetch(
+        `${WebApi}/checkEmployeeId/${formData.employeeId}`,
+        {
+          method: "GET",
+          credentials: "include",
+          headers: {
+            Cookie: document.cookie,
+          },
+        }
+      );
+      const result = await response.json();
+      if (result.status === "success") {
+        setError(result.message);
+        setDisabled(!disabled);
+      } else {
+        setError(result.message);
+        setDisabled(!disabled);
+      }
+    } catch (error) {
+      console.log(error);
+      toast.error("An error occurred while processing your request");
+    }
+  };
+  const handleEvent = async (event) => {
+    if (event.type === "keydown" && event.key === "Tab") {
+      // Tab key pressed, make API call
+      await checkEmployeeId(formData.employeeId);
+    } else if (event.type === "mousedown") {
+      // Mouse clicked outside, check if it's outside the input and make API call
+      const isClickedOutside = !event.target.closest("input");
+      if (isClickedOutside && inputValue) {
+        await checkEmployeeId(formData.employeeId);
+      }
+    }
+  };
   return (
     <Fragment>
       <Breadcrumbs
@@ -278,7 +315,10 @@ export default function CreateEmployee() {
                         employeeId: e.target.value,
                       }))
                     }
+                    onKeyDown={handleEvent}
+                    onMouseDown={handleEvent}
                   />
+                  {disabled && <span className="text-danger">{error}</span>}
                 </FormGroup>
 
                 <FormGroup>
@@ -423,7 +463,7 @@ export default function CreateEmployee() {
                     />
                   </Col>
                 </FormGroup>
-                <Button type="submit" color="primary">
+                <Button type="submit" color="primary" disabled={disabled}>
                   Create
                 </Button>
               </Form>

@@ -20,7 +20,10 @@ const Dashboard = () => {
       <Breadcrumbs mainTitle="Default" parent="Dashboard" title="Default" />
       <Container fluid={true}>
         <Row className="widget-grid">
-          <GreetingCard name={localStorage.getItem("Name")} />
+          <GreetingCard
+            name={localStorage.getItem("Name")}
+            college={localStorage.getItem("campusName")}
+          />
           {/* <WidgetsWrapper />
           <OverallBalance
             title={"Mess Bookings"}

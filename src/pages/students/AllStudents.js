@@ -306,72 +306,80 @@ const AllStudents = () => {
                       </tr>
                     </thead>
                     <tbody>
-                      {tableData.map((item, index) => (
-                        <tr
-                          key={item.id}
-                          className={`border-bottom-${item.color}`}
-                        >
-                          <th scope="row">{index + 1}</th>
-                          <td>
-                            {/* <Image
+                      {tableData.length > 0 ? (
+                        tableData.map((item, index) => (
+                          <tr
+                            key={item.id}
+                            className={`border-bottom-${item.color}`}
+                          >
+                            <th scope="row">{index + 1}</th>
+                            <td>
+                              {/* <Image
                               attrImage={{
                                 className: "img-30 me-2",
                                 src: require(`../../assets/images/user/${item.image}`),
                                 alt: "user",
                               }}
                             /> */}
-                            {item.name}
-                          </td>
+                              {item.name}
+                            </td>
 
-                          <td>{item.semesterYear}</td>
-                          <td>{item.branch}</td>
-                          <td>
-                            {item.hostel_name !== null ? (
-                              <>
-                                <p>Hostel Name: {item?.hostel_name}</p>
-                                <p>Room No: {item?.room_id}</p>
-                              </>
-                            ) : (
-                              "need to assign"
-                            )}
-                          </td>
-                          <td>
-                            <PopUpButton
-                              student={item}
-                              onViewClick={() =>
-                                handleOptionSelect("View", item.id)
-                              }
-                            />
-                          </td>
-                          <td>
-                            <Dropdown
-                              isOpen={activeDropdown === item.id}
-                              toggle={() => toggleDropdown(item.id)}
-                            >
-                              <DropdownToggle caret>{Action}</DropdownToggle>
-                              <DropdownMenu>
-                                <DropdownItem
-                                  onClick={() =>
-                                    handleOptionSelect(
-                                      "Assign Room",
-                                      item.userId
-                                    )
-                                  }
-                                >
-                                  {item.hostel_name
-                                    ? "Reassign Room"
-                                    : "Assign Room"}
-                                </DropdownItem>
-                                {/* <DropdownItem
+                            <td>{item.semesterYear}</td>
+                            <td>{item.branch}</td>
+                            <td>
+                              {item.hostel_name !== null ? (
+                                <>
+                                  <p>Hostel Name: {item?.hostel_name}</p>
+                                  <p>Room No: {item?.room_id}</p>
+                                </>
+                              ) : (
+                                "need to assign"
+                              )}
+                            </td>
+                            <td>
+                              <PopUpButton
+                                student={item}
+                                onViewClick={() =>
+                                  handleOptionSelect("View", item.id)
+                                }
+                              />
+                            </td>
+                            <td>
+                              <Dropdown
+                                isOpen={activeDropdown === item.id}
+                                toggle={() => toggleDropdown(item.id)}
+                              >
+                                <DropdownToggle caret>{Action}</DropdownToggle>
+                                <DropdownMenu>
+                                  <DropdownItem
+                                    onClick={() =>
+                                      handleOptionSelect(
+                                        "Assign Room",
+                                        item.userId
+                                      )
+                                    }
+                                  >
+                                    {item.hostel_name
+                                      ? "Reassign Room"
+                                      : "Assign Room"}
+                                  </DropdownItem>
+                                  {/* <DropdownItem
                                   onClick={() => setActive(!active)}
                                 >
                                   {active ? "ACTIVE" : "IN ACTIVE"}
                                 </DropdownItem> */}
-                              </DropdownMenu>
-                            </Dropdown>
+                                </DropdownMenu>
+                              </Dropdown>
+                            </td>
+                          </tr>
+                        ))
+                      ) : (
+                        <tr>
+                          <td colSpan="7" className="text-center text-danger">
+                            No Student found
                           </td>
                         </tr>
-                      ))}
+                      )}
                     </tbody>
                   </Table>
 

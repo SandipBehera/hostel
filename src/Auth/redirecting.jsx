@@ -32,6 +32,7 @@ const RedirectionPage = () => {
           localStorage.setItem("Name", data.data.name);
           localStorage.setItem("userType", data.data.user_type);
           localStorage.setItem("branchId", branchId);
+          localStorage.setItem("campusName", campus_name);
           if (data.data.user_type === "admin" && data.data.user_id !== null) {
             const dashboardLink = `/${data.data.user_type}/${data.data.user_id}/dashboard`;
             window.location.href = dashboardLink;
