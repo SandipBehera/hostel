@@ -38,11 +38,12 @@ const CreateHostelConfig = (props) => {
   const handleSubmit = async (event) => {
     event.preventDefault();
     // Do something with inputFields data, for example:
-    if (inputFields.length === 0 || inputFields.some(field => field.trim() === "")) {
+    if (
+      inputFields.length === 0 ||
+      inputFields.some((field) => field.trim() === "")
+    ) {
       toast.warning("Cannot Add Empty Field");
-    }
-   
-     else{
+    } else {
       console.log(inputFields);
       const data = {
         config_type: props.config_type,
@@ -54,10 +55,9 @@ const CreateHostelConfig = (props) => {
         method: "POST",
         credentials: "include",
         headers: {
-          Cookie: document.cookie,
           "Content-Type": "application/json",
+          cookie: document.cookie,
         },
-        // headers: { "Content-Type": "application/json" },
         body: JSON.stringify(data),
       });
       const res = await response.json();
@@ -67,9 +67,8 @@ const CreateHostelConfig = (props) => {
       } else {
         toast.success(res.message);
       }
-      
-    };
-     }
+    }
+  };
 
   const handleCancel = () => {
     // Handle cancel action if needed

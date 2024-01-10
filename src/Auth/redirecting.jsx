@@ -18,9 +18,8 @@ const RedirectionPage = () => {
             method: "GET",
             credentials: "include",
             headers: {
-            Cookie: document.cookie,
-          },
-
+              Cookie: document.cookie,
+            },
           }
         );
         const data = await response.json();

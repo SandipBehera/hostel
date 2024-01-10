@@ -40,14 +40,13 @@ export default function CreateEmployee() {
   const [designation, setDesignation] = React.useState([]);
   const fetchDesignation = async (type) => {
     try {
-      const response = await fetch(`${WebApi}/get_config_by_type/${type}`,{
-        method:"GET",
+      const response = await fetch(`${WebApi}/get_config_by_type/${type}`, {
+        method: "GET",
         credentials: "include",
-          headers: {
-            Cookie: document.cookie,
-          },
-      })
-      ;
+        headers: {
+          Cookie: document.cookie,
+        },
+      });
       const respData = await response.json();
       console.log(respData.data);
       return respData.data;
