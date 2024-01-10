@@ -48,7 +48,13 @@ const UpdateEmployee = ({ isOpen, toggle }) => {
 
   const fetchDesignation = async (type) => {
     try {
-      const response = await fetch(`${WebApi}/get_config_by_type/${type}`);
+      const response = await fetch(`${WebApi}/get_config_by_type/${type}`,{
+        method:"POST",
+        credentials: "include",
+          headers: {
+            Cookie: document.cookie,
+          },
+      });
       const respData = await response.json();
       console.log(respData.data);
       return respData.data;

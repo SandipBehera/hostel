@@ -48,9 +48,14 @@ const Complaints = () => {
     const student_info = async () => {
       const response = await fetch(`${WebApi}/profile_info`, {
         method: "POST",
+        credentials: "include",
         headers: {
+          Cookie: document.cookie,
           "Content-Type": "application/json",
         },
+        // headers: {
+        //   "Content-Type": "application/json",
+        // },
         body: JSON.stringify({ user_id: studentId, userType: userType }),
       });
       const res = await response.json();
@@ -155,9 +160,14 @@ else{
   try {
     const response = await fetch(`${WebApi}/create_complaint`, {
       method: "POST",
+      credentials: "include",
       headers: {
+        Cookie: document.cookie,
         "Content-Type": "application/json",
       },
+      // headers: {
+      //   "Content-Type": "application/json",
+      // },
       body: JSON.stringify(fdata),
     });
 

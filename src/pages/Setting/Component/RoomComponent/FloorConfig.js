@@ -26,7 +26,15 @@ const FloorConfig = ({ setSteps, setFormdata, formdata }) => {
 
   const fetchRoomConfig = async (type) => {
     try {
-      const response = await fetch(`${WebApi}/get_config_by_type/${type}`);
+      const response = await fetch(`${WebApi}/get_config_by_type/${type}`,{
+        method:"GET",
+        credentials: "include",
+        headers: {
+          Cookie: document.cookie,
+          "Content-Type": "application/json",
+        },
+      }
+      );
       const respData = await response.json();
       console.log("data is", respData.data);
       return respData.data.filter(
@@ -126,9 +134,14 @@ const FloorConfig = ({ setSteps, setFormdata, formdata }) => {
     try {
       const response = await fetch(`${WebApi}/create_rooms`, {
         method: "POST",
+        credentials: "include",
         headers: {
+          Cookie: document.cookie,
           "Content-Type": "application/json",
         },
+        // headers: {
+        //   "Content-Type": "application/json",
+        // },
         body: JSON.stringify(sendData),
       });
 

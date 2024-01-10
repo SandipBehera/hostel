@@ -30,6 +30,10 @@ export default function ComplaintStatus() {
       try {
         const response = await fetch(`${WebApi}/get_complaints`, {
           method: "GET",
+          credentials: "include",
+          headers: {
+            Cookie: document.cookie,
+          },
         });
         const respData = await response.json();
         setData(respData.data.filter((complaint) => complaint.id === id));

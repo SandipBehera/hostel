@@ -9,7 +9,10 @@ const WardenDashboard = () => {
       <Breadcrumbs mainTitle="Default" parent="Dashboard" title="Default" />
       <Container fluid={true}>
         <Row className="widget-grid">
-          <GreetingCard name={localStorage.getItem("Name")} />
+          <GreetingCard
+            name={localStorage.getItem("Name")}
+            college={localStorage.getItem("campusName")}
+          />
         </Row>
       </Container>
     </Fragment>

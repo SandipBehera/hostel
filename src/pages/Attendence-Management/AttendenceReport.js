@@ -58,6 +58,10 @@ const AttendenceReport = ({ attendanceData }) => {
     const roomHostel = async () => {
       const response = await fetch(`${WebApi}/get_rooms`, {
         method: "GET",
+        credentials: "include",
+        headers: {
+          Cookie: document.cookie,
+        },
       });
       const resproom = await response.json();
       setHostelData(
@@ -98,7 +102,12 @@ const AttendenceReport = ({ attendanceData }) => {
   const handleHostelSelect = async (hostelId) => {
     const response = await fetch(`${WebApi}/get_attendence`, {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      credentials: "include",
+      headers: {
+        Cookie: document.cookie,
+        "Content-Type": "application/json"
+      },
+     // headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ hostel_id: hostelId }),
     });
     const resproom = await response.json();
@@ -112,7 +121,12 @@ const AttendenceReport = ({ attendanceData }) => {
     try {
       const response = await fetch(`${WebApi}/update_attendence`, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+        headers: {
+          Cookie: document.cookie,
+          "Content-Type": "application/json"
+        },
+       // headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           id: itemId,
           status: newStatus,

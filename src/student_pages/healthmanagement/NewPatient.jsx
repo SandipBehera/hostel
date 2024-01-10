@@ -26,27 +26,33 @@ const NewPatient = () => {
   const [reg, setReg] = useState("");
   const [userType, setUserType] = useState("");
   const [profileData, setProfileData] = useState([]);
-const [err, setErr] =useState("");
+  const [err, setErr] = useState("");
   useEffect(() => {
     const roomHostel = async () => {
       const response = await fetch(`${WebApi}/get_rooms`, {
         method: "GET",
+        credentials: "include",
+        headers: {
+          Cookie: document.cookie,
+        },
       });
       const resproom = await response.json();
-    
-
     };
     roomHostel();
   }, []);
 
   const fetchProfile = async () => {
-   
     try {
       const response = await fetch(`${WebApi}/profile_info`, {
         method: "POST",
+        credentials: "include",
         headers: {
+          Cookie: document.cookie,
           "Content-Type": "application/json",
         },
+        // headers: {
+        //   "Content-Type": "application/json",
+        // },
         body: JSON.stringify({ user_id: reg, userType: userType }),
       });
 
@@ -68,10 +74,10 @@ const [err, setErr] =useState("");
       const contentType = response.headers.get("Content-Type");
       if (contentType && contentType.includes("application/json")) {
         const res = await response.json();
-      
+
         const fetchedUserData = res.data;
         let obj = {
-          studentName: fetchedUserData.name,
+          studentName: fetchedUserData.name || fetchedUserData.emp_name,
           hostelName: fetchedUserData.hostel_name,
           floorNo: "1",
           roomNo: fetchedUserData.room_id,
@@ -81,20 +87,17 @@ const [err, setErr] =useState("");
           doctor: "",
           regdNo: fetchedUserData.userId,
           file: null,
-        }
+        };
         setFormData(obj);
-        setErr("")
+        setErr("");
       } else {
         console.error("Response is not in JSON format");
       }
     } catch (error) {
       console.error("An error occurred:", error);
-      setErr("Registration number or user type incorrect!!")
-
+      setErr("Registration number or user type incorrect!!");
     }
   };
-
-
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -115,10 +118,8 @@ const [err, setErr] =useState("");
   const userId = localStorage.getItem("userId");
 
   const handleSubmit = async (e) => {
-
     e.preventDefault();
-  
-   
+
     if (
       studentName === "" ||
       formData.date === "" ||
@@ -144,12 +145,14 @@ const [err, setErr] =useState("");
       formDataForSubmission.append("file", formData.file);
       formDataForSubmission.append("branch_id", branch_id);
 
-    
- 
       try {
         // Make the API call
         const response = await fetch(`${WebApi}/add_patient`, {
           method: "POST",
+          credentials: "include",
+          headers: {
+            Cookie: document.cookie,
+          },
           body: formDataForSubmission,
         });
 
@@ -160,8 +163,6 @@ const [err, setErr] =useState("");
         const result = await response.json();
         toast.success(result.message);
         // Handle the result as needed
-
-        
 
         // Reset form after successful submission
         setFormData({
@@ -175,7 +176,6 @@ const [err, setErr] =useState("");
 
           branch_id: parseInt(localStorage.getItem("branchId")),
         });
-    
 
         navigate(`/admin/${userId}/all-patient`);
       } catch (error) {
@@ -230,19 +230,28 @@ const [err, setErr] =useState("");
                 <option value="employee">Employee</option>
               </Input>
             </Col>
-            <Col sm={1} className="d-flex align-items-center justify-content-center fs-3 text-secondary" style={{ marginBottom: "15px", paddingTop: "20px", cursor:"pointer"}}>
-  <i className="fa fa-search" aria-hidden="true" onClick={fetchProfile} style={{ transition: 'color 0.3s blue' }}></i>
-</Col>
-       <p className="text-danger text-center"> {err===""?"":err}</p>
+            <Col
+              sm={1}
+              className="d-flex align-items-center justify-content-center fs-3 text-secondary"
+              style={{
+                marginBottom: "15px",
+                paddingTop: "20px",
+                cursor: "pointer",
+              }}
+            >
+              <i
+                className="fa fa-search"
+                aria-hidden="true"
+                onClick={fetchProfile}
+                style={{ transition: "color 0.3s blue" }}
+              ></i>
+            </Col>
+            <p className="text-danger text-center"> {err === "" ? "" : err}</p>
           </FormGroup>
           <hr></hr>
           <FormGroup row>
-            <Col sm={6} style={{ marginBottom: "15px", marginTop:"10px" }}>
-              <Label
-                for="studentName"
-              >
-                Student Name
-              </Label>
+            <Col sm={6} style={{ marginBottom: "15px", marginTop: "10px" }}>
+              <Label for="studentName">{userType} Name</Label>
               <Input
                 type="text"
                 name="studentName"
@@ -251,28 +260,34 @@ const [err, setErr] =useState("");
                 disabled
               />
             </Col>
+            {userType === "student" && (
+              <>
+                <Col sm={6} style={{ marginBottom: "20px" }}>
+                  <Label className="col-form-label">Hostel name</Label>
+                  <Input
+                    type="text"
+                    name="hostel"
+                    id="hostel"
+                    value={formData.hostelName}
+                    disabled
+                  />
+                </Col>
 
-            <Col sm={6} style={{ marginBottom: "20px" }} >
-              <Label className="col-form-label">Hostel name</Label>
-              <Input
-                type="text"
-                name="hostel"
-                id="hostel"
-                value={formData.hostelName}
-                disabled
-              />
-            </Col>
-
-            <Col sm={6} style={{ marginBottom: "15px", marginTop:"-10px" }}>
-              <Label className="col-form-label">Room No.</Label>
-              <Input
-                type="text"
-                name="roomNo"
-                id="roomNo"
-                value={formData.roomNo}
-                disabled
-              ></Input>
-            </Col>
+                <Col
+                  sm={6}
+                  style={{ marginBottom: "15px", marginTop: "-10px" }}
+                >
+                  <Label className="col-form-label">Room No.</Label>
+                  <Input
+                    type="text"
+                    name="roomNo"
+                    id="roomNo"
+                    value={formData.roomNo}
+                    disabled
+                  ></Input>
+                </Col>
+              </>
+            )}
 
             <Col sm={6} style={{ marginBottom: "15px" }}>
               <Label for="date">Date</Label>

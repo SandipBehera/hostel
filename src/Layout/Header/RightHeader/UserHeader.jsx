@@ -34,6 +34,7 @@ const UserHeader = () => {
   const { layoutURL } = useContext(CustomizerContext);
   const authenticated = JSON.parse(localStorage.getItem("authenticated"));
   const userId = localStorage.getItem("userId");
+  const campusName = localStorage.getItem("campusName");
   // const auth0_profile = JSON.parse(localStorage.getItem("auth0_profile"));
 
   const userType = localStorage.getItem("userType");

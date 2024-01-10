@@ -13,8 +13,6 @@ import {
   TabPane,
 } from "reactstrap";
 import { Breadcrumbs, H5, P } from "../../../AbstractElements";
-import { Contact, Hometxt, PrimaryColor, Profile } from "../../../Constant";
-import { Table } from "react-feather";
 import { WebApi } from "../../../api";
 const PillPrimaryTab = () => {
   const [primarycolorTab, setprimarycolorTab] = useState("1");
@@ -24,7 +22,13 @@ const PillPrimaryTab = () => {
 
   const fetchDesignation = async (type) => {
     try {
-      const response = await fetch(`${WebApi}/get_config_by_type/${type}`);
+      const response = await fetch(`${WebApi}/get_config_by_type/${type}`, {
+        method: "GET",
+        credentials: "include",
+        headers: {
+          Cookie: document.cookie,
+        },
+      });
       const respData = await response.json();
       console.log(respData.data);
       return respData.data.filter(

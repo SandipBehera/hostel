@@ -35,11 +35,17 @@ const OutingForm = () => {
     try {
       const response = await fetch(`${WebApi}/add_outing`, {
         method: "POST",
-        body: JSON.stringify(data),
+        credentials: "include",
         headers: {
+          Cookie: document.cookie,
           "Content-Type": "application/json",
           "Access-Control-Allow-Origin": "*",
         },
+        body: JSON.stringify(data),
+        // headers: {
+        //   "Content-Type": "application/json",
+        //   "Access-Control-Allow-Origin": "*",
+        // },
       });
 
       console.log("response", response);

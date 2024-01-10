@@ -24,9 +24,14 @@ const FoodBookEntry = () => {
   const checkCode = async () => {
     const response = await fetch(`${WebApi}/checkcode`, {
       method: "POST",
+      credentials: "include",
       headers: {
+        Cookie: document.cookie,
         "Content-Type": "application/json",
       },
+      // headers: {
+      //   "Content-Type": "application/json",
+      // },
       body: JSON.stringify({
         auth_code: authCode,
       }),
@@ -50,9 +55,14 @@ const FoodBookEntry = () => {
     }
     const response = await fetch(`${WebApi}/food_allocate`, {
       method: "POST",
+      credentials: "include",
       headers: {
+        Cookie: document.cookie,
         "Content-Type": "application/json",
       },
+      // headers: {
+      //   "Content-Type": "application/json",
+      // },
       body: JSON.stringify({
         auth_code: authCode,
         regd_no: studentData?.result[0].registration_no,

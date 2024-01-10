@@ -24,7 +24,14 @@ const AllPlanner = () => {
   const branchID = localStorage.getItem("branchId");
 
   const fetchData = async () => {
-    const response = await fetch(`${WebApi}/get_all_menu`);
+    const response = await fetch(`${WebApi}/get_all_menu`,{
+      method:"GET",
+      credentials: "include",
+      headers: {
+        Cookie: document.cookie,
+        "Content-Type": "application/json",
+      },
+    });
     const respData = await response.json();
 
     setData(
@@ -45,9 +52,14 @@ const AllPlanner = () => {
     try {
       const response = await fetch(`${WebApi}/delete_menu`, {
         method: "POST",
+        credentials: "include",
         headers: {
+          Cookie: document.cookie,
           "Content-Type": "application/json",
         },
+        // headers: {
+        //   "Content-Type": "application/json",
+        // },
         body: JSON.stringify({ id: itemId }),
       });
 

@@ -46,6 +46,10 @@ const Complaint = () => {
     const detailComplaints = async () => {
       const response = await fetch(`${WebApi}/get_complaints`, {
         method: "GET",
+        credentials: "include",
+        headers: {
+          Cookie: document.cookie,
+        },
       });
       const res = await response.json();
       console.log(res.data);

@@ -19,10 +19,16 @@ const AllOuting = () => {
     try {
       const response = await fetch(`${WebApi}/get_outing`, {
         method: "GET",
+        credentials: "include",
         headers: {
+          Cookie: document.cookie,
           "Content-Type": "application/json",
-          "Access-Control-Allow-Origin": "*",
+           "Access-Control-Allow-Origin": "*",
         },
+        // headers: {
+        //   "Content-Type": "application/json",
+        //   "Access-Control-Allow-Origin": "*",
+        // },
       });
 
       if (response.ok) {
@@ -47,7 +53,9 @@ const AllOuting = () => {
     try {
       const response = await fetch(`${WebApi}/approve_outing/${id}`, {
         method: "POST",
+        credentials: "include",
         headers: {
+          Cookie: document.cookie,
           "Content-Type": "application/json",
           "Access-Control-Allow-Origin": "*",
         },
@@ -68,10 +76,16 @@ const AllOuting = () => {
     try {
       const response = await fetch(`${WebApi}/approve_outing/${id}`, {
         method: "POST",
+        credentials: "include",
         headers: {
+          Cookie: document.cookie,
           "Content-Type": "application/json",
           "Access-Control-Allow-Origin": "*",
         },
+        // headers: {
+        //   "Content-Type": "application/json",
+        //   "Access-Control-Allow-Origin": "*",
+        // },
         body: JSON.stringify({ status: "0" }), // 0 for rejected
       });
 

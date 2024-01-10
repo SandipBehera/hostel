@@ -198,9 +198,14 @@ const AllEmployee = () => {
     try {
       const response = await fetch(`${WebApi}/assignHostel`, {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        credentials: "include",
+          headers: {
+            Cookie: document.cookie,
+            "Content-Type": "application/json",
+          },
+        // headers: {
+        //   "Content-Type": "application/json",
+        // },
         body: JSON.stringify(data),
       });
 

@@ -34,6 +34,10 @@ const AllRoom = () => {
   const roomHostel = async () => {
     const response = await fetch(`${WebApi}/get_student_room/${branchId}`, {
       method: "GET",
+      credentials: "include",
+      headers: {
+        Cookie: document.cookie,
+      },
     });
 
     const resproom = await response.json();
