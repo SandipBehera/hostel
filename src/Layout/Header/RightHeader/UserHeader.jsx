@@ -45,24 +45,24 @@ const UserHeader = () => {
   }, []);
 
   const Logout = async () => {
-    // const loggedOut = await fetch(`${WebApi}/logout/${userId}`, {
-    //   method: "GET",
-    //   credentials: "include",
-    //   headers: {
-    //     Cookie: document.cookie,
-    //   },
-    // });
-    // const data = await loggedOut.json();
-    // if (data) {
-    localStorage.removeItem("profileURL");
-    localStorage.removeItem("token");
-    localStorage.removeItem("auth0_profile");
-    localStorage.removeItem("Name");
-    localStorage.setItem("authenticated", false);
-    localStorage.setItem("login", false);
-    localStorage.removeItem("roles");
-    window.location.href = "http://13.58.144.48/admin/dashboard";
-    // }
+    const loggedOut = await fetch(`${WebApi}/logout/${userId}`, {
+      method: "GET",
+      credentials: "include",
+      headers: {
+        Cookie: document.cookie,
+      },
+    });
+    const data = await loggedOut.json();
+    if (data) {
+      localStorage.removeItem("profileURL");
+      localStorage.removeItem("token");
+      localStorage.removeItem("auth0_profile");
+      localStorage.removeItem("Name");
+      localStorage.setItem("authenticated", false);
+      localStorage.setItem("login", false);
+      localStorage.removeItem("roles");
+      window.location.href = "http://13.58.144.48/admin/dashboard";
+    }
   };
 
   const UserMenuRedirect = (redirect) => {
