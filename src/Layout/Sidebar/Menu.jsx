@@ -96,6 +96,16 @@ export const EmployeeMenu = [
           { path: `/view-complain`, title: "View Complain", type: "link" },
         ],
       },
+      {
+        title: "Fines",
+        icon: "widget",
+        type: "sub",
+        active: false,
+        children: [
+          { path: `/create-fine`, title: "Create Fine", type: "link" },
+          
+        ],
+      },
     ],
   },
 

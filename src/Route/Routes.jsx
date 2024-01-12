@@ -38,6 +38,7 @@ import HostelConfig from "../pages/Setting/HostelConfig";
 import UpdateEmployee from "../pages/employee/UpdateEmployee";
 import Config from "../pages/Setting/Hostel-Config/Config";
 import EditRoom from "../pages/Setting/Hostel-Config/EditRoom";
+import CreateFine from "../pages/Fines/CreateFine";
 
 export const routes = [
   { path: `/dashboard`, Component: <Dashboard /> },
@@ -96,6 +97,8 @@ export const routes = [
   { path: `/complaint`, Component: <Complaint /> },
   { path: `/attendence`, Component: <Attendence /> },
   { path: "/house_keeping", Component: <HouseKeeping /> },
+
+  {path: "/create-fine", Component: <CreateFine/>},
 
   //employee Management routes ends
 ];
