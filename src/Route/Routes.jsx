@@ -38,6 +38,7 @@ import HostelConfig from "../pages/Setting/HostelConfig";
 import UpdateEmployee from "../pages/employee/UpdateEmployee";
 import Config from "../pages/Setting/Hostel-Config/Config";
 import EditRoom from "../pages/Setting/Hostel-Config/EditRoom";
+import ViewCollection from "../pages/Fine-Collection/ViewCollection";
 
 export const routes = [
   { path: `/dashboard`, Component: <Dashboard /> },
@@ -98,6 +99,9 @@ export const routes = [
   { path: "/house_keeping", Component: <HouseKeeping /> },
 
   //employee Management routes ends
+  //create collection
+ 
+  { path: `/view-collection`, Component: <ViewCollection /> },
 ];
 
 export const Wardenroutes = [
