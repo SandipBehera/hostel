@@ -125,7 +125,7 @@ const AllStudents = () => {
       },
     });
     const resproom = await response.json();
-    if (response.data !== undefined) {
+    if (resproom.data !== undefined) {
       sethostelData(
         resproom.data.filter((key) => key.branch_id === parseInt(branchId))
       );
