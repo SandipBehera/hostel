@@ -48,8 +48,12 @@ export default function CreateFine() {
   const [selectedHostel, setSelectedHostel] = useState(null);
   const [selectedFloor, setSelectedFloor] = useState(null);
   const [selectedRoom, setSelectedRoom] = useState(null);
-  console.log(selectedHostel, selectedFloor, selectedRoom)
-  console.log(otherAmenities)
+  const [studentName, setStudent] = useState([]);
+  const [studentid, setStudentId] = useState([]);
+  const [uploadType, setUploadType] = useState("");
+  const [fineAmount, setFineAmount] = useState("");
+  const [title, setTitle] = useState("");
+
   const fetchDesignation = async (type) => {
     try {
       const response = await fetch(`${WebApi}/get_config_by_type/${type}`, {
@@ -87,7 +91,7 @@ export default function CreateFine() {
   const handleCapturePhoto = (imageSrc) => {
     setCapturedPhoto(imageSrc);
     sendImageToBackend(imageSrc);
-    console.log(imageSrc)
+    console.log(imageSrc);
   };
 
   const branchId = localStorage.getItem("branchId");
@@ -103,15 +107,14 @@ export default function CreateFine() {
 
     const resproom = await response.json();
     const fetchedData = resproom.data;
-    sethostelData(fetchedData);
+
     if (resproom && resproom.status) {
-      console.log("data fetched");
+      sethostelData(fetchedData);
     }
   };
   useEffect(() => {
     roomHostel();
   }, []);
-console.log(hostelData)
   const handleHostelSelect = (hostelid) => {
     setSelectedHostel(hostelid);
     const floors = hostelid
@@ -131,11 +134,10 @@ console.log(hostelData)
   const hostel_name = hostelData?.map((key) => {
     return { value: `${key.hostel_name}`, label: `${key.hostel_name}` };
   });
-  
 
   const handleFloorSelect = (floor) => {
     setSelectedFloor(floor);
-  
+
     const rooms = hostelData
       .find((hostel) => hostel.hostel_name === selectedHostel)
       .room_details.filter((room) => room.floor === floor)
@@ -143,29 +145,69 @@ console.log(hostelData)
         value: room.details.room_no,
         label: `Room ${room.details.room_no}`,
       }));
-  
+
     setRoomData(rooms);
   };
+  const getStudent = (roomid) => {
+    setSelectedRoom(roomid);
 
-  // const sendImageToBackend = async (imageData) => {
-  //   console.log(imageData);
-  //   try {
-  //     const response = await fetch(`${WebApi}/upload_image`, {
-  //       method: "POST",
-  //       headers: {
-  //         "Content-Type": "application/json",
-  //       },
-  //       body: JSON.stringify({
-  //         image: imageData,
-  //       }),
-  //     });
+    const foundHostel = hostelData
+      .find((hostel) => hostel.hostel_name === selectedHostel)
+      .users_details.filter((room) => room.room_id === roomid);
+    if (foundHostel) {
+      setStudent(
+        foundHostel.map((student) => ({
+          value: student.user_id,
+          label: student.name,
+        }))
+      );
+    } else {
+      // Handle the case when no matching hostel is found
+      setStudent([]); // or setStudent(null) depending on your use case
+    }
+  };
 
-  //     const data = await response.json();
-  //     console.log("Image uploaded successfully:", data);
-  //   } catch (error) {
-  //     console.error("Error uploading image to backend:", error);
-  //   }
-  // };
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    const data = {
+      studentid: studentid.map((student) => student.value),
+      fineAmount,
+      reason: {
+        title,
+        broken_item:
+          selectedAminities === "Other" ? otherAmenities : selectedAminities,
+        hostel_name: selectedHostel,
+        floor: selectedFloor,
+        room_no: selectedRoom,
+      },
+      upload_image: upload || capturedPhoto,
+      branch_id: branchId,
+    };
+    data.reason = JSON.stringify(data.reason);
+    console.log(data);
+    try {
+      fetch(`${WebApi}/create_fine`, {
+        method: "POST",
+        credentials: "include",
+        headers: {
+          Cookie: document.cookie,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+      })
+        .then((res) => res.json())
+        .then((res) => {
+          if (res.status) {
+            alert("Fine Created Successfully");
+            window.location.reload();
+          } else {
+            alert("Something went wrong");
+          }
+        });
+    } catch (err) {
+      console.log(err);
+    }
+  };
 
   return (
     <Fragment>
@@ -179,7 +221,7 @@ console.log(hostelData)
         <Row className="p-2">
           <Col sm={6} className="">
             <Label>Title</Label>
-            <Input type="text" />
+            <Input type="text" onChange={(e) => setTitle(e.target.value)} />
           </Col>
           <Col sm={6} className="">
             <Label>Ammenities</Label>
@@ -238,73 +280,77 @@ console.log(hostelData)
           <Col sm={6}>
             <Label className="col-form-label">Select Room No</Label>
             <Select
+              id="roomSelect"
               options={roomData}
-              onChange={(selectedOption) =>
-                setSelectedRoom(selectedOption.value)
-              }
+              onChange={(selectedOption) => getStudent(selectedOption.value)}
             />
           </Col>
-          <Col sm={6} className="p-2">
-            <Label>Involvment</Label>
-            <Input type="select">
-              <option value="">Select Involvement</option>
-              <option value="single">Single Individual</option>
-              <option value="multiple">Multiple Individual</option>
-            </Input>
-          </Col>
-        </Row>
-        <Row className="p-2">
           <Col sm={6}>
-            <Label>Culprit Name</Label>
+            <Label className="col-form-label">Culprit Name</Label>
             <Select
               isMulti
-              options={hostel_name}
+              options={studentName}
+              onChange={(selectedOption) => setStudentId(selectedOption)}
               // value={selectedCulprits}
               // onChange={(selectedOptions) => setSelectedCulprits(selectedOptions)}
             />
           </Col>
+        </Row>
+        <Row className="p-2">
           <Col sm={6}>
             <Label>Amount</Label>
             <Input
               type="number"
               className="form-control"
               style={{ appearance: "textfield" }}
+              onChange={(e) => setFineAmount(e.target.value)}
             />
+          </Col>
+          <Col sm={6}>
+            <Label>Upload Type</Label>
+            <Input
+              type="select"
+              onChange={(e) => setUploadType(e.target.value)}
+            >
+              <option>Select Upload Type</option>
+              <option value={"upload"}>Upload From Local</option>
+              <option value={"tpic"}>Take Picture</option>
+            </Input>
           </Col>
         </Row>
 
         <Row className="p-2">
-          <Col sm={4} className="">
-            <Label >Upload/Take Picture</Label>
-            <Input
-                  type="file"
-                  accept="image/*"
-                  onChange={(e) => setUpload(e.target.value)}
-                />
-                  </Col>
-                  <Col sm={2} className="mt-3">
-            {!capturedPhoto && cameraOpen && (
-              <WebcamCapture onCapture={handleCapturePhoto} />
-            )}
-            {capturedPhoto && <img src={capturedPhoto} alt="Captured" />}
-            {!capturedPhoto && (
-              <div className="d-flex">
-                <button
-                  className="btn btn-info  m-2 px-3 py-2"
-                  onClick={() => setCameraOpen(true)}
-                >
-                 Take Photo
-                </button>
-              
-              </div>
-            )}
+          {uploadType === "upload" && (
+            <Col sm={6} className="">
+              <Label>Upload/Take Picture</Label>
+              <Input
+                type="file"
+                accept="image/*"
+                onChange={(e) => setUpload(e.target.files[0])}
+              />
             </Col>
-       
+          )}
+          {uploadType === "tpic" && (
+            <Col sm={6} className="mt-3">
+              {!capturedPhoto && cameraOpen && (
+                <WebcamCapture onCapture={handleCapturePhoto} />
+              )}
+              {capturedPhoto && <img src={capturedPhoto} alt="Captured" />}
+              {!capturedPhoto && (
+                <div className="d-flex">
+                  <button
+                    className="btn btn-info  m-2 px-3 py-2"
+                    onClick={() => setCameraOpen(true)}
+                  >
+                    Take Photo
+                  </button>
+                </div>
+              )}
+            </Col>
+          )}
         </Row>
-        <Button>Submit</Button>
-            
+        <Button onClick={handleSubmit}> Submit</Button>
       </Card>
-    
     </Fragment>
   );
 }
