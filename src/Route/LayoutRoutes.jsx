@@ -13,7 +13,6 @@ const LayoutRoutes = () => {
     setUserRoles(localStorage.getItem("roles"));
   }, []);
 
-  console.log(userType);
   return (
     <>
       <Routes>
