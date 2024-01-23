@@ -34,16 +34,16 @@ const RedirectionPage = () => {
           localStorage.setItem("branchId", branchId);
           localStorage.setItem("campusName", campus_name);
           if (data.data.user_type === "admin" && data.data.user_id !== null) {
-            const dashboardLink = `/${data.data.user_type}/${data.data.user_id}/dashboard`;
+            const dashboardLink = `/hms/${data.data.user_type}/${data.data.user_id}/dashboard`;
             window.location.href = dashboardLink;
           } else if (data.data.user_type === "employee") {
-            const dashboardLink = `/${data.data.user_type}/${data.data.user_id}/dashboard`;
+            const dashboardLink = `/hms/${data.data.user_type}/${data.data.user_id}/dashboard`;
             window.location.href = dashboardLink;
           } else if (
             data.data.user_type === "student" &&
             data.data.user_id !== null
           ) {
-            const dashboardLink = `/${data.data.user_type}/${data.data.user_id}/dashboard`;
+            const dashboardLink = `/hms/${data.data.user_type}/${data.data.user_id}/dashboard`;
             window.location.href = dashboardLink;
           } else {
             window.location.href = "http://13.58.144.48/admin/dashboard";
