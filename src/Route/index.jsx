@@ -36,7 +36,7 @@ const Routers = () => {
   }, []);
 
   return (
-    <BrowserRouter basename={"/"}>
+    <BrowserRouter basename={"/hms"}>
       <Suspense fallback={<Loader />}>
         <Routes>
           <Route path={`/${userType}/${userId}/`} element={<PrivateRoute />}>
@@ -66,6 +66,7 @@ const Routers = () => {
             path={`/users/:userId/campus/:campus_name/branchId/:branchId`}
             element={<RedirectionPage />}
           />
+          <Route exact path="/login/student" element={<Signin />} />
           {/* <Route exact path={`/login`} element={<Signin />} /> */}
           {authRoutes.map(({ path, Component }, i) => (
             <Route path={path} element={Component} key={i++} />
