@@ -11,24 +11,24 @@ import {
 import Widgets1 from "../../Components/Common/CommonWidgets/Widgets1";
 import Widgets2 from "../../Components/Common/CommonWidgets/Widgets2";
 
-const FineWrapper = () => {
+const FineWrapper = ({ totalAmount, CollectedAmount, remains }) => {
   const Fines = {
-    title: "Total Fine",
+    title: "Total Fine Amount",
     gros: 50,
-    total: 0,
+    total: totalAmount,
     color: "secondary",
     icon: "fill-form",
   };
   const Collected = {
-    title: "Total Collected",
+    title: "Total Amount Collected",
     gros: 50,
-    total: 0,
+    total: CollectedAmount,
     color: "warning",
     icon: "fill-form",
   };
   const Remains = {
-    title: "Remains",
-    total: 0,
+    title: "Remaining Amount",
+    total: remains,
     color: "purple",
     icon: "fill-calender",
   };
