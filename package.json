@@ -122,7 +122,7 @@
     "react-use-file-upload": "^0.9.5",
     "react-uuid": "^2.0.0",
     "react-vertical-timeline-component": "^3.6.0",
-    "react-webcam": "^7.2.0", 
+    "react-webcam": "^7.2.0",
     "reactour": "^1.19.0",
     "reactstrap": "^9.1.9",
     "redux": "^4.2.1",
@@ -149,7 +149,7 @@
   },
   "scripts": {
     "start": "node scripts/start.js",
-    "build": "parcel build src/index.html --no-source-maps --public-url ../foody/backend/public",
+    "build": "node scripts/build.js",
     "test": "node scripts/test.js",
     "lint": "eslint --fix --ext .js,.jsx .",
     "json-serve": "node public/server.js",
