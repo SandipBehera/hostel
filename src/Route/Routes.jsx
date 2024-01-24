@@ -38,7 +38,7 @@ import HostelConfig from "../pages/Setting/HostelConfig";
 import UpdateEmployee from "../pages/employee/UpdateEmployee";
 import Config from "../pages/Setting/Hostel-Config/Config";
 import EditRoom from "../pages/Setting/Hostel-Config/EditRoom";
-import ViewCollection from "../pages/Fine-Collection/ViewCollection";
+import ViewCollection from "../pages/Fines/ViewCollection";
 import CreateFine from "../pages/Fines/CreateFine";
 
 export const routes = [
