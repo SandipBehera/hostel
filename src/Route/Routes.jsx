@@ -38,6 +38,7 @@ import HostelConfig from "../pages/Setting/HostelConfig";
 import UpdateEmployee from "../pages/employee/UpdateEmployee";
 import Config from "../pages/Setting/Hostel-Config/Config";
 import EditRoom from "../pages/Setting/Hostel-Config/EditRoom";
+import ViewCollection from "../pages/Fines/ViewCollection";
 import CreateFine from "../pages/Fines/CreateFine";
 
 export const routes = [
@@ -69,7 +70,7 @@ export const routes = [
   //ROOM MANAGEMENT
   { path: `/room-management`, Component: <RoomManagement /> },
   { path: `/allroom`, Component: <AllRoom /> },
-{ path: `/editroom/:id`, Component: <EditRoom /> },
+  { path: `/editroom/:id`, Component: <EditRoom /> },
   //Compain Management
   { path: `/create-complain`, Component: <CreateComplain /> },
   { path: `/view-complain`, Component: <ViewComplain /> },
@@ -98,9 +99,12 @@ export const routes = [
   { path: `/attendence`, Component: <Attendence /> },
   { path: "/house_keeping", Component: <HouseKeeping /> },
 
-  {path: "/create-fine", Component: <CreateFine/>},
+  { path: "/create-fine", Component: <CreateFine /> },
 
   //employee Management routes ends
+  //create collection
+
+  { path: `/view-collection`, Component: <ViewCollection /> },
 ];
 
 export const Wardenroutes = [

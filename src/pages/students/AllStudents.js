@@ -47,7 +47,6 @@ import { LocalApi, LocalSocketAPI, WebApi, WebSocketAPI } from "../../api";
 import socketIOClient from "socket.io-client";
 import { toast } from "react-toastify";
 import RoomDetails from "./component/roomDetails";
-import { ro } from "date-fns/locale";
 
 const roomNumberOptions = [
   { value: "room1", label: "Room 1" },
@@ -125,7 +124,7 @@ const AllStudents = () => {
       },
     });
     const resproom = await response.json();
-    if (response.data !== undefined) {
+    if (resproom.data !== undefined) {
       sethostelData(
         resproom.data.filter((key) => key.branch_id === parseInt(branchId))
       );
@@ -231,54 +230,6 @@ const AllStudents = () => {
     setModalOpen(!modalOpen);
   };
 
-  //  function handleOnHostel(e){
-  //   setHostelSelect(e.target.value)
-  //  }
-  //  function handleOnFloor(){
-
-  //  }
-  const fetchHostel = () => {
-    const extractedHostels = hostelData.room_details.map((room) => ({
-      id: room.branch_id,
-      name: hostelData.hostel_name,
-    }));
-
-    setHostelSelect(extractedHostels);
-  };
-  console.log(hostelSelect);
-
-  const fetchFloors = (selectedHostelId) => {
-    const selectedHostelFloors = [
-      ...new Set(
-        hostelData.room_details
-          .filter((room) => room.branch_id === selectedHostelId)
-          .map((room) => room.floor)
-      ),
-    ];
-
-    setFloorSelect(selectedHostelFloors);
-  };
-
-  const getRoomColor = (room) => {
-    const assignedRoom = tableData.filter(
-      (item) => item.room_id === room.details?.room_no
-    );
-
-    if (!assignedRoom) {
-      return "green"; // Room not assigned to anyone
-    } else if (
-      assignedRoom &&
-      assignedRoom.room_id === room.details?.room_no &&
-      assignedRoom.hostel_name === room.hostel_name
-    ) {
-      return "blue"; // Room is not full and assigned to the current user
-    } else {
-      return "red"; // Room is full or assigned to someone else
-    }
-  };
-  console.log("room data is", roomData);
-  console.log("hostel data is", hostelData);
-  console.log("table data is", tableData);
   return (
     <Fragment>
       <Breadcrumbs

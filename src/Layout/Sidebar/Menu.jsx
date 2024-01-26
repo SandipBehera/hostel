@@ -97,13 +97,14 @@ export const EmployeeMenu = [
         ],
       },
       {
+        title: "Fine",
         title: "Fines",
         icon: "widget",
         type: "sub",
         active: false,
         children: [
+          { path: `/view-collection`, title: "All Collection", type: "link" },
           { path: `/create-fine`, title: "Create Fine", type: "link" },
-          
         ],
       },
     ],
@@ -163,7 +164,6 @@ export const EmployeeMenu = [
       //   badge: "badge badge-light-primary",
       //   active: false,
       // },
-    
     ],
   },
 
@@ -837,23 +837,20 @@ export const StudentMenu = [
         title: "My Profile",
         type: "link",
         badge: "badge badge-light-primary",
-        
+
         active: false,
       },
-      
-    
+
       {
-       
         icon: "widget",
         title: "Student FoodBook",
         type: "sub",
         badge: "badge badge-light-primary",
         active: false,
-        children:[
+        children: [
           { path: `/student-foodbook`, title: "Book Food", type: "link" },
           { path: `/food-calendar`, title: "Food Calender", type: "link" },
-
-        ]
+        ],
       },
 
       {
@@ -878,9 +875,7 @@ export const StudentMenu = [
         type: "link",
         badge: "badge badge-light-primary",
         active: false,
-       
       },
-    
     ],
   },
 ];
