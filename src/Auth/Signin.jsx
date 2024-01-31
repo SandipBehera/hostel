@@ -6,7 +6,7 @@ import { ForgotPassword, Password, SignIn } from "../Constant";
 import { useNavigate, useParams } from "react-router-dom";
 import CustomizerContext from "../_helper/Customizer";
 import { ToastContainer, toast } from "react-toastify";
-import { LocalApi } from "../api";
+import { LocalApi, WebApi } from "../api";
 
 const Signin = ({ selected }) => {
   const { campus_name } = useParams();
@@ -18,7 +18,7 @@ const Signin = ({ selected }) => {
 
   const loginAuth = async (e) => {
     e.preventDefault();
-    fetch(`${LocalApi}/login`, {
+    fetch(`${WebApi}/login`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
