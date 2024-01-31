@@ -1,47 +1,55 @@
 import React, { Fragment, useState, useEffect, useContext } from "react";
 import { Col, Container, Form, FormGroup, Input, Label, Row } from "reactstrap";
 import { Btn, H4, P } from "../AbstractElements";
-import {
-  EmailAddress,
-  ForgotPassword,
-  Password,
-  RememberPassword,
-  SignIn,
-} from "../Constant";
+import { ForgotPassword, Password, SignIn } from "../Constant";
 
-import { useNavigate } from "react-router-dom";
-import man from "../assets/images/dashboard/profile.png";
-
+import { useNavigate, useParams } from "react-router-dom";
 import CustomizerContext from "../_helper/Customizer";
-import OtherWay from "./OtherWay";
 import { ToastContainer, toast } from "react-toastify";
+import { LocalApi } from "../api";
 
 const Signin = ({ selected }) => {
-  const [email, setEmail] = useState("test@gmail.com");
-  const [password, setPassword] = useState("test123");
+  const { campus_name } = useParams();
+  const [regd_no, setRegistration] = useState("");
+  const [password, setPassword] = useState("");
   const [togglePassword, setTogglePassword] = useState(false);
   const history = useNavigate();
   const { layoutURL } = useContext(CustomizerContext);
 
-  const [value, setValue] = useState(localStorage.getItem("profileURL" || man));
-  const [name, setName] = useState(localStorage.getItem("Name"));
-
-  useEffect(() => {
-    localStorage.setItem("profileURL", man);
-    localStorage.setItem("Name", "Emay Walter");
-  }, [value, name]);
-
   const loginAuth = async (e) => {
     e.preventDefault();
-    setValue(man);
-    setName("Emay Walter");
-    if (email === "test@gmail.com" && password === "test123") {
-      localStorage.setItem("login", JSON.stringify(true));
-      history(`/dashboard`);
-      toast.success("Successfully logged in!..");
-    } else {
-      toast.error("You enter wrong password or username!..");
-    }
+    fetch(`${LocalApi}/login`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        userid: regd_no,
+        password,
+        slug: campus_name,
+      }),
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        console.log(data);
+        if (data.status === "success") {
+          localStorage.setItem("login", JSON.stringify(true));
+          localStorage.setItem("authenticated", JSON.stringify(true));
+          localStorage.setItem("userId", data.data.userId);
+          localStorage.setItem("Name", data.data.name);
+          localStorage.setItem("userType", data.data.user_type);
+          localStorage.setItem("branchId", data.data.branch_id);
+          localStorage.setItem("campusName", campus_name);
+          toast.success("Successfully logged in!..");
+          window.location = `/hms/${data.data.user_type}/${data.data.userId}/dashboard`;
+        } else {
+          window.location = `campus/${campus_name}/login/student`;
+          toast.error("You enter wrong password or username!..");
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   };
 
   return (
@@ -53,18 +61,17 @@ const Signin = ({ selected }) => {
               <div className="login-main login-tab">
                 <Form className="theme-form">
                   <H4>
-                    {selected === "simpleLogin"
-                      ? ""
-                      : "Sign In With Simple Login"}
+                    {selected === "simpleLogin" ? "" : "Sign In with HMS"}
                   </H4>
-                  <P>{"Enter your email & password to login"}</P>
+                  <P>{"Enter your Registration No & password to login"}</P>
                   <FormGroup>
-                    <Label className="col-form-label">{EmailAddress}</Label>
+                    <Label className="col-form-label">Registration No</Label>
                     <Input
                       className="form-control"
-                      type="email"
-                      onChange={(e) => setEmail(e.target.value)}
-                      value={email}
+                      type="text"
+                      onChange={(e) => setRegistration(e.target.value)}
+                      value={regd_no}
+                      placeholder="Enter your Registration No"
                     />
                   </FormGroup>
                   <FormGroup className="position-relative">
@@ -75,6 +82,7 @@ const Signin = ({ selected }) => {
                         type={togglePassword ? "text" : "password"}
                         onChange={(e) => setPassword(e.target.value)}
                         value={password}
+                        placeholder="Enter Password"
                       />
                       <div
                         className="show-hide"
@@ -86,14 +94,11 @@ const Signin = ({ selected }) => {
                   </FormGroup>
                   <div className="position-relative form-group mb-0">
                     <div className="checkbox">
-                      <Input id="checkbox1" type="checkbox" />
-                      <Label className="text-muted" for="checkbox1">
-                        {RememberPassword}
-                      </Label>
+                      <a className="link" href="#javascript">
+                        {ForgotPassword}
+                      </a>
                     </div>
-                    <a className="link" href="#javascript">
-                      {ForgotPassword}
-                    </a>
+
                     <Btn
                       attrBtn={{
                         color: "primary",
@@ -104,7 +109,6 @@ const Signin = ({ selected }) => {
                       {SignIn}
                     </Btn>
                   </div>
-                  <OtherWay />
                 </Form>
               </div>
             </div>
