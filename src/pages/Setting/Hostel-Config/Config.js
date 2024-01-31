@@ -41,22 +41,20 @@ const PillPrimaryTab = () => {
   };
   useEffect(() => {
     fetchDesignation("designation").then((data) => {
-      setDesignation(data[0].config_type_name.data);
+      setDesignation(data[0]?.config_type_name.data);
     });
   }, []);
 
   useEffect(() => {
     fetchDesignation("room_type").then((data) => {
-      setRoomType(data[0].config_type_name.data);
+      setRoomType(data[0]?.config_type_name.data);
     });
   }, []);
   useEffect(() => {
     fetchDesignation("ammenities").then((data) => {
-      setAminities(data[0].config_type_name.data);
+      setAminities(data[0]?.config_type_name.data);
     });
   }, []);
-
-  console.log(aminites);
 
   return (
     <Fragment>
