@@ -51,14 +51,13 @@ const ViewCollection = () => {
       });
       const data = await response.json();
       setFineData(data.data);
-
-      data.data.map((fine) => {
-        setTotalFine(addNumbers(parseInt(fine.fine)));
-      });
+      setTotalFine(data.FineCalac.totalAmount || 0);
+      setTotalCollected(data.FineCalac.paidAmount || 0);
+      setTotalRemains(data.FineCalac.remainingAmount || 0);
     };
     getFineData();
   }, []);
-  console.log(FineData);
+
   return (
     <Fragment>
       <Breadcrumbs parent="Fine" mainTitle="Fine Dashboard" title="Dashboard" />
@@ -86,35 +85,45 @@ const ViewCollection = () => {
                   </tr>
                 </thead>
                 <tbody>
-                  {FineData.map((fine, index) => (
-                    <tr>
-                      <td>{index + 1}</td>
-                      <td>{fine.created_at}</td>
-                      <td>{fine.reason.broken_item}</td>
-                      <td>{fine.name}</td>
-                      <td>{fine.fine}</td>
-                      <td>
-                        <Dropdown
-                          isOpen={activeDropdown === fine.studentid}
-                          toggle={() => toggleDropdown(fine.studentid)}
-                        >
-                          <DropdownToggle caret>{Action}</DropdownToggle>
-                          <DropdownMenu>
-                            <DropdownItem onClick={toggleView}>
-                              View
-                            </DropdownItem>
-                            <DropdownItem>Edit</DropdownItem>
-                            <DropdownItem>Make A Payment</DropdownItem>
-                          </DropdownMenu>
-                        </Dropdown>
-                      </td>
-                      <ViewDetails
-                        isViewOpen={isViewOpen}
-                        onclick={toggleView}
-                        header="View Details"
-                      />
-                    </tr>
-                  ))}
+                  {FineData.length > 0 ? (
+                    FineData.map((fine, index) => (
+                      <tr>
+                        <td>{index + 1}</td>
+                        <td>{fine.created_at}</td>
+                        <td>{fine.reason.broken_item}</td>
+                        <td>{fine.name}</td>
+                        <td>{fine.fine}</td>
+                        <td>
+                          <Dropdown
+                            isOpen={activeDropdown === fine.studentid}
+                            toggle={() => toggleDropdown(fine.studentid)}
+                          >
+                            <DropdownToggle caret>{Action}</DropdownToggle>
+                            <DropdownMenu>
+                              <DropdownItem onClick={toggleView}>
+                                View
+                              </DropdownItem>
+                              <DropdownItem>Edit</DropdownItem>
+                              <DropdownItem>Make A Payment</DropdownItem>
+                            </DropdownMenu>
+                          </Dropdown>
+                        </td>
+                        <ViewDetails
+                          isViewOpen={isViewOpen}
+                          onclick={toggleView}
+                          header="View Details"
+                        />
+                      </tr>
+                    ))
+                  ) : (
+                    <>
+                      <tr>
+                        <td colSpan="6" align="center" style={{ color: "red" }}>
+                          No Data Found
+                        </td>
+                      </tr>
+                    </>
+                  )}
                 </tbody>
               </Table>
             </div>
