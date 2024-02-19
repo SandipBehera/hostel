@@ -41,22 +41,20 @@ const PillPrimaryTab = () => {
   };
   useEffect(() => {
     fetchDesignation("designation").then((data) => {
-      setDesignation(data[0].config_type_name.data);
+      setDesignation(data[0]?.config_type_name.data);
     });
   }, []);
 
   useEffect(() => {
     fetchDesignation("room_type").then((data) => {
-      setRoomType(data[0].config_type_name.data);
+      setRoomType(data[0]?.config_type_name.data);
     });
   }, []);
   useEffect(() => {
     fetchDesignation("ammenities").then((data) => {
-      setAminities(data[0].config_type_name.data);
+      setAminities(data[0]?.config_type_name.data);
     });
   }, []);
-
-  console.log(aminites);
 
   return (
     <Fragment>
@@ -101,44 +99,56 @@ const PillPrimaryTab = () => {
             <TabContent activeTab={primarycolorTab}>
               <TabPane className="fade show" tabId="1">
                 <P attrPara={{ className: "mb-0 m-t-30" }}>
-                  {aminites.map((item, i) => (
-                    <Badge
-                      color="success"
-                      style={{ padding: "0.5rem 1rem" }}
-                      className="m-2"
-                      key={i}
-                    >
-                      {item !== "" ? item : <></>}
-                    </Badge>
-                  ))}
+                  {aminites !== undefined && aminites !== null ? (
+                    aminites.map((item, i) => (
+                      <Badge
+                        color="success"
+                        style={{ padding: "0.5rem 1rem" }}
+                        className="m-2"
+                        key={i}
+                      >
+                        {item !== "" ? item : <></>}
+                      </Badge>
+                    ))
+                  ) : (
+                    <>No Ammenities found</>
+                  )}
                 </P>
               </TabPane>
               <TabPane tabId="2">
                 <P attrPara={{ className: "mb-0 m-t-30" }}>
-                  {roomType.map((item, i) => (
-                    <Badge
-                      color="success"
-                      style={{ padding: "0.5rem 1rem" }}
-                      className="m-2"
-                      key={i}
-                    >
-                      {item !== "" ? item : <></>}
-                    </Badge>
-                  ))}
+                  {roomType !== undefined && roomType !== null ? (
+                    roomType.map((item, i) => (
+                      <Badge
+                        color="success"
+                        style={{ padding: "0.5rem 1rem" }}
+                        className="m-2"
+                        key={i}
+                      >
+                        {item !== "" ? item : <></>}
+                      </Badge>
+                    ))
+                  ) : (
+                    <>No Room Type found</>
+                  )}
                 </P>
               </TabPane>
               <TabPane tabId="3">
                 <P attrPara={{ className: "mb-0 m-t-30" }}>
-                  {designation.map((item, i) => (
-                    <Badge
-                      color="success"
-                      style={{ padding: "0.5rem 1rem" }}
-                      className="m-2"
-                      key={i}
-                    >
-                      {item !== "" ? item : <></>}
-                    </Badge>
-                  ))}
+                  {designation !== undefined && designation !== null ? (
+                    designation.map((item, i) => (
+                      <Badge
+                        color="success"
+                        style={{ padding: "0.5rem 1rem" }}
+                        className="m-2"
+                        key={i}
+                      >
+                        {item !== "" ? item : <></>}
+                      </Badge>
+                    ))
+                  ) : (
+                    <>No Designation found</>
+                  )}
                 </P>
               </TabPane>
             </TabContent>
