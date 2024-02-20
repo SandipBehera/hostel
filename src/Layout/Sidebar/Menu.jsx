@@ -852,6 +852,14 @@ export const StudentMenu = [
           { path: `/food-calendar`, title: "Food Calender", type: "link" },
         ],
       },
+      {
+        path: `/view-collection`,
+        icon: "widget",
+        title: "My Fines",
+        type: "link",
+        badge: "badge badge-light-primary",
+        active: false,
+      },
 
       {
         path: `/Requests`,

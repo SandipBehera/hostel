@@ -153,5 +153,7 @@ export const studentRoutes = [
   //outing approval
   { path: `/create-request`, Component: <OutingForm /> },
   { path: `/my-outings`, Component: <MyOutings /> },
+
+  { path: `/view-collection`, Component: <ViewCollection /> },
   // { path: `/all-request`, Component: < /> },
 ];

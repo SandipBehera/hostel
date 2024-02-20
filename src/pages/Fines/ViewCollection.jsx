@@ -18,6 +18,7 @@ import { WebApi } from "../../api";
 import { addNumbers } from "../../Hooks/sumFunction";
 import { Action } from "../../Constant";
 import ViewDetails from "./components/modal/viewDetails";
+import { studentFineData } from "../../Hooks/fetch_student_data";
 
 const ViewCollection = () => {
   const [FineData, setFineData] = useState([]);
@@ -34,7 +35,8 @@ const ViewCollection = () => {
   const toggleView = () => setViewOpen(!isViewOpen);
   const toggleEdit = () => setEditOpen(!isEditOpen);
   const togglePayment = () => setPaymentOpen(!isPaymentOpen);
-
+  const userType = localStorage.getItem("userType");
+  const userId = localStorage.getItem("userId");
   const toggleDropdown = (id) => {
     setActiveDropdown(activeDropdown === id ? null : id);
     setDropdownOpen(!dropdownOpen);
@@ -42,19 +44,28 @@ const ViewCollection = () => {
 
   useEffect(() => {
     const getFineData = async () => {
-      const response = await fetch(`${WebApi}/get_fine/${branch_id}`, {
-        method: "GET",
-        credentials: "include",
-        headers: {
-          cookie: document.cookie,
-        },
-      });
-      const data = await response.json();
-      setFineData(data.data);
-      setTotalFine(data.FineCalac.totalAmount || 0);
-      setTotalCollected(data.FineCalac.paidAmount || 0);
-      setTotalRemains(data.FineCalac.remainingAmount || 0);
+      if (userType === "student") {
+        const data = await studentFineData(userId);
+        setFineData(data.data);
+        setTotalFine(data.FineCalac.totalAmount || 0);
+        setTotalCollected(data.FineCalac.paidAmount || 0);
+        setTotalRemains(data.FineCalac.remainingAmount || 0);
+      } else {
+        const response = await fetch(`${WebApi}/get_fine/${branch_id}`, {
+          method: "GET",
+          credentials: "include",
+          headers: {
+            cookie: document.cookie,
+          },
+        });
+        const data = await response.json();
+        setFineData(data.data);
+        setTotalFine(data.FineCalac.totalAmount || 0);
+        setTotalCollected(data.FineCalac.paidAmount || 0);
+        setTotalRemains(data.FineCalac.remainingAmount || 0);
+      }
     };
+
     getFineData();
   }, []);
 
@@ -103,7 +114,9 @@ const ViewCollection = () => {
                               <DropdownItem onClick={toggleView}>
                                 View
                               </DropdownItem>
-                              <DropdownItem>Edit</DropdownItem>
+                              {userType !== "student" && (
+                                <DropdownItem>Edit</DropdownItem>
+                              )}
                               <DropdownItem>Make A Payment</DropdownItem>
                             </DropdownMenu>
                           </Dropdown>
@@ -112,6 +125,8 @@ const ViewCollection = () => {
                           isViewOpen={isViewOpen}
                           onclick={toggleView}
                           header="View Details"
+                          key={index}
+                          data={fine}
                         />
                       </tr>
                     ))
