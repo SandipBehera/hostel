@@ -13,7 +13,7 @@ import {
 } from "reactstrap";
 import { Breadcrumbs, H5 } from "../../AbstractElements";
 import { useLocation, useNavigate } from "react-router-dom";
-import { WebApi } from "../../api";
+import { WebApi, WebStore } from "../../api";
 import { toast } from "react-toastify";
 import Select from "react-select";
 
@@ -161,7 +161,7 @@ const UpdateEmployee = ({ isOpen, toggle }) => {
                 src={
                   preview
                     ? URL.createObjectURL(preview)
-                    : `http://13.58.217.203:3001/upload/employee/${employeeDetails?.image}`
+                    : `${WebStore}employee/${employeeDetails?.image}`
                 }
                 alt="Profile"
                 style={{ height: "10rem", width: "10rem", borderRadius: "50%" }}

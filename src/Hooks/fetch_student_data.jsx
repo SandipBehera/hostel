@@ -63,3 +63,26 @@ export const fetchHealthData = async () => {
     console.error("Error fetching data:", error.message);
   }
 };
+
+export const studentFineData = async (id) => {
+  try {
+    const response = await fetch(`${WebApi}/get_fine_by_id/${id}`, {
+      method: "GET",
+      credentials: "include",
+      headers: {
+        Cookie: document.cookie,
+      },
+    });
+
+    const res = await response.json();
+
+    if (res.data.length > 0 && res.data !== undefined) {
+      return res;
+    } else {
+      return [];
+    }
+  } catch (error) {
+    console.error("Error fetching student fine data:", error);
+    return [];
+  }
+};

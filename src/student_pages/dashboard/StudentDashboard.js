@@ -5,13 +5,19 @@ import ActivityCard from "../../pages/Dashboard/ActivityCard";
 import GreetingCard from "../../pages/Dashboard/GreetingCard";
 import { ActivityData } from "../../Data/DefaultDashboard";
 import WidgetsWrapper from "../../pages/Dashboard/WidgetsWraper";
-import { myComplaints, fetchHealthData } from "../../Hooks/fetch_student_data";
+import {
+  myComplaints,
+  fetchHealthData,
+  studentFineData,
+} from "../../Hooks/fetch_student_data";
 
 const StudentDashboard = () => {
   // Simulated data (you'll fetch this data from API/backend)
   const [data, setData] = useState([]);
   const [healthData, setHealthData] = useState([]);
+  const [fineAmount, setFineAmount] = useState([]);
   const issueTypeCount = {};
+  const userId = localStorage.getItem("userId");
   const studentInfo = {
     daysPresent: 65,
     daysAbsent: 15,
@@ -64,12 +70,11 @@ const StudentDashboard = () => {
     async function fetchData() {
       setData(await myComplaints());
       setHealthData(await fetchHealthData());
+      setFineAmount(await studentFineData(userId));
     }
 
     fetchData();
   }, []);
-
-  console.log("fetchdata", data);
   data.forEach((item) => {
     let issueType = item.issue_type;
 
@@ -101,6 +106,7 @@ const StudentDashboard = () => {
           <WidgetsWrapper
             issueTypeCount={issueTypeCount}
             healthData={healthData?.length}
+            fineData={fineAmount?.FineCalac?.totalAmount}
           />
           <ActivityCard
             ActivityData={data}

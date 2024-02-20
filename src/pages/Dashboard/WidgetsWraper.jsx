@@ -11,7 +11,7 @@ import {
 import Widgets1 from "../../Components/Common/CommonWidgets/Widgets1";
 import Widgets2 from "../../Components/Common/CommonWidgets/Widgets2";
 
-const WidgetsWrapper = ({ issueTypeCount, healthData }) => {
+const WidgetsWrapper = ({ issueTypeCount, healthData, fineData }) => {
   console.log(issueTypeCount);
   const Complaint = {
     title: "Complaint",
@@ -21,9 +21,9 @@ const WidgetsWrapper = ({ issueTypeCount, healthData }) => {
     icon: "fill-form",
   };
   const NightOutRequest = {
-    title: "Night Out Request",
+    title: "My Fine Amount",
     gros: 50,
-    total: issueTypeCount.night_out_request || 0,
+    total: fineData || 0,
     color: "warning",
     icon: "fill-form",
   };
