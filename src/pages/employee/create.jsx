@@ -80,7 +80,7 @@ export default function CreateEmployee() {
   };
 
   const validateBankAccountNumber = (account) => {
-    const regex = /^\d+$/;
+    const regex = /^\d{9,18}$/;
     return regex.test(account);
   };
 
@@ -90,18 +90,18 @@ export default function CreateEmployee() {
   };
 
   const validateIFSCCode = (ifsc) => {
-    const regex = /^[A-Za-z0-9]+$/;
+    const regex = /^[A-Za-z0-9]{11}$/;
     return regex.test(ifsc);
   };
 
   const validatePanCard = (pan) => {
-    const regex = /^[A-Za-z0-9]+$/;
+    const regex = /^[A-Za-z0-9]{10}$/;
     return regex.test(pan);
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const nameRegex = /^[^\d\s]+$/;
+    const nameRegex = /^[A-Za-z\s]+$/;
     const idRegex = /^[A-Za-z0-9]+$/;
     if (
       formData.name === "" ||
@@ -130,9 +130,9 @@ export default function CreateEmployee() {
     } else if (!idRegex.test(formData.employeeId)) {
       toast.warning("Employee ID should not contain special characters");
     } else if (!validateAadharNumber(formData.aadhar)) {
-      toast.warning("Aadhar number should be 12 digits");
+      toast.warning("Aadhar number should be 12 digit number");
     } else if (!validatePanCard(formData.pan)) {
-      toast.warning("Invalid PAN card");
+      toast.warning("Invalid PAN number");
     } else if (!validateBankAccountNumber(formData.account)) {
       toast.warning("Invalid bank account number");
     } else if (!validateBankName(formData.bank)) {
@@ -437,6 +437,7 @@ export default function CreateEmployee() {
                     type="date"
                     placeholder="Date Of Joining"
                     value={formData.doj}
+                    max={new Date().toISOString().split("T")[0]} // Set max attribute to current date
                     onChange={(e) =>
                       setFormData((prevData) => ({
                         ...prevData,

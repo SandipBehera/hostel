@@ -18,10 +18,14 @@ const CreateHostelConfig = (props) => {
   const [inputFields, setInputFields] = useState([""]);
 
   const handleInputChange = (index, event) => {
-    const values = [...inputFields];
-    values[index] = event.target.value;
-    setInputFields(values);
-  };
+    const inputValue = event.target.value;
+    // Only update the input field if it contains alphabets
+    if (/^[A-Za-z\s]*$/.test(inputValue)) {
+      const values = [...inputFields];
+      values[index] = inputValue;
+      setInputFields(values);
+    }
+};
 
   const handleAddFields = () => {
     const values = [...inputFields];
