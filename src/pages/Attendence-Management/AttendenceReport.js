@@ -31,8 +31,6 @@ import Select from "react-select";
 import { WebApi } from "../../api";
 import { toast } from "react-toastify";
 
-import MonthlyAttendanceReport from "./MonthlyAttendenceReport";
-
 const AttendenceReport = ({ attendanceData }) => {
   const [data, setData] = useState([]);
   const [modalOpen, setModalOpen] = useState(false);
@@ -45,9 +43,6 @@ const AttendenceReport = ({ attendanceData }) => {
   const [hostelId, setHostelId] = useState("");
   const [selectedItem, setSelectedItem] = useState(null);
   const [commentModalOpen, setCommentModalOpen] = useState(false);
-  console.log(msg);
-  console.log(selectedItem);
-
   const branchId = localStorage.getItem("branchId");
 
   const toggleCommentModal = () => {
@@ -70,15 +65,14 @@ const AttendenceReport = ({ attendanceData }) => {
     };
     roomHostel();
   }, []);
-  console.log(hostelData);
   const handleExport = () => {
     const exportData = data.map((item, i) => ({
-      "S.No.": i+1,
+      "S.No.": i + 1,
       "St. Reg. No.": item.registration_no,
       "St. Name": item.name,
       "H-Name": item.hostel_name,
       "Room No": item.room_id,
-      "Present/Absent": item.status === 1 ? "present" : "absent"
+      "Present/Absent": item.status === 1 ? "present" : "absent",
     }));
     const csv = Papa.unparse(exportData);
     const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
@@ -105,18 +99,16 @@ const AttendenceReport = ({ attendanceData }) => {
       credentials: "include",
       headers: {
         Cookie: document.cookie,
-        "Content-Type": "application/json"
+        "Content-Type": "application/json",
       },
-     // headers: { "Content-Type": "application/json" },
+      // headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ hostel_id: hostelId }),
     });
     const resproom = await response.json();
-    console.log(resproom);
     setData(
       resproom.data.filter((key) => key.branch_id === parseInt(branchId))
     );
   };
-  console.log(data);
   const handleMarkAttendance = async (itemId, newStatus, comm) => {
     try {
       const response = await fetch(`${WebApi}/update_attendence`, {
@@ -124,9 +116,9 @@ const AttendenceReport = ({ attendanceData }) => {
         credentials: "include",
         headers: {
           Cookie: document.cookie,
-          "Content-Type": "application/json"
+          "Content-Type": "application/json",
         },
-       // headers: { "Content-Type": "application/json" },
+        // headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           id: itemId,
           status: newStatus,
@@ -185,8 +177,8 @@ const AttendenceReport = ({ attendanceData }) => {
                                 options={hostel_name}
                                 className="js-example-basic-single col-sm-12"
                                 onChange={(selectedOption) => {
-                                  handleHostelSelect(selectedOption.value),
-                                    setHostelId(selectedOption.value);
+                                  handleHostelSelect(selectedOption.value);
+                                  setHostelId(selectedOption.value);
                                 }}
                               />
                             </div>
@@ -262,10 +254,7 @@ const AttendenceReport = ({ attendanceData }) => {
                                             </DropdownItem>
                                             <DropdownItem
                                               onClick={() =>
-                                                handleMarkAttendance(
-                                                  item.id,
-                                                  1
-                                                )
+                                                handleMarkAttendance(item.id, 1)
                                               }
                                               disabled={item.status === 1}
                                             >
@@ -288,10 +277,7 @@ const AttendenceReport = ({ attendanceData }) => {
                               ))
                             ) : (
                               <tr>
-                                <td
-                                  colSpan="8"
-                                  style={{ textAlign: "center" }}
-                                >
+                                <td colSpan="8" style={{ textAlign: "center" }}>
                                   <p style={{ color: "red" }}>
                                     Please Select the hostel Name
                                   </p>
@@ -311,7 +297,10 @@ const AttendenceReport = ({ attendanceData }) => {
                 Reason for Absence
               </ModalHeader>
               <ModalBody>
-                <p>{selectedItem?.comments?.comment || selectedItem?.comments?.comments }</p>
+                <p>
+                  {selectedItem?.comments?.comment ||
+                    selectedItem?.comments?.comments}
+                </p>
               </ModalBody>
               <ModalFooter>
                 <Button color="secondary" onClick={toggleCommentModal}>

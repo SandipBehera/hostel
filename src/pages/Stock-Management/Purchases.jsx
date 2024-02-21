@@ -38,19 +38,18 @@ export default function Purchases() {
   const userId = localStorage.getItem("userId");
   const navigate = useNavigate();
 
-
   const toggleModal = () => {
     setModal(!modal);
     setItemPrice(0); // Reset the price per item when the modal is toggled
   };
   const fetchItems = async () => {
     const response = await fetch(WebApi + "/get_items", {
-       method: "GET" ,
-       credentials: "include",
-       headers: {
-         Cookie: document.cookie,
-       },
-      });
+      method: "GET",
+      credentials: "include",
+      headers: {
+        Cookie: document.cookie,
+      },
+    });
     const data = await response.json();
     setItemList(
       data.data.filter((item) => item.branch_id === parseInt(branchId))
@@ -125,10 +124,9 @@ export default function Purchases() {
   };
 
   const handleCreateItem = async () => {
-    if(newItem===""||itemFor===""){
-      toast.warning("All Fields Required")
-    }
-    else{
+    if (newItem === "" || itemFor === "") {
+      toast.warning("All Fields Required");
+    } else {
       const response = await fetch(WebApi + "/create_item", {
         method: "POST",
         credentials: "include",
@@ -145,7 +143,7 @@ export default function Purchases() {
           branch_id: branchId,
         }),
       });
-  
+
       const data = await response.json();
       console.log(data);
       if (data.status === "success") {
@@ -162,42 +160,40 @@ export default function Purchases() {
   const handleSubmit = async () => {
     console.log(selectedItems);
     console.log(file, isMarketPlace);
-    if(buyerName===""||totalPrice===0){
-      toast.warning("Please Select Items")
-    }
-    else{
-{
-      const data = {
-        total_price: totalPrice,
-        purchased_from: buyerName,
-        branch_id: branchId,
-        allItems: selectedItems,
-      };
-      console.log(data);
+    if (buyerName === "" || totalPrice === 0) {
+      toast.warning("Please Select Items");
+    } else {
+      {
+        const data = {
+          total_price: totalPrice,
+          purchased_from: buyerName,
+          branch_id: branchId,
+          allItems: selectedItems,
+        };
 
-      await fetch(`${WebApi}/add_stock`, {
-        method: "POST",
-        credentials: "include",
-        headers: {
-          Cookie: document.cookie,
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(data),
-        // headers: {
-        //   "Content-type": "Application/json",
-        // },
-      })
-        .then((response) => response.json())
-        .then((data) => {
-          console.log(data);
-          toast.success(data.message);
-          navigate(`/admin/${userId}/all-item-purchases`)
-
+        await fetch(`${WebApi}/add_stock`, {
+          method: "POST",
+          credentials: "include",
+          headers: {
+            Cookie: document.cookie,
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(data),
+          // headers: {
+          //   "Content-type": "Application/json",
+          // },
         })
-        .catch((e) => {
-          console.log(e), toast.error("Faild to add stocks");
-        });
-    }
+          .then((response) => response.json())
+          .then((data) => {
+            console.log(data);
+            toast.success(data.message);
+            navigate(`/admin/${userId}/all-item-purchases`);
+          })
+          .catch((e) => {
+            console.log(e);
+            toast.error("Faild to add stocks");
+          });
+      }
     }
   };
   return (

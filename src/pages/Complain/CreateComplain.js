@@ -27,7 +27,7 @@ export default function CreateComplain() {
   };
 
   const role = localStorage.getItem("userType");
-  const userId=localStorage.getItem("userId");
+  const userId = localStorage.getItem("userId");
   const navigate = useNavigate();
 
   const [issueType, setIssueType] = useState("");
@@ -101,7 +101,6 @@ export default function CreateComplain() {
   const branchId = localStorage.getItem("branchId");
   const handleHostelNumberChange = (value) => {
     setHostelNumber(value);
-    console.log("value", value);
     setFilteredEmployee(
       employees
         .filter((item) => item.assigned_hostel_id === parseInt(value))
@@ -110,14 +109,11 @@ export default function CreateComplain() {
         })
     );
   };
-  console.log(filteredEmployee);
-  
 
   const handleSubmit = async () => {
-    if(issueType===""){
+    if (issueType === "") {
       toast.warning("Please choose issue type");
-    }
-    else if (
+    } else if (
       issueType === "Hostel Issue" &&
       (content === "" || hostelNumber === "" || assignTo === "")
     ) {
@@ -149,19 +145,17 @@ export default function CreateComplain() {
           headers: {
             Cookie: document.cookie,
             "Content-Type": "application/json",
-             "Access-Control-Allow-Origin": "*",
+            "Access-Control-Allow-Origin": "*",
           },
           // headers: {
           //   "Content-Type": "application/json",
           //   "Access-Control-Allow-Origin": "*",
           // },
         });
-        console.log("response", response);
         if (response.status === 200) {
           socket.emit("newComplaint", data);
           toast.success("Complaint Created Successfully");
           navigate(`/admin/${userId}/view-complain`);
-
         } else {
           toast.error("Something went wrong");
         }
@@ -267,7 +261,7 @@ export default function CreateComplain() {
                   onChange={(e) => setAssignTo(e.target.value)}
                 >
                   <option value="">Select a person to assign</option>
-                  {Object.values(wardenNames).map((warden) => (
+                  {filteredEmployee.map((warden) => (
                     <option key={warden} value={warden}>
                       {warden}
                     </option>

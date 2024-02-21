@@ -34,7 +34,6 @@ const Take_Attendence = () => {
 
   const [studentData, setStudentData] = useState([]);
 
-
   const [presentButtonDisabled, setPresentButtonDisabled] = useState(false);
   const [absentButtonDisabled, setAbsentButtonDisabled] = useState(false);
   const [selectedId, setSelectedId] = useState("");
@@ -44,7 +43,7 @@ const Take_Attendence = () => {
   const [otherMessage, setOtherMessage] = useState("");
 
   const [attendanceStatus, setAttendanceStatus] = useState({});
-  const [attendanceData, setAttendanceData] = useState([])
+  const [attendanceData, setAttendanceData] = useState([]);
 
   const resetButtonStates = () => {
     setPresentButtonDisabled(false);
@@ -73,7 +72,7 @@ const Take_Attendence = () => {
     return { value: key.id, label: key.hostel_name };
   });
 
-  console.log(hostelData)
+  console.log(hostelData);
 
   const handleHostelSelect = (hostelid) => {
     setSelectedHostel(hostelid);
@@ -112,7 +111,8 @@ const Take_Attendence = () => {
   };
 
   const viewReason = (comment) => {
-    const commentText = comment && typeof comment === "object" ? comment.comment : comment;
+    const commentText =
+      comment && typeof comment === "object" ? comment.comment : comment;
     setSelectedComment(commentText);
     setReasonModal(!reasonModal);
   };
@@ -123,7 +123,7 @@ const Take_Attendence = () => {
       credentials: "include",
       headers: {
         Cookie: document.cookie,
-        "Content-Type": "application/json"
+        "Content-Type": "application/json",
       },
       // headers: {
       //   "Content-Type": "application/json",
@@ -143,11 +143,11 @@ const Take_Attendence = () => {
       setStudentData(result.data);
     }
   };
-  console.log(studentData)
- 
+  console.log(studentData);
+
   const makeAttandance = async (studentregistration, status, comments) => {
-    console.log(studentregistration, status,comments)
-    console.log(status)
+    console.log(studentregistration, status, comments);
+    console.log(status);
     if (status === 1) {
       setPresentButtonDisabled(true);
       setAbsentButtonDisabled(false);
@@ -156,7 +156,6 @@ const Take_Attendence = () => {
       setAbsentButtonDisabled(true);
     }
     const processAttendance = async () => {
-      
       let comment = "";
       if (comments === null) {
         comment = "{}";
@@ -171,7 +170,7 @@ const Take_Attendence = () => {
           credentials: "include",
           headers: {
             Cookie: document.cookie,
-            "Content-Type": "application/json"
+            "Content-Type": "application/json",
           },
           // headers: {
           //   "Content-Type": "application/json",
@@ -205,16 +204,11 @@ const Take_Attendence = () => {
       } catch (error) {
         console.error("Error Making Attendance Request:", error.message);
       }
-     
     };
 
     // Call the async function
     await processAttendance();
-    
   };
- 
-  
-
 
   return (
     <Fragment>
@@ -298,7 +292,11 @@ const Take_Attendence = () => {
                       <td>{index + 1}</td>
                       <td>
                         <img
-                        style={{height:"4rem", width:"4rem", borderRadius:"50%"}}
+                          style={{
+                            height: "4rem",
+                            width: "4rem",
+                            borderRadius: "50%",
+                          }}
                           src={stud.image}
                           alt="image"
                         />
@@ -390,46 +388,43 @@ const Take_Attendence = () => {
                             </ModalBody>
                           </Modal>
                         </div>
-                        {( stud.statuses!=="0")
-                        &&(
+                        {stud.statuses !== "0" && (
                           <Button
                             color="success"
                             onClick={() => {
-                              makeAttandance(stud.userId, 1, null),
-                                setSelectedId(stud.userId);
+                              makeAttandance(stud.userId, 1, null);
+                              setSelectedId(stud.userId);
                             }}
-                            disabled ={stud.attendance_taken==="taken"}
-                          
+                            disabled={stud.attendance_taken === "taken"}
                           >
                             Present
                           </Button>
                         )}{" "}
-                        {(stud.statuses!=="1") && (
+                        {stud.statuses !== "1" && (
                           <>
-                          <Button
-                            color="danger"
-                            onClick={() => {
-                              openModal();
-                              setMsg("");
-                              setSelectedId(stud.userId);
-                            }}
-
-                            disabled ={stud.attendance_taken==="taken"}
-                          
-                          >
-                            Absent
-                          </Button>
-                          
-                            {stud.statuses==="0"&&<Button
-                              color="primary"
-                              onClick={() =>
-                                viewReason(JSON.parse(stud.comments))
-                              }
+                            <Button
+                              color="danger"
+                              onClick={() => {
+                                openModal();
+                                setMsg("");
+                                setSelectedId(stud.userId);
+                              }}
+                              disabled={stud.attendance_taken === "taken"}
                             >
-                              View
-                            </Button>}
+                              Absent
+                            </Button>
+
+                            {stud.statuses === "0" && (
+                              <Button
+                                color="primary"
+                                onClick={() =>
+                                  viewReason(JSON.parse(stud.comments))
+                                }
+                              >
+                                View
+                              </Button>
+                            )}
                           </>
-                           
                         )}
                       </td>
                     </tr>

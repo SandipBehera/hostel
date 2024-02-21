@@ -96,8 +96,6 @@ export default function CreateFine() {
 
   const handleCapturePhoto = (imageSrc) => {
     setCapturedPhoto(imageSrc);
-    sendImageToBackend(imageSrc);
-    console.log(imageSrc);
   };
 
   const roomHostel = async () => {

@@ -88,8 +88,7 @@ const FoodBook = () => {
     },
     {
       name: "Payment",
-      selector: (row) =>
-        row.type === "hostel" ? "Not Required" : item.payment,
+      selector: (row) => (row.type === "hostel" ? "Not Required" : "₹"),
       center: false,
       sortable: true,
     },

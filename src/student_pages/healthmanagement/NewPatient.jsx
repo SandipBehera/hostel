@@ -121,11 +121,11 @@ const NewPatient = () => {
     e.preventDefault();
 
     if (
-      studentName === "" ||
+      formData.studentName === "" ||
       formData.date === "" ||
       formData.time === "" ||
       formData.reason === "" ||
-      doctor === "" ||
+      formData.doctor === "" ||
       formData.file === null ||
       formData.regdNo === ""
     ) {

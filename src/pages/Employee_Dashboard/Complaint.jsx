@@ -10,6 +10,7 @@ import {
   Card,
 } from "reactstrap";
 import { Breadcrumbs, H5 } from "../../AbstractElements";
+import { WebApi } from "../../api";
 
 const dummyData = [
   {
@@ -52,7 +53,6 @@ const Complaint = () => {
         },
       });
       const res = await response.json();
-      console.log(res.data);
       setData(res.data);
     };
     detailComplaints();
@@ -79,7 +79,7 @@ const Complaint = () => {
           <tbody>
             {dummyData.map((complaint, index) => (
               <tr key={complaint.id}>
-                <td>{index+1}</td>
+                <td>{index + 1}</td>
                 <td>{complaint.name}</td>
                 <td>{complaint.issueType}</td>
                 <td>

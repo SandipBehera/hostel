@@ -232,7 +232,7 @@ export default function CreateEmployee() {
     } else if (event.type === "mousedown") {
       // Mouse clicked outside, check if it's outside the input and make API call
       const isClickedOutside = !event.target.closest("input");
-      if (isClickedOutside && inputValue) {
+      if (isClickedOutside && formData.employeeId !== "") {
         await checkEmployeeId(formData.employeeId);
       }
     }
