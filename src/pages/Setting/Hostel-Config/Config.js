@@ -34,7 +34,6 @@ const PillPrimaryTab = () => {
         },
       });
       const respData = await response.json();
-      console.log(respData.data);
       return respData.data.filter(
         (key) => key.branch_id === parseInt(localStorage.getItem("branchId"))
       );
@@ -62,7 +61,6 @@ const PillPrimaryTab = () => {
   const handleBadgeClick = (item, i) => {
     setUpdatedConfig(item);
     setEditingBadgeIndex(i);
-    console.log(item);
   };
 
   const branchId = localStorage.getItem("branchId");
@@ -72,8 +70,7 @@ const PillPrimaryTab = () => {
     switch (configType) {
       case "designation":
         updatedArray = [...designation];
-        console.log(designation)
-        updatedArray.splice(index-1, 1);
+        updatedArray.splice(index, 1); // Use splice to remove the element at the specified index
         setDesignation(updatedArray);
         break;
       case "room_type":
@@ -90,7 +87,7 @@ const PillPrimaryTab = () => {
         console.error("Invalid config type");
         return;
     }
-  
+
     // Update the backend API to reflect the changes
     const obj = {
       config_type: configType,
@@ -98,7 +95,7 @@ const PillPrimaryTab = () => {
       branch_id: branchId,
     };
     obj.config_type_name = JSON.stringify({ data: obj.config_type_name });
-  
+
     fetch(`${WebApi}/updateConfig`, {
       method: "POST",
       credentials: "include",
@@ -113,6 +110,9 @@ const PillPrimaryTab = () => {
         // Handle response from the API
         if (data.status === "success") {
           toast.success(data.message);
+          // Reset editingBadgeIndex and updatedConfig
+          setEditingBadgeIndex(null);
+          setUpdatedConfig("");
         } else {
           toast.error(data.message);
         }
@@ -120,27 +120,13 @@ const PillPrimaryTab = () => {
       .catch((error) => {
         console.error("Error updating config:", error);
       });
-  
-    // Reset editingBadgeIndex and updatedConfig
-    setEditingBadgeIndex(null);
-    setUpdatedConfig("");
   };
-  
 
   const handleEdit = (arr, configType) => {
     if (!configType) {
       console.error("Config type is undefined");
       return;
     }
-
-    console.log("Payload:", {
-      arr,
-      configType,
-      editingBadgeIndex,
-      updatedConfig,
-      branchId,
-    });
-
     let arr1 = arr;
     arr1.splice(editingBadgeIndex, 1, updatedConfig);
     const obj = {
