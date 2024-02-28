@@ -35,16 +35,16 @@ const FineWrapper = ({ totalAmount, CollectedAmount, remains }) => {
 
   return (
     <>
-      <Col xxl="auto" xl="3" sm="6" className="box-col-6">
+      <Col xxl="auto" sm="auto" className="box-col-6">
         <Row>
-          <Col xl="4">
+          <Col xl="4" md="4" sm="4">
             <Widgets1 data={Fines} />
           </Col>
-          <Col xl="4">
+          <Col xl="4" md="4" sm="4">
             <Widgets1 data={Collected} />
           </Col>
 
-          <Col xl="4">
+          <Col xl="4" md="4" sm="4">
             <Widgets1 data={Remains} />
           </Col>
         </Row>

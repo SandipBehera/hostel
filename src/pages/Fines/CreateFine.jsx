@@ -395,8 +395,11 @@ export default function CreateFine() {
                 {!capturedPhoto && (
                   <div className="d-flex">
                     <button
-                      className="btn btn-info  m-2 px-3 py-2"
-                      onClick={() => setCameraOpen(true)}
+                      className="btn btn-info m-2 px-3 py-2"
+                      onClick={(e) => {
+                        e.preventDefault(); // Prevent default form submission behavior
+                        setCameraOpen(true); // Set cameraOpen to true
+                      }}
                     >
                       Take Photo
                     </button>

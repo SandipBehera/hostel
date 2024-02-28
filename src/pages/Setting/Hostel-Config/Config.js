@@ -34,7 +34,6 @@ const PillPrimaryTab = () => {
         },
       });
       const respData = await response.json();
-      console.log(respData.data);
       return respData.data.filter(
         (key) => key.branch_id === parseInt(localStorage.getItem("branchId"))
       );
@@ -62,25 +61,72 @@ const PillPrimaryTab = () => {
   const handleBadgeClick = (item, i) => {
     setUpdatedConfig(item);
     setEditingBadgeIndex(i);
-    console.log(item);
   };
 
   const branchId = localStorage.getItem("branchId");
+
+  const handleDelete = (index, configType) => {
+    let updatedArray;
+    switch (configType) {
+      case "designation":
+        updatedArray = [...designation];
+        updatedArray.splice(index, 1); // Use splice to remove the element at the specified index
+        setDesignation(updatedArray);
+        break;
+      case "room_type":
+        updatedArray = [...roomType];
+        updatedArray.splice(index, 1);
+        setRoomType(updatedArray);
+        break;
+      case "ammenities":
+        updatedArray = [...aminites];
+        updatedArray.splice(index, 1);
+        setAminities(updatedArray);
+        break;
+      default:
+        console.error("Invalid config type");
+        return;
+    }
+
+    // Update the backend API to reflect the changes
+    const obj = {
+      config_type: configType,
+      config_type_name: updatedArray,
+      branch_id: branchId,
+    };
+    obj.config_type_name = JSON.stringify({ data: obj.config_type_name });
+
+    fetch(`${WebApi}/updateConfig`, {
+      method: "POST",
+      credentials: "include",
+      headers: {
+        Cookie: document.cookie,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(obj),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        // Handle response from the API
+        if (data.status === "success") {
+          toast.success(data.message);
+          // Reset editingBadgeIndex and updatedConfig
+          setEditingBadgeIndex(null);
+          setUpdatedConfig("");
+        } else {
+          toast.error(data.message);
+        }
+      })
+      .catch((error) => {
+        console.error("Error updating config:", error);
+      });
+  };
 
   const handleEdit = (arr, configType) => {
     if (!configType) {
       console.error("Config type is undefined");
       return;
     }
-
-    console.log("Payload:", {
-      arr,
-      configType,
-      editingBadgeIndex,
-      updatedConfig,
-      branchId,
-    });
-
     let arr1 = arr;
     arr1.splice(editingBadgeIndex, 1, updatedConfig);
     const obj = {
@@ -114,10 +160,6 @@ const PillPrimaryTab = () => {
 
     setEditingBadgeIndex(null);
     setUpdatedConfig("");
-  };
-
-  const handleDelete = (index) => {
-    // Handle deletion here
   };
 
   return (
@@ -201,7 +243,16 @@ const PillPrimaryTab = () => {
                             <Button
                               className="px-2 mx-1 my-1"
                               color="danger"
-                              onClick={() => handleDelete()}
+                              onClick={() =>
+                                handleDelete(
+                                  i,
+                                  primarycolorTab === "1"
+                                    ? "ammenities"
+                                    : primarycolorTab === "2"
+                                    ? "room_type"
+                                    : "designation"
+                                )
+                              }
                             >
                               Delete
                             </Button>
@@ -256,7 +307,16 @@ const PillPrimaryTab = () => {
                             <Button
                               className="px-2 mx-1 my-1"
                               color="danger"
-                              onClick={() => handleDelete()}
+                              onClick={() =>
+                                handleDelete(
+                                  i,
+                                  primarycolorTab === "1"
+                                    ? "ammenities"
+                                    : primarycolorTab === "2"
+                                    ? "room_type"
+                                    : "designation"
+                                )
+                              }
                             >
                               Delete
                             </Button>
@@ -311,7 +371,16 @@ const PillPrimaryTab = () => {
                             <Button
                               className="px-2 mx-1 my-1"
                               color="danger"
-                              onClick={() => handleDelete()}
+                              onClick={() =>
+                                handleDelete(
+                                  i,
+                                  primarycolorTab === "1"
+                                    ? "ammenities"
+                                    : primarycolorTab === "2"
+                                    ? "room_type"
+                                    : "designation"
+                                )
+                              }
                             >
                               Delete
                             </Button>

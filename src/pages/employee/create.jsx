@@ -50,7 +50,7 @@ export default function CreateEmployee() {
       });
       const respData = await response.json();
       console.log(respData.data);
-      return respData.data;
+      return ((respData.data).filter((key)=>key.branch_id===parseInt(branch_id)));
     } catch (error) {
       console.error("Error fetching room config:", error);
       throw error;
@@ -59,11 +59,11 @@ export default function CreateEmployee() {
 
   useEffect(() => {
     fetchDesignation("designation").then((data) => {
-      setDesignation(data[0].config_type_name.data);
+      setDesignation((data[0].config_type_name.data));
     });
     console.log(branch_id, userType);
   }, []);
-
+console.log(designation)
   const validateEmail = (email) => {
     const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return regex.test(email);
@@ -232,7 +232,7 @@ export default function CreateEmployee() {
     } else if (event.type === "mousedown") {
       // Mouse clicked outside, check if it's outside the input and make API call
       const isClickedOutside = !event.target.closest("input");
-      if (isClickedOutside && formData.employeeId !== "") {
+      if (isClickedOutside && inputValue) {
         await checkEmployeeId(formData.employeeId);
       }
     }
@@ -350,7 +350,9 @@ export default function CreateEmployee() {
                     }
                   >
                     <option value="">Select Designation</option>
-                    {designation.map((item) => (
+                    {designation
+                    .filter(option=>option !=="")
+                    .map((item) => (
                       <option key={item} value={item}>
                         {item}
                       </option>

@@ -154,7 +154,7 @@ const AllRoom = () => {
                     </thead>
                     <tbody style={{ textAlign: "center" }}>
                       {data && data.length > 0 ? (
-                        data.map((item) => {
+                        data.map((item,i) => {
                           console.log("item", item);
 
                           return edit === item.id ? (
@@ -171,7 +171,7 @@ const AllRoom = () => {
                               key={item.id}
                               className={`border-bottom-${item.color}`}
                             >
-                              <th scope="row">{item.id}</th>
+                              <th scope="row">{i+1}</th>
                               <td>{item.hostel_name}</td>
                               <td>{item.floor_count}</td>
                               <td>
