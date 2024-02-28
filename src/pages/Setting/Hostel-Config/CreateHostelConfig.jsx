@@ -1,4 +1,4 @@
-import React, { Fragment, useState } from "react";
+import React, { Fragment, useEffect, useState } from "react";
 import {
   Card,
   Container,
@@ -16,7 +16,9 @@ import { toast } from "react-toastify";
 
 const CreateHostelConfig = (props) => {
   const [inputFields, setInputFields] = useState([""]);
-
+const [designation, setDesignation] = useState([]);
+const [roomType, setRoomType] = useState([]);
+const [aminites, setAminities] = useState([]);
   const handleInputChange = (index, event) => {
     const inputValue = event.target.value;
     // Only update the input field if it contains alphabets
@@ -27,6 +29,43 @@ const CreateHostelConfig = (props) => {
     }
 };
 
+const fetchDesignation = async (type) => {
+  try {
+    const response = await fetch(`${WebApi}/get_config_by_type/${type}`, {
+      method: "GET",
+      credentials: "include",
+      headers: {
+        Cookie: document.cookie,
+      },
+    });
+    const respData = await response.json();
+    return respData.data.filter(
+      (key) => key.branch_id === parseInt(localStorage.getItem("branchId"))
+    );
+  } catch (error) {
+    console.error("Error fetching room config:", error);
+    throw error;
+  }
+};
+
+useEffect(() => {
+  fetchDesignation("designation").then((data) => {
+    setDesignation(data[0]?.config_type_name.data);
+  });
+}, []);
+useEffect(() => {
+  fetchDesignation("room_type").then((data) => {
+    setRoomType(data[0]?.config_type_name.data);
+  });
+}, []);
+useEffect(() => {
+  fetchDesignation("ammenities").then((data) => {
+    setAminities(data[0]?.config_type_name.data);
+  });
+}, []);
+
+
+console.log(designation)
   const handleAddFields = () => {
     const values = [...inputFields];
     values.push("");
@@ -38,9 +77,55 @@ const CreateHostelConfig = (props) => {
     values.splice(index, 1);
     setInputFields(values);
   };
+  
 
   const handleSubmit = async (event) => {
+
     event.preventDefault();
+    console.log(props.config_type)
+    let flag = false;
+    let repeat = "";
+
+    inputFields.map((item)=>{
+      if(props.config_type==="ammenities")
+      {
+        const filterData = aminites.filter((i)=>i===item)
+        if(filterData.length>0){
+          flag = true;
+          repeat = filterData[0];
+          return
+        }
+
+      }
+      if(props.config_type==="room_type")
+      {
+        const filterData = roomType.filter((i)=>i===item)
+        if(filterData.length>0){
+          flag = true;
+          repeat = filterData[0];
+          return
+        }
+
+      }
+      if(props.config_type==="designation")
+      {
+        const filterData = designation.filter((i)=>i===item)
+        if(filterData.length>0){
+          flag = true;
+          repeat = filterData[0];
+          return
+        }
+
+      }
+
+     
+    })
+    if(flag)
+    {
+      toast.warning("Config Already Exists")
+      console.log("first", repeat)
+      return;
+    }
     // Do something with inputFields data, for example:
     if (
       inputFields.length === 0 ||
