@@ -44,7 +44,6 @@ const UpdateEmployee = ({ isOpen, toggle }) => {
 
   const userId = localStorage.getItem("userId");
   const [designation, setDesignation] = useState([]);
-  console.log(employeeDetails);
 
   const fetchDesignation = async (type) => {
     try {
@@ -74,58 +73,148 @@ const UpdateEmployee = ({ isOpen, toggle }) => {
     console.log(userType);
   }, []);
 
-  console.log(currentDes);
+  const validateEmail = (email) => {
+    const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return regex.test(email);
+  };
 
-  const handleSave = async () => {
+  const validateContactNumber = (contact) => {
+    const regex = /^\d{10}$/;
+    return regex.test(contact);
+  };
+
+  const validateAadharNumber = (aadhar) => {
+    const regex = /^\d{12}$/;
+    return regex.test(aadhar);
+  };
+
+  const validateBankAccountNumber = (account) => {
+    const regex = /^\d{9,18}$/;
+    return regex.test(account);
+  };
+
+  const validateBankName = (bank) => {
+    const regex = /^[A-Za-z\s]+$/;
+    return regex.test(bank);
+  };
+
+  const validateIFSCCode = (ifsc) => {
+    const regex = /^[A-Za-z0-9]{11}$/;
+    return regex.test(ifsc);
+  };
+
+  const validatePanCard = (pan) => {
+    const regex = /^[A-Za-z0-9]{10}$/;
+    return regex.test(pan);
+  };
+  const handleSave = async (e) => {
+    e.preventDefault();
     try {
-      const formData = new FormData();
-
-      // Append form data fields
-      formData.append("name", name);
-      formData.append("email", email);
-      formData.append("contact", contact);
-      formData.append("employeeId", employeeDetails?.empId);
-      formData.append("address", address);
-      formData.append("employee_reg_no", regNo);
-      formData.append("pan", pan);
-      formData.append("aadhar", aadhar);
-      formData.append("bank", bank);
-      formData.append("account", bankNo);
-      formData.append("ifsc", ifsc);
-      formData.append("userType", "employee");
-      formData.append("branch_id", branch);
-      formData.append("doj", doj);
-      if (currentDes === "") {
-        formData.append("designation", employeeDetails?.designation);
-      } else {
-        formData.append("designation", currentDes);
-      }
+      const nameRegex = /^[A-Za-z\s]+$/;
+      const idRegex = /^[A-Za-z0-9]+$/;
       if (
-        image === undefined ||
-        image === null ||
-        image === "" ||
-        image === "undefined"
+        name === "" ||
+        email === "" ||
+        contact === "" ||
+        regNo === "" ||
+        address === "" ||
+        designation === "" ||
+        aadhar === "" ||
+        pan === "" ||
+        bankNo === "" ||
+        bank === "" ||
+        ifsc === "" ||
+        doj === ""
       ) {
-        formData.append("file", employeeDetails?.image);
-      } else {
-        formData.append("file", image);
-      }
-      const response = await fetch(`${WebApi}/updateEmployee`, {
-        method: "POST",
-        credentials: "include",
-        headers: {
-          Cookie: document.cookie,
-        },
-        body: formData,
-      });
+        const emptyFields = [];
 
-      const data = await response.json();
+        if (name === "") emptyFields.push("Name");
+        if (email === "") emptyFields.push("Email");
+        if (contact === "") emptyFields.push("Contact");
+        if (regNo === "") emptyFields.push("Registration Number");
+        if (address === "") emptyFields.push("Address");
+        if (designation === "") emptyFields.push("Designation");
+        if (aadhar === "") emptyFields.push("Aadhar Number");
+        if (pan === "") emptyFields.push("PAN Number");
+        if (bankNo === "") emptyFields.push("Bank Account Number");
+        if (bank === "") emptyFields.push("Bank Name");
+        if (ifsc === "") emptyFields.push("IFSC Code");
+        if (doj === "") emptyFields.push("Date of Joining");
 
-      if (data.status === "success") {
-        toast.success("Employee Details Updated Successfully");
-        navigate(`/admin/${userId}/allemployee`);
+        const emptyFieldsString = emptyFields.join(", ");
+        toast.warning(
+          `Please fill in the following fields: ${emptyFieldsString}`
+        );
+      } else if (!nameRegex.test(name)) {
+        toast.warning(
+          "Employee name should not contain numbers or special characters "
+        );
+      } else if (!validateEmail(email)) {
+        toast.warning("Invalid email address");
+      } else if (!validateContactNumber(contact)) {
+        toast.warning("Contact number should be 10 digits");
+      } else if (!idRegex.test(regNo)) {
+        toast.warning("Employee ID should not contain special characters");
+      } else if (!validateAadharNumber(aadhar)) {
+        toast.warning("Aadhar number should be 12 digit number");
+      } else if (!validatePanCard(pan)) {
+        toast.warning("Invalid PAN number");
+      } else if (!validateBankAccountNumber(bankNo)) {
+        toast.warning("Invalid bank account number");
+      } else if (!validateBankName(bank)) {
+        toast.warning("Invalid bank name");
+      } else if (!validateIFSCCode(ifsc)) {
+        toast.warning("Invalid IFSC code");
       } else {
-        toast.error(data.message);
+        const formData = new FormData();
+
+        // Append form data fields
+        formData.append("name", name);
+        formData.append("email", email);
+        formData.append("contact", contact);
+        formData.append("employeeId", employeeDetails?.empId);
+        formData.append("address", address);
+        formData.append("employee_reg_no", regNo);
+        formData.append("pan", pan);
+        formData.append("aadhar", aadhar);
+        formData.append("bank", bank);
+        formData.append("account", bankNo);
+        formData.append("ifsc", ifsc);
+        formData.append("userType", "employee");
+        formData.append("branch_id", branch);
+        formData.append("doj", doj);
+        if (currentDes === "") {
+          formData.append("designation", employeeDetails?.designation);
+        } else {
+          formData.append("designation", currentDes);
+        }
+        if (
+          image === undefined ||
+          image === null ||
+          image === "" ||
+          image === "undefined"
+        ) {
+          formData.append("file", employeeDetails?.image);
+        } else {
+          formData.append("file", image);
+        }
+        const response = await fetch(`${WebApi}/updateEmployee`, {
+          method: "POST",
+          credentials: "include",
+          headers: {
+            Cookie: document.cookie,
+          },
+          body: formData,
+        });
+
+        const data = await response.json();
+
+        if (data.status === "success") {
+          toast.success("Employee Details Updated Successfully");
+          navigate(`/admin/${userId}/allemployee`);
+        } else {
+          toast.error(data.message);
+        }
       }
     } catch (error) {
       console.error("Error during form submission:", error);

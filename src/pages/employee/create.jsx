@@ -49,8 +49,10 @@ export default function CreateEmployee() {
         },
       });
       const respData = await response.json();
-      console.log(respData.data);
-      return ((respData.data).filter((key)=>key.branch_id===parseInt(branch_id)));
+
+      return respData.data.filter(
+        (key) => key.branch_id === parseInt(branch_id)
+      );
     } catch (error) {
       console.error("Error fetching room config:", error);
       throw error;
@@ -59,11 +61,10 @@ export default function CreateEmployee() {
 
   useEffect(() => {
     fetchDesignation("designation").then((data) => {
-      setDesignation((data[0].config_type_name.data));
+      setDesignation(data[0].config_type_name.data);
     });
     console.log(branch_id, userType);
   }, []);
-console.log(designation)
   const validateEmail = (email) => {
     const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return regex.test(email);
@@ -118,7 +119,25 @@ console.log(designation)
       formData.doj === "" ||
       formData.file === ""
     ) {
-      toast.warning("All fields are required");
+      const emptyFields = [];
+
+      if (formData.name === "") emptyFields.push("Name");
+      if (formData.email === "") emptyFields.push("Email");
+      if (formData.contact === "") emptyFields.push("Contact");
+      if (formData.employeeId === "") emptyFields.push("Registration Number");
+      if (formData.address === "") emptyFields.push("Address");
+      if (formData.designation === "") emptyFields.push("Designation");
+      if (formData.aadhar === "") emptyFields.push("Aadhar Number");
+      if (formData.pan === "") emptyFields.push("PAN Number");
+      if (formData.account === "") emptyFields.push("Bank Account Number");
+      if (formData.bank === "") emptyFields.push("Bank Name");
+      if (formData.ifsc === "") emptyFields.push("IFSC Code");
+      if (formData.doj === "") emptyFields.push("Date of Joining");
+
+      const emptyFieldsString = emptyFields.join(", ");
+      toast.warning(
+        `Please fill in the following fields: ${emptyFieldsString}`
+      );
     } else if (!nameRegex.test(formData.name)) {
       toast.warning(
         "Employee name should not contain numbers or special characters "
@@ -351,12 +370,12 @@ console.log(designation)
                   >
                     <option value="">Select Designation</option>
                     {designation
-                    .filter(option=>option !=="")
-                    .map((item) => (
-                      <option key={item} value={item}>
-                        {item}
-                      </option>
-                    ))}
+                      .filter((option) => option !== "")
+                      .map((item) => (
+                        <option key={item} value={item}>
+                          {item}
+                        </option>
+                      ))}
                   </Input>
                 </FormGroup>
                 <FormGroup>
