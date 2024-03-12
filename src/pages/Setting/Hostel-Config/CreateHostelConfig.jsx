@@ -52,17 +52,17 @@ const CreateHostelConfig = (props) => {
     fetchDesignation("designation").then((data) => {
       setDesignation(data[0]?.config_type_name.data);
     });
-  }, []);
+  }, [inputFields]);
   useEffect(() => {
     fetchDesignation("room_type").then((data) => {
       setRoomType(data[0]?.config_type_name.data);
     });
-  }, []);
+  }, [inputFields]);
   useEffect(() => {
     fetchDesignation("ammenities").then((data) => {
       setAminities(data[0]?.config_type_name.data);
     });
-  }, []);
+  }, [inputFields]);
   const handleAddFields = () => {
     const values = [...inputFields];
     values.push("");
@@ -79,33 +79,30 @@ const CreateHostelConfig = (props) => {
     event.preventDefault();
     let flag = false;
     let repeat = "";
-
     inputFields.map((item) => {
       if (props.config_type === "ammenities") {
-        const filterData = aminites.filter((i) => i === item);
-        if (filterData.length > 0) {
+        if (aminites !== undefined && aminites.includes(item)) {
           flag = true;
-          repeat = filterData[0];
+          repeat = item;
           return;
         }
       }
       if (props.config_type === "room_type") {
-        const filterData = roomType.filter((i) => i === item);
-        if (filterData.length > 0) {
+        if (roomType !== undefined && roomType.includes(item)) {
           flag = true;
-          repeat = filterData[0];
+          repeat = item;
           return;
         }
       }
       if (props.config_type === "designation") {
-        const filterData = designation.filter((i) => i === item);
-        if (filterData.length > 0) {
+        if (designation !== undefined && designation.includes(item)) {
           flag = true;
-          repeat = filterData[0];
+          repeat = item;
           return;
         }
       }
     });
+
     if (flag) {
       toast.warning("Config Already Exists");
       return;
