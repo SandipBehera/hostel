@@ -2,8 +2,8 @@
   "name": "hostel-management-system",
   "version": "0.1.0",
   "private": true,
-  "homepage": "",
-  "proxy": "http://13.58.217.203:3001",
+  "homepage": "hms/",
+  "proxy": "http://13.58.144.48:3001",
   "dependencies": {
     "@auth0/auth0-react": "^2.0.1",
     "@babel/core": "^7.16.0",
